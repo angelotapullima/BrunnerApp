@@ -1,4 +1,5 @@
 import 'package:new_brunner_app/src/core/ConfigDatabase/modulos_db.dart';
+import 'package:new_brunner_app/src/core/ConfigDatabase/vehiculos_db.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -12,8 +13,12 @@ class DatabaseHelper {
   Future<Database> getDatabase() async {
     final String path = join(await getDatabasesPath(), 'brunner.db');
     return openDatabase(path, onCreate: (db, version) {
+      //Menu
       db.execute(ModulosDB.modulosTableSql);
       db.execute(ModulosDB.submodulosTableSql);
+
+      //Mantenimiento
+      db.execute(VehiculosDB.vehiculosTableSql);
     }, version: 1, onDowngrade: onDatabaseDowngradeDelete);
   }
 }
