@@ -18,4 +18,15 @@ class VehiculosDB {
       ' estadoInspeccionVehiculo TEXT,'
       ' imagenVehiculo TEXT,'
       ' estadoVehiculo TEXT)';
+
+  static const String choferesTableSql = 'CREATE TABLE Choferes('
+      ' idChofer TEXT PRIMARY KEY,'
+      ' nombreChofer TEXT,'
+      ' dniChofer TEXT)';
+
+  static const String categoriasInspeccionTableSql = 'CREATE TABLE CategoriasInspeccion('
+      ' idCatInspeccion TEXT PRIMARY KEY,'
+      ' tipoUnidad TEXT,'
+      ' descripcionCatInspeccion TEXT,'
+      ' estadoCatInspeccion TEXT)';
 }

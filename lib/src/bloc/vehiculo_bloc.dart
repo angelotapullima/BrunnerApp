@@ -24,5 +24,6 @@ class VehiculoBloc {
     } else {
       _searchVehiculoController.sink.add(await _api.vehiculosDB.getVehiculos());
     }
+    await _api.getVehiculos();
   }
 }

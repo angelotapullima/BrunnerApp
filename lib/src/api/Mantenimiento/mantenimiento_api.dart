@@ -3,11 +3,17 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:new_brunner_app/src/core/preferences.dart';
 import 'package:new_brunner_app/src/core/routes_constanst.dart';
+import 'package:new_brunner_app/src/database/Mantenimiento/categorias_inspeccion_database.dart';
+import 'package:new_brunner_app/src/database/Mantenimiento/choferes_database.dart';
 import 'package:new_brunner_app/src/database/Mantenimiento/vehiculo_database.dart';
+import 'package:new_brunner_app/src/model/Mantenimiento/categoria_inspeccion_model.dart';
+import 'package:new_brunner_app/src/model/Mantenimiento/choferes_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/vehiculo_model.dart';
 
 class MantenimientoApi {
   final vehiculosDB = VehiculoDatabase();
+  final choferesDB = ChoferesDatabase();
+  final catInspeccionDB = CategoriaInspeccionDatabase();
 
   Future<bool> getVehiculos() async {
     try {
@@ -24,8 +30,9 @@ class MantenimientoApi {
       );
       final decodedData = json.decode(resp.body);
 
-      for (var i = 0; i < decodedData["result"].length; i++) {
-        var data = decodedData["result"][i];
+      //Insertar Vehiculos
+      for (var i = 0; i < decodedData["result"]["vehiculo"].length; i++) {
+        var data = decodedData["result"]["vehiculo"][i];
 
         final vehiculo = VehiculoModel();
 
@@ -49,6 +56,31 @@ class MantenimientoApi {
         vehiculo.estadoVehiculo = data["vehiculo_estado"];
 
         await vehiculosDB.insertarVehiculo(vehiculo);
+      }
+
+      //Insertar Categorias Inspeccion
+      for (var i = 0; i < decodedData["result"]["categoria"].length; i++) {
+        var data = decodedData["result"]["categoria"][i];
+
+        final categoria = CategoriaInspeccionModel();
+        categoria.idCatInspeccion = data["id_vehiculo_inspeccion_categoria"];
+        categoria.tipoUnidad = data["tipo_unidad"];
+        categoria.descripcionCatInspeccion = data["vehiculo_inspeccion_categoria_descripcion"];
+        categoria.estadoCatInspeccion = data["vehiculo_inspeccion_categoria_estado"];
+
+        await catInspeccionDB.insertarCategoriaInspeccion(categoria);
+      }
+
+      //Insertar Choferes
+      for (var i = 0; i < decodedData["result"]["choferes"].length; i++) {
+        var data = decodedData["result"]["choferes"][i];
+
+        final chofer = ChoferesModel();
+        chofer.idChofer = data["id_person"];
+        chofer.dniChofer = data["person_dni"];
+        chofer.nombreChofer = data["nombre"];
+
+        await choferesDB.insertarChofer(chofer);
       }
 
       return true;
