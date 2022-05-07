@@ -6,6 +6,7 @@ import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/core/routes_constanst.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/vehiculo_model.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/check_list.dart';
+import 'package:provider/provider.dart';
 
 class ListaVehiculosMaquinarias extends StatefulWidget {
   const ListaVehiculosMaquinarias({Key? key}) : super(key: key);
@@ -189,6 +190,8 @@ class _ListaVehiculosMaquinariasState extends State<ListaVehiculosMaquinarias> {
     }
     return InkWell(
       onTap: () {
+        final provider = Provider.of<ConductorController>(context, listen: false);
+        provider.setData('', 'Seleccionar');
         Navigator.push(
           context,
           PageRouteBuilder(

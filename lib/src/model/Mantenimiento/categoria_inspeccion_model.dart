@@ -1,14 +1,19 @@
+import 'package:new_brunner_app/src/model/Mantenimiento/item_inspeccion_model.dart';
+
 class CategoriaInspeccionModel {
   String? idCatInspeccion;
   String? tipoUnidad;
   String? descripcionCatInspeccion;
   String? estadoCatInspeccion;
+  //No en db
+  List<ItemInspeccionModel>? itemsInspeccion;
 
   CategoriaInspeccionModel({
     this.idCatInspeccion,
     this.tipoUnidad,
     this.descripcionCatInspeccion,
     this.estadoCatInspeccion,
+    this.itemsInspeccion,
   });
 
   static List<CategoriaInspeccionModel> fromJsonList(List<dynamic> json) => json.map((i) => CategoriaInspeccionModel.fromJson(i)).toList();

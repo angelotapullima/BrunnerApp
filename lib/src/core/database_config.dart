@@ -11,7 +11,7 @@ class DatabaseHelper {
   Future<Database> get database async => _database ??= await getDatabase();
 
   Future<Database> getDatabase() async {
-    final String path = join(await getDatabasesPath(), 'brunner1.db');
+    final String path = join(await getDatabasesPath(), 'brunner.db');
     return openDatabase(path, onCreate: (db, version) {
       //Menu
       db.execute(ModulosDB.modulosTableSql);
@@ -21,6 +21,7 @@ class DatabaseHelper {
       db.execute(VehiculosDB.vehiculosTableSql);
       db.execute(VehiculosDB.choferesTableSql);
       db.execute(VehiculosDB.categoriasInspeccionTableSql);
+      db.execute(VehiculosDB.itemInspeccionTableSql);
     }, version: 1, onDowngrade: onDatabaseDowngradeDelete);
   }
 }

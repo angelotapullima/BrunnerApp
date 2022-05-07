@@ -29,4 +29,12 @@ class VehiculosDB {
       ' tipoUnidad TEXT,'
       ' descripcionCatInspeccion TEXT,'
       ' estadoCatInspeccion TEXT)';
+
+  static const String itemInspeccionTableSql = 'CREATE TABLE ItemInspeccion('
+      ' idItemInspeccion TEXT PRIMARY KEY,'
+      ' idCatInspeccion TEXT,'
+      ' conteoItemInspeccion TEXT,'
+      ' descripcionItemInspeccion TEXT,'
+      ' estadoMantenimientoItemInspeccion TEXT,'
+      ' estadoItemInspeccion TEXT)';
 }

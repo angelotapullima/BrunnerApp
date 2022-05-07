@@ -5,15 +5,18 @@ import 'package:new_brunner_app/src/core/preferences.dart';
 import 'package:new_brunner_app/src/core/routes_constanst.dart';
 import 'package:new_brunner_app/src/database/Mantenimiento/categorias_inspeccion_database.dart';
 import 'package:new_brunner_app/src/database/Mantenimiento/choferes_database.dart';
+import 'package:new_brunner_app/src/database/Mantenimiento/item_inspeccion_database.dart';
 import 'package:new_brunner_app/src/database/Mantenimiento/vehiculo_database.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/categoria_inspeccion_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/choferes_model.dart';
+import 'package:new_brunner_app/src/model/Mantenimiento/item_inspeccion_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/vehiculo_model.dart';
 
 class MantenimientoApi {
   final vehiculosDB = VehiculoDatabase();
   final choferesDB = ChoferesDatabase();
   final catInspeccionDB = CategoriaInspeccionDatabase();
+  final itemInspecciondb = ItemInspeccionDatabase();
 
   Future<bool> getVehiculos() async {
     try {
@@ -69,6 +72,23 @@ class MantenimientoApi {
         categoria.estadoCatInspeccion = data["vehiculo_inspeccion_categoria_estado"];
 
         await catInspeccionDB.insertarCategoriaInspeccion(categoria);
+
+        // Insertar Items Inspeccion
+
+        for (var x = 0; x < data["vehiculo_inspeccion_items"].length; x++) {
+          var dataItem = data["vehiculo_inspeccion_items"][x];
+
+          final item = ItemInspeccionModel();
+
+          item.idItemInspeccion = dataItem["id_vehiculo_inspeccion_item"];
+          item.idCatInspeccion = dataItem["id_vehiculo_inspeccion_categoria"];
+          item.conteoItemInspeccion = dataItem["vehiculo_inspeccion_item_conteo"];
+          item.descripcionItemInspeccion = dataItem["vehiculo_inspeccion_item_descripcion"];
+          item.estadoMantenimientoItemInspeccion = dataItem["vehiculo_inspeccion_item_estadoMantto"];
+          item.estadoItemInspeccion = dataItem["vehiculo_inspeccion_item_estado"];
+
+          await itemInspecciondb.insertarItemInspeccion(item);
+        }
       }
 
       //Insertar Choferes
