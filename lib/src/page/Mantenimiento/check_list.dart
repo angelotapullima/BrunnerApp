@@ -145,6 +145,7 @@ class CheckList extends StatelessWidget {
               ),
             ),
             CategoriasInspeccion(
+              idVehiculo: vehiculo.idVehiculo.toString(),
               tipoUnidad: vehiculo.tipoUnidad.toString(),
             ),
           ],

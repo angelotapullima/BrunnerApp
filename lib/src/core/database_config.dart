@@ -1,3 +1,4 @@
+import 'package:new_brunner_app/src/core/ConfigDatabase/mantenimiento_db.dart';
 import 'package:new_brunner_app/src/core/ConfigDatabase/modulos_db.dart';
 import 'package:new_brunner_app/src/core/ConfigDatabase/vehiculos_db.dart';
 import 'package:path/path.dart';
@@ -22,6 +23,7 @@ class DatabaseHelper {
       db.execute(VehiculosDB.choferesTableSql);
       db.execute(VehiculosDB.categoriasInspeccionTableSql);
       db.execute(VehiculosDB.itemInspeccionTableSql);
+      db.execute(MantenimientoDB.checkItemInspeccionTableSql);
     }, version: 1, onDowngrade: onDatabaseDowngradeDelete);
   }
 }
