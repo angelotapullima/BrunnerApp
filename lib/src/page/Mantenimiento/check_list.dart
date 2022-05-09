@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/vehiculo_model.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/categorias_inspeccion.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/choferes_search.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/observaciones_inspeccion.dart';
 import 'package:provider/provider.dart';
 
 class CheckList extends StatelessWidget {
@@ -148,6 +149,14 @@ class CheckList extends StatelessWidget {
               idVehiculo: vehiculo.idVehiculo.toString(),
               tipoUnidad: vehiculo.tipoUnidad.toString(),
             ),
+            SizedBox(height: ScreenUtil().setHeight(10)),
+            const Divider(),
+            Text(
+              'REPORTE DE OBSERVACIONES',
+              style: TextStyle(fontWeight: FontWeight.w500, fontSize: ScreenUtil().setSp(14)),
+            ),
+            SizedBox(height: ScreenUtil().setHeight(10)),
+            const ObservacionesInspeccion(),
           ],
         ),
       ),

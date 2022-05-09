@@ -141,6 +141,7 @@ class MantenimientoApi {
           checkItem.estadoMantenimientoCheckItemInsp = listItemsInspecion[i].estadoMantenimientoItemInspeccion;
           checkItem.estadoCheckItemInsp = listItemsInspecion[i].estadoItemInspeccion;
           checkItem.valueCheckItemInsp = '0';
+          checkItem.ckeckItemHabilitado = '0';
           checkItem.observacionCkeckItemInsp = '';
 
           await checkItemInspDB.insertarCheckItemInspeccion(checkItem);
@@ -148,6 +149,7 @@ class MantenimientoApi {
       }
 
       if (decodedData["result"]["respuesta"] == 1) {
+        //Insertar checks previamente seleccionados
         for (var i = 0; i < decodedData["result"]["inspeccion_detalle"].length; i++) {
           var data = decodedData["result"]["inspeccion_detalle"][i];
           final checkItem = CheckItemInspeccionModel();
@@ -158,9 +160,16 @@ class MantenimientoApi {
           checkItem.conteoCheckItemInsp = data["vehiculo_inspeccion_item_conteo"];
           checkItem.descripcionCheckItemInsp = data["vehiculo_inspeccion_item_descripcion"];
           checkItem.valueCheckItemInsp = data["inspeccion_vehiculo_detalle_estado"];
+          checkItem.ckeckItemHabilitado = '0';
           checkItem.observacionCkeckItemInsp = data["inspeccion_vehiculo_detalle_observacion"];
 
           await checkItemInspDB.updateCheckInspeccion(checkItem);
+        }
+
+        //Insertar checks deshabilitados
+        for (var x = 0; x < decodedData["result"]["checklist_deshabilitado"].length; x++) {
+          var data = decodedData["result"]["checklist_deshabilitado"][x];
+          await checkItemInspDB.updateHabilitarCheck('${data["id_vehiculo_inspeccion_item"]}$idVehiculo', data["checklist_deshabilitado_estado"]);
         }
       }
 

@@ -58,6 +58,7 @@ class CategoriasInspeccion extends StatelessWidget {
       ),
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
+        color: (item.ckeckItemHabilitado == '1') ? Colors.blueGrey.withOpacity(0.15) : Colors.transparent,
         border: Border.all(color: Colors.blueGrey),
         borderRadius: BorderRadius.circular(5),
       ),
@@ -108,16 +109,22 @@ class CategoriasInspeccion extends StatelessWidget {
   Widget check(BuildContext context, IconData icon, Color color, String value, CheckItemInspeccionModel item) {
     return InkWell(
       onTap: () {
-        final check = CheckItemInspeccionModel();
-        check.valueCheckItemInsp = value;
-        check.idCheckItemInsp = item.idCheckItemInsp;
-        check.idVehiculo = idVehiculo;
-        final _catInspeccionBloc = ProviderBloc.checklist(context);
-        _catInspeccionBloc.updateCheckInspeccion(check, tipoUnidad);
+        if (item.ckeckItemHabilitado == '0') {
+          final check = CheckItemInspeccionModel();
+          check.valueCheckItemInsp = value;
+          check.idCheckItemInsp = item.idCheckItemInsp;
+          check.idVehiculo = idVehiculo;
+          final _catInspeccionBloc = ProviderBloc.checklist(context);
+          _catInspeccionBloc.updateCheckInspeccion(check, tipoUnidad);
+        }
       },
       child: Container(
         decoration: BoxDecoration(
-          color: (color == Colors.white) ? Colors.redAccent : Colors.white,
+          color: (color == Colors.white)
+              ? Colors.redAccent
+              : (item.ckeckItemHabilitado == '1')
+                  ? Colors.blueGrey.withOpacity(0.1)
+                  : Colors.white,
           shape: BoxShape.circle,
           border: Border.all(color: color),
         ),

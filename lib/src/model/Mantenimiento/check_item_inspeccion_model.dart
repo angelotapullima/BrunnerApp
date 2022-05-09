@@ -8,6 +8,7 @@ class CheckItemInspeccionModel {
   String? estadoMantenimientoCheckItemInsp;
   String? estadoCheckItemInsp;
   String? valueCheckItemInsp;
+  String? ckeckItemHabilitado;
   String? observacionCkeckItemInsp;
 
   CheckItemInspeccionModel({
@@ -20,6 +21,7 @@ class CheckItemInspeccionModel {
     this.estadoCheckItemInsp,
     this.valueCheckItemInsp,
     this.idItemInspeccion,
+    this.ckeckItemHabilitado,
     this.observacionCkeckItemInsp,
   });
 
@@ -35,6 +37,7 @@ class CheckItemInspeccionModel {
         'estadoCheckItemInsp': estadoCheckItemInsp,
         'valueCheckItemInsp': valueCheckItemInsp,
         'idItemInspeccion': idItemInspeccion,
+        'ckeckItemHabilitado': ckeckItemHabilitado,
         'observacionCkeckItemInsp': observacionCkeckItemInsp,
       };
 
@@ -48,6 +51,7 @@ class CheckItemInspeccionModel {
         estadoCheckItemInsp: json["estadoCheckItemInsp"],
         valueCheckItemInsp: json["valueCheckItemInsp"],
         idItemInspeccion: json["idItemInspeccion"],
+        ckeckItemHabilitado: json["ckeckItemHabilitado"],
         observacionCkeckItemInsp: json["observacionCkeckItemInsp"],
       );
 }

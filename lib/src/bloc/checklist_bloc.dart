@@ -13,9 +13,13 @@ class CheckListBloc {
   final _cartegoriasInspeccionController = BehaviorSubject<List<CategoriaInspeccionModel>>();
   Stream<List<CategoriaInspeccionModel>> get catInspeccionStream => _cartegoriasInspeccionController.stream;
 
+  final _observacionesCheckItemController = BehaviorSubject<List<CheckItemInspeccionModel>>();
+  Stream<List<CheckItemInspeccionModel>> get observacionesCkeckStream => _observacionesCheckItemController.stream;
+
   dispose() {
     _choferesController.close();
     _cartegoriasInspeccionController.close();
+    _observacionesCheckItemController.close();
   }
 
   void searchVehiculos(String query) async {
@@ -29,14 +33,18 @@ class CheckListBloc {
 
   void getCatCheckInspeccion(String idVehiculo, String tipoUnidad) async {
     _cartegoriasInspeccionController.sink.add(await checkCategoriasInspeccion(idVehiculo, tipoUnidad));
+    _observacionesCheckItemController.sink.add(await _api.checkItemInspDB.getCheckItemInspeccionByIdVehiculo(idVehiculo));
     await _api.getCheckItemsVehiculo(idVehiculo);
     _cartegoriasInspeccionController.sink.add(await checkCategoriasInspeccion(idVehiculo, tipoUnidad));
+    _observacionesCheckItemController.sink.add(await _api.checkItemInspDB.getObservacionesItemInspeccionByIdVehiculo(idVehiculo));
   }
 
   void updateCheckInspeccion(CheckItemInspeccionModel check, String tipoUnidad) async {
     await _api.checkItemInspDB.updateCheck(check);
-    // await _api.getCheckItemsVehiculo(check.idVehiculo.toString());
     _cartegoriasInspeccionController.sink.add(await checkCategoriasInspeccion(check.idVehiculo.toString(), tipoUnidad));
+    if (check.valueCheckItemInsp != '1') {
+      _observacionesCheckItemController.sink.add(await _api.checkItemInspDB.getObservacionesItemInspeccionByIdVehiculo(check.idVehiculo.toString()));
+    }
   }
 
   Future<List<CategoriaInspeccionModel>> checkCategoriasInspeccion(String idVehiculo, String tipoUnidad) async {
@@ -54,7 +62,7 @@ class CheckListBloc {
 
       //categoria.itemsInspeccion = await _itemInspeccionDB.getItemInspeccionByIdCatInsp(categoria.idCatInspeccion.toString());
 
-      final checkItems = await _api.checkItemInspDB.getCheckItemInspeccionByIdVehiculo(idVehiculo, categoria.idCatInspeccion.toString());
+      final checkItems = await _api.checkItemInspDB.getCheckItemInspeccionByIdVehiculoANDIdCat(idVehiculo, categoria.idCatInspeccion.toString());
 
       if (checkItems.isNotEmpty) {
         categoria.checkItemInspeccion = checkItems;

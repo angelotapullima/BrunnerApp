@@ -9,5 +9,6 @@ class MantenimientoDB {
       ' estadoMantenimientoCheckItemInsp TEXT,'
       ' estadoCheckItemInsp TEXT,'
       ' valueCheckItemInsp TEXT,'
+      ' ckeckItemHabilitado TEXT,'
       ' observacionCkeckItemInsp TEXT)';
 }

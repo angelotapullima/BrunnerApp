@@ -1,5 +1,4 @@
 import 'package:new_brunner_app/src/model/Mantenimiento/check_item_inspeccion_model.dart';
-import 'package:new_brunner_app/src/model/Mantenimiento/item_inspeccion_model.dart';
 
 class CategoriaInspeccionModel {
   String? idCatInspeccion;

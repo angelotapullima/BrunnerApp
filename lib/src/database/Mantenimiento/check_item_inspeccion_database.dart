@@ -33,12 +33,42 @@ class CheckItemInspeccionDatabase {
     }
   }
 
-  Future<List<CheckItemInspeccionModel>> getCheckItemInspeccionByIdVehiculo(String idVehiculo, String idCatInspeccion) async {
+  Future<List<CheckItemInspeccionModel>> getCheckItemInspeccionByIdVehiculoANDIdCat(String idVehiculo, String idCatInspeccion) async {
     try {
       final Database db = await dbprovider.getDatabase();
       List<CheckItemInspeccionModel> list = [];
       List<Map> maps = await db.rawQuery(
           "SELECT * FROM CheckItemInspeccion WHERE idVehiculo='$idVehiculo' AND idCatInspeccion='$idCatInspeccion' ORDER BY CAST(idCheckItemInsp AS INTEGER)");
+
+      if (maps.isNotEmpty) list = CheckItemInspeccionModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      e;
+      return [];
+    }
+  }
+
+  Future<List<CheckItemInspeccionModel>> getCheckItemInspeccionByIdVehiculo(String idVehiculo) async {
+    try {
+      final Database db = await dbprovider.getDatabase();
+      List<CheckItemInspeccionModel> list = [];
+      List<Map> maps =
+          await db.rawQuery("SELECT * FROM CheckItemInspeccion WHERE idVehiculo='$idVehiculo' ORDER BY CAST(idCheckItemInsp AS INTEGER)");
+
+      if (maps.isNotEmpty) list = CheckItemInspeccionModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      e;
+      return [];
+    }
+  }
+
+  Future<List<CheckItemInspeccionModel>> getObservacionesItemInspeccionByIdVehiculo(String idVehiculo) async {
+    try {
+      final Database db = await dbprovider.getDatabase();
+      List<CheckItemInspeccionModel> list = [];
+      List<Map> maps = await db.rawQuery(
+          "SELECT * FROM CheckItemInspeccion WHERE idVehiculo='$idVehiculo' AND observacionCkeckItemInsp!='' ORDER BY CAST(idCheckItemInsp AS INTEGER)");
 
       if (maps.isNotEmpty) list = CheckItemInspeccionModel.fromJsonList(maps);
       return list;
@@ -86,6 +116,15 @@ class CheckItemInspeccionDatabase {
     final res = await db.rawUpdate("UPDATE CheckItemInspeccion SET "
         "valueCheckItemInsp='${checkItem.valueCheckItemInsp}' "
         "WHERE idCheckItemInsp='${checkItem.idCheckItemInsp}'");
+    return res;
+  }
+
+  updateHabilitarCheck(String idCheckItemInsp, String ckeckItemHabilitado) async {
+    final db = await dbprovider.database;
+
+    final res = await db.rawUpdate("UPDATE CheckItemInspeccion SET "
+        "ckeckItemHabilitado='$ckeckItemHabilitado' "
+        "WHERE idCheckItemInsp='$idCheckItemInsp'");
     return res;
   }
 }
