@@ -52,8 +52,23 @@ class CheckItemInspeccionDatabase {
     try {
       final Database db = await dbprovider.getDatabase();
       List<CheckItemInspeccionModel> list = [];
-      List<Map> maps =
-          await db.rawQuery("SELECT * FROM CheckItemInspeccion WHERE idVehiculo='$idVehiculo' ORDER BY CAST(idCheckItemInsp AS INTEGER)");
+      List<Map> maps = await db.rawQuery(
+          "SELECT * FROM CheckItemInspeccion WHERE idVehiculo='$idVehiculo' AND valueCheckItemInsp!=''  ORDER BY CAST(idCheckItemInsp AS INTEGER)");
+
+      if (maps.isNotEmpty) list = CheckItemInspeccionModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      e;
+      return [];
+    }
+  }
+
+  Future<List<CheckItemInspeccionModel>> getCheckItemInspeccionFALTANTESByIdVehiculo(String idVehiculo) async {
+    try {
+      final Database db = await dbprovider.getDatabase();
+      List<CheckItemInspeccionModel> list = [];
+      List<Map> maps = await db.rawQuery(
+          "SELECT * FROM CheckItemInspeccion WHERE idVehiculo='$idVehiculo' AND valueCheckItemInsp=='0' AND ckeckItemHabilitado=='0'  ORDER BY CAST(idCheckItemInsp AS INTEGER)");
 
       if (maps.isNotEmpty) list = CheckItemInspeccionModel.fromJsonList(maps);
       return list;
@@ -69,6 +84,21 @@ class CheckItemInspeccionDatabase {
       List<CheckItemInspeccionModel> list = [];
       List<Map> maps = await db.rawQuery(
           "SELECT * FROM CheckItemInspeccion WHERE idVehiculo='$idVehiculo' AND observacionCkeckItemInsp!='' ORDER BY CAST(idCheckItemInsp AS INTEGER)");
+
+      if (maps.isNotEmpty) list = CheckItemInspeccionModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      e;
+      return [];
+    }
+  }
+
+  Future<List<CheckItemInspeccionModel>> getCHECKItemInspeccionSELECCIONADOSByIdVehiculo(String idVehiculo) async {
+    try {
+      final Database db = await dbprovider.getDatabase();
+      List<CheckItemInspeccionModel> list = [];
+      List<Map> maps = await db.rawQuery(
+          "SELECT * FROM CheckItemInspeccion WHERE idVehiculo='$idVehiculo' AND valueCheckItemInsp!='' AND valueCheckItemInsp!='0' ORDER BY CAST(idCheckItemInsp AS INTEGER)");
 
       if (maps.isNotEmpty) list = CheckItemInspeccionModel.fromJsonList(maps);
       return list;
@@ -110,12 +140,13 @@ class CheckItemInspeccionDatabase {
     return res;
   }
 
-  updateCheck(CheckItemInspeccionModel checkItem) async {
+  updateCheck(String valueCheckItemInsp, String idCheckItemInsp) async {
     final db = await dbprovider.database;
 
     final res = await db.rawUpdate("UPDATE CheckItemInspeccion SET "
-        "valueCheckItemInsp='${checkItem.valueCheckItemInsp}' "
-        "WHERE idCheckItemInsp='${checkItem.idCheckItemInsp}'");
+        "valueCheckItemInsp='$valueCheckItemInsp', "
+        "observacionCkeckItemInsp='' "
+        "WHERE idCheckItemInsp='$idCheckItemInsp'");
     return res;
   }
 

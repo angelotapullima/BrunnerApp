@@ -4,16 +4,28 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/categoria_inspeccion_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/check_item_inspeccion_model.dart';
+import 'package:new_brunner_app/src/util/utils.dart';
 
-class CategoriasInspeccion extends StatelessWidget {
+class CategoriasInspeccion extends StatefulWidget {
   const CategoriasInspeccion({Key? key, required this.tipoUnidad, required this.idVehiculo}) : super(key: key);
   final String idVehiculo;
   final String tipoUnidad;
 
   @override
+  State<CategoriasInspeccion> createState() => _CategoriasInspeccionState();
+}
+
+class _CategoriasInspeccionState extends State<CategoriasInspeccion> {
+  int count = 0;
+
+  @override
   Widget build(BuildContext context) {
     final _catInspeccionBloc = ProviderBloc.checklist(context);
-    _catInspeccionBloc.getCatCheckInspeccion(idVehiculo, tipoUnidad);
+    if (count == 0) {
+      _catInspeccionBloc.getCatCheckInspeccion(widget.idVehiculo, widget.tipoUnidad);
+      count++;
+    }
+
     return StreamBuilder<List<CategoriaInspeccionModel>>(
       stream: _catInspeccionBloc.catInspeccionStream,
       builder: (_, snapshot) {
@@ -110,12 +122,17 @@ class CategoriasInspeccion extends StatelessWidget {
     return InkWell(
       onTap: () {
         if (item.ckeckItemHabilitado == '0') {
-          final check = CheckItemInspeccionModel();
-          check.valueCheckItemInsp = value;
-          check.idCheckItemInsp = item.idCheckItemInsp;
-          check.idVehiculo = idVehiculo;
-          final _catInspeccionBloc = ProviderBloc.checklist(context);
-          _catInspeccionBloc.updateCheckInspeccion(check, tipoUnidad);
+          if (value != '1') {
+            addObservacion(context, item, value);
+          } else {
+            final check = CheckItemInspeccionModel();
+            check.valueCheckItemInsp = value;
+            check.idCheckItemInsp = item.idCheckItemInsp;
+            check.observacionCkeckItemInsp = '';
+            check.idVehiculo = widget.idVehiculo;
+            final _catInspeccionBloc = ProviderBloc.checklist(context);
+            _catInspeccionBloc.updateCheckInspeccion(check, widget.tipoUnidad);
+          }
         }
       },
       child: Container(
@@ -134,5 +151,247 @@ class CategoriasInspeccion extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void addObservacion(BuildContext context, CheckItemInspeccionModel item, String value) {
+    final _controller = EditController();
+    TextEditingController _itemNameController = TextEditingController();
+    TextEditingController _observacionesController = TextEditingController();
+    _itemNameController.text = item.descripcionCheckItemInsp.toString().trim();
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return GestureDetector(
+          child: Container(
+            color: const Color.fromRGBO(0, 0, 0, 0.001),
+            child: GestureDetector(
+              onTap: () {},
+              child: DraggableScrollableSheet(
+                initialChildSize: 0.8,
+                minChildSize: 0.3,
+                maxChildSize: 0.9,
+                builder: (_, controller) {
+                  return Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Container(
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(25.0),
+                            topRight: Radius.circular(25.0),
+                          ),
+                        ),
+                        child: SingleChildScrollView(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: ScreenUtil().setWidth(24),
+                            ),
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: ScreenUtil().setHeight(16),
+                                ),
+                                Center(
+                                  child: Container(
+                                    width: ScreenUtil().setWidth(100),
+                                    height: ScreenUtil().setHeight(5),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey,
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: ScreenUtil().setHeight(20),
+                                ),
+                                Text(
+                                  'Agregar observación',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: ScreenUtil().setSp(20),
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: ScreenUtil().setHeight(20),
+                                ),
+                                TextField(
+                                  controller: _itemNameController,
+                                  readOnly: true,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    color: Color(0xff808080),
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: const Color(0xffeeeeee),
+                                    labelStyle: const TextStyle(
+                                      color: Color(0xff808080),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      borderSide: const BorderSide(
+                                        color: Color(0xffeeeeee),
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      borderSide: const BorderSide(
+                                        color: Color(0xffeeeeee),
+                                      ),
+                                    ),
+                                    hintStyle: const TextStyle(
+                                      color: Color(0xff808080),
+                                    ),
+                                    labelText: 'Item [${item.conteoCheckItemInsp.toString().trim()}]',
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: ScreenUtil().setHeight(16),
+                                ),
+                                TextField(
+                                  controller: _observacionesController,
+                                  autofocus: true,
+                                  keyboardType: TextInputType.multiline,
+                                  maxLines: null,
+                                  textInputAction: TextInputAction.done,
+                                  style: const TextStyle(
+                                    color: Color(0xff808080),
+                                  ),
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: const Color(0xffeeeeee),
+                                    labelStyle: const TextStyle(
+                                      color: Color(0xff808080),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      borderSide: const BorderSide(
+                                        color: Color(0xffeeeeee),
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      borderSide: const BorderSide(
+                                        color: Color(0xffeeeeee),
+                                      ),
+                                    ),
+                                    hintText: 'Agregar observación',
+                                    hintStyle: const TextStyle(
+                                      color: Color(0xff808080),
+                                    ),
+                                    labelText: 'Observación',
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: ScreenUtil().setHeight(20),
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    FocusScope.of(context).requestFocus(FocusNode());
+                                    _controller.chnageCargando(true);
+
+                                    if (_observacionesController.text.trim().isNotEmpty) {
+                                      final check = CheckItemInspeccionModel();
+                                      check.valueCheckItemInsp = value;
+                                      check.idCheckItemInsp = item.idCheckItemInsp;
+                                      check.observacionCkeckItemInsp = _observacionesController.text.trim();
+                                      check.idVehiculo = widget.idVehiculo;
+                                      final _catInspeccionBloc = ProviderBloc.checklist(context);
+                                      _catInspeccionBloc.updateCheckInspeccion(check, widget.tipoUnidad);
+                                      Navigator.pop(context);
+                                    } else {
+                                      showToast2('Debe agregar una observación', Colors.red);
+                                    }
+
+                                    _controller.chnageCargando(false);
+                                  },
+                                  child: Container(
+                                    width: double.infinity,
+                                    margin: const EdgeInsets.all(8),
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: Colors.green,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.2),
+                                          spreadRadius: 3,
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 3), // changes position of shadow
+                                        ),
+                                      ],
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        'Guardar',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: ScreenUtil().setSp(20),
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: ScreenUtil().setHeight(15),
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Center(
+                                    child: Text(
+                                      'Cancelar',
+                                      style: TextStyle(
+                                        color: Colors.redAccent,
+                                        fontSize: ScreenUtil().setSp(20),
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      AnimatedBuilder(
+                          animation: _controller,
+                          builder: (_, s) {
+                            return (_controller.cargando)
+                                ? Container(
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                    color: Colors.black.withOpacity(0.3),
+                                    child: const Center(
+                                      child: CupertinoActivityIndicator(),
+                                    ),
+                                  )
+                                : Container();
+                          }),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class EditController extends ChangeNotifier {
+  bool cargando = false;
+
+  void chnageCargando(bool c) {
+    cargando = c;
+    notifyListeners();
   }
 }

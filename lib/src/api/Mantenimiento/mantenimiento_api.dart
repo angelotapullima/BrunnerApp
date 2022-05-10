@@ -13,6 +13,7 @@ import 'package:new_brunner_app/src/model/Mantenimiento/check_item_inspeccion_mo
 import 'package:new_brunner_app/src/model/Mantenimiento/choferes_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/item_inspeccion_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/vehiculo_model.dart';
+import 'package:new_brunner_app/src/model/api_result_model.dart';
 
 class MantenimientoApi {
   final vehiculosDB = VehiculoDatabase();
@@ -140,7 +141,7 @@ class MantenimientoApi {
           checkItem.descripcionCheckItemInsp = listItemsInspecion[i].descripcionItemInspeccion;
           checkItem.estadoMantenimientoCheckItemInsp = listItemsInspecion[i].estadoMantenimientoItemInspeccion;
           checkItem.estadoCheckItemInsp = listItemsInspecion[i].estadoItemInspeccion;
-          checkItem.valueCheckItemInsp = '0';
+          checkItem.valueCheckItemInsp = '';
           checkItem.ckeckItemHabilitado = '0';
           checkItem.observacionCkeckItemInsp = '';
 
@@ -176,6 +177,50 @@ class MantenimientoApi {
       return true;
     } catch (e) {
       return false;
+    }
+  }
+
+  Future<ApiResultModel> saveCheckList(VehiculoModel vehiculo, String idChofer, String hidrolina, String kilometraje) async {
+    final res = ApiResultModel();
+    try {
+      String? token = await Preferences.readData('token');
+      String checkItems = '';
+      String observaciones = '';
+
+      final checksSeleccionados = await checkItemInspDB.getCHECKItemInspeccionSELECCIONADOSByIdVehiculo(vehiculo.idVehiculo.toString());
+
+      for (var i = 0; i < checksSeleccionados.length; i++) {
+        checkItems += '${checksSeleccionados[i].idItemInspeccion}-.-.${checksSeleccionados[i].valueCheckItemInsp}/-/-';
+        observaciones += '${checksSeleccionados[i].idItemInspeccion}-.-.${checksSeleccionados[i].observacionCkeckItemInsp}/-/-';
+      }
+
+      // final url = Uri.parse('$apiBaseURL/api/Vehiculo/guardar_checklist');
+      // final resp = await http.post(
+      //   url,
+      //   body: {
+      //     'app': 'true',
+      //     'tn': token,
+      //     'id_vehiculo': vehiculo.idVehiculo,
+      //     'unidad': vehiculo.tipoUnidad,
+      //     'id_chofer': idChofer,
+      //     'hidrolina_inicial': hidrolina,
+      //     'kilometro_inicial': kilometraje,
+      //     'contenido': checkItems,
+      //     'contenido_modal': observaciones,
+      //   },
+      // );
+      // final decodedData = json.decode(resp.body);
+      print(checkItems);
+      print(observaciones);
+      //print(decodedData);
+      res.code = 2;
+      res.message = 'Ocurrió un error, inténtelo nuevamente';
+
+      return res;
+    } catch (e) {
+      res.code = 2;
+      res.message = 'Ocurrió un error, inténtelo nuevamente';
+      return res;
     }
   }
 }
