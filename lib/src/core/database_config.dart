@@ -24,6 +24,7 @@ class DatabaseHelper {
       db.execute(VehiculosDB.categoriasInspeccionTableSql);
       db.execute(VehiculosDB.itemInspeccionTableSql);
       db.execute(MantenimientoDB.checkItemInspeccionTableSql);
+      db.execute(MantenimientoDB.inspeccionVehiculosTableSql);
     }, version: 1, onDowngrade: onDatabaseDowngradeDelete);
   }
 }

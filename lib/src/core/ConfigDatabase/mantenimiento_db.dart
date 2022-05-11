@@ -11,4 +11,17 @@ class MantenimientoDB {
       ' valueCheckItemInsp TEXT,'
       ' ckeckItemHabilitado TEXT,'
       ' observacionCkeckItemInsp TEXT)';
+
+  static const String inspeccionVehiculosTableSql = 'CREATE TABLE InspeccionVehiculos('
+      ' idInspeccionVehiculo TEXT PRIMARY KEY,'
+      ' fechaInspeccionVehiculo TEXT,'
+      ' numeroInspeccionVehiculo TEXT,'
+      ' estadoCheckInspeccionVehiculo TEXT,'
+      ' placaVehiculo TEXT,'
+      ' rucVehiculo TEXT,'
+      ' razonSocialVehiculo TEXT,'
+      ' idchofer TEXT,'
+      ' nombreChofer TEXT,'
+      ' nombreUsuario TEXT,'
+      ' tipoUnidad TEXT)';
 }

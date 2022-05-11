@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/page/Home/menu_widget.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/Check%20List/check_list.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/Consulta%20Informacion/consulta_informacion.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/lista_vehiculos_maquinarias.dart';
+import 'package:provider/provider.dart';
 
 class ListaVerificacion extends StatelessWidget {
   const ListaVerificacion({Key? key}) : super(key: key);
@@ -44,7 +47,18 @@ class ListaVerificacion extends StatelessWidget {
           ),
           SizedBox(height: ScreenUtil().setWidth(30)),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              final provider = Provider.of<ConductorController>(context, listen: false);
+              provider.setData('', 'Seleccionar');
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) {
+                    return const ConsultaInformacion();
+                  },
+                ),
+              );
+            },
             child: option('Consulta de Información', 'Lista los Check List generados', Icons.search, const Color(0XFF09A8AD)),
           ),
           // InkWell(

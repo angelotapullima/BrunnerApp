@@ -6,7 +6,8 @@ import 'package:new_brunner_app/src/page/Mantenimiento/Check%20List/check_list.d
 import 'package:provider/provider.dart';
 
 class ChoferesSearch extends StatefulWidget {
-  const ChoferesSearch({Key? key}) : super(key: key);
+  const ChoferesSearch({Key? key, required this.page}) : super(key: key);
+  final String page;
 
   @override
   State<ChoferesSearch> createState() => _ChoferesSearchState();
@@ -98,7 +99,13 @@ class _ChoferesSearchState extends State<ChoferesSearch> {
                             onTap: () {
                               Navigator.pop(context);
                               final provider = Provider.of<ConductorController>(context, listen: false);
-                              provider.setData(chofer.idChofer.toString(), '${chofer.dniChofer}  |  ${chofer.nombreChofer}');
+                              String data = '';
+                              if (widget.page == 'Check') {
+                                data = '${chofer.dniChofer}  |  ${chofer.nombreChofer}';
+                              } else {
+                                data = '${chofer.nombreChofer}';
+                              }
+                              provider.setData(chofer.idChofer.toString(), data);
                             },
                             child: Padding(
                               padding: EdgeInsets.symmetric(

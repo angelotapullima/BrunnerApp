@@ -6,7 +6,7 @@ import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/database/Mantenimiento/check_item_inspeccion_database.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/vehiculo_model.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Check%20List/categorias_inspeccion.dart';
-import 'package:new_brunner_app/src/page/Mantenimiento/Check%20List/choferes_search.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/choferes_search.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Check%20List/observaciones_inspeccion.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
 import 'package:provider/provider.dart';
@@ -76,7 +76,9 @@ class _CheckListState extends State<CheckList> {
                           context,
                           PageRouteBuilder(
                             pageBuilder: (context, animation, secondaryAnimation) {
-                              return const ChoferesSearch();
+                              return const ChoferesSearch(
+                                page: 'Check',
+                              );
                             },
                             transitionsBuilder: (context, animation, secondaryAnimation, child) {
                               var begin = const Offset(0.0, 1.0);
