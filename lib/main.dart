@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/core/router.dart';
-import 'package:new_brunner_app/src/page/Mantenimiento/check_list.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/Check%20List/check_list.dart';
 import 'package:provider/provider.dart';
 
 void main() {
