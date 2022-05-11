@@ -17,6 +17,12 @@ class VehiculoBloc {
     await _api.getVehiculos();
   }
 
+  void cargarEstadosVehiculos() async {
+    _searchVehiculoController.sink.add([]);
+    await _api.getVehiculos();
+    _searchVehiculoController.sink.add(await _api.vehiculosDB.getVehiculos());
+  }
+
   void searchVehiculos(String query) async {
     _searchVehiculoController.sink.add([]);
     if (query.isNotEmpty) {

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/api/Mantenimiento/mantenimiento_api.dart';
+import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/database/Mantenimiento/check_item_inspeccion_database.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/vehiculo_model.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/categorias_inspeccion.dart';
@@ -393,16 +394,8 @@ class _CheckListState extends State<CheckList> {
 
         if (provider.idS.value != '') {
           final _cheksDB = CheckItemInspeccionDatabase();
-          //final _checks = await _cheksDB.getCheckItemInspeccionByIdVehiculo(widget.vehiculo.idVehiculo.toString());
+
           final _checks = await _cheksDB.getCheckItemInspeccionFALTANTESByIdVehiculo(widget.vehiculo.idVehiculo.toString());
-          // int count = 0;
-          // for (var i = 0; i < _checks.length; i++) {
-          //   if (_checks[i].valueCheckItemInsp == '0' && _checks[i].ckeckItemHabilitado == '0') {
-          //     print(' ${_checks[i].conteoCheckItemInsp} ${_checks[i].valueCheckItemInsp} ${_checks[i].descripcionCheckItemInsp}');
-          //     count++;
-          //     break;
-          //   }
-          // }
 
           if (_checks.isEmpty) {
             if (_hidrolinaController.text.trim().isNotEmpty) {
@@ -412,6 +405,8 @@ class _CheckListState extends State<CheckList> {
                 final res = await _api.saveCheckList(
                     widget.vehiculo, provider.idS.value, _hidrolinaController.text.trim(), _kilometrajeController.text.trim());
                 if (res.code == 1) {
+                  final searchVehiculoBloc = ProviderBloc.vehiculo(context);
+                  searchVehiculoBloc.cargarEstadosVehiculos();
                   showToast2('Check List guardado correctamente', Colors.blueGrey);
                   Navigator.pop(context);
                 } else {

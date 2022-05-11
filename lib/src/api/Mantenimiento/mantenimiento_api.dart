@@ -184,6 +184,7 @@ class MantenimientoApi {
     final res = ApiResultModel();
     try {
       String? token = await Preferences.readData('token');
+      String? idUser = await Preferences.readData('id_user');
       String checkItems = '';
       String observaciones = '';
 
@@ -191,30 +192,37 @@ class MantenimientoApi {
 
       for (var i = 0; i < checksSeleccionados.length; i++) {
         checkItems += '${checksSeleccionados[i].idItemInspeccion}-.-.${checksSeleccionados[i].valueCheckItemInsp}/-/-';
-        observaciones += '${checksSeleccionados[i].idItemInspeccion}-.-.${checksSeleccionados[i].observacionCkeckItemInsp}/-/-';
+
+        if (checksSeleccionados[i].observacionCkeckItemInsp != '') {
+          observaciones += '${checksSeleccionados[i].idItemInspeccion}-.-.${checksSeleccionados[i].observacionCkeckItemInsp}/./.';
+        }
       }
 
-      // final url = Uri.parse('$apiBaseURL/api/Vehiculo/guardar_checklist');
-      // final resp = await http.post(
-      //   url,
-      //   body: {
-      //     'app': 'true',
-      //     'tn': token,
-      //     'id_vehiculo': vehiculo.idVehiculo,
-      //     'unidad': vehiculo.tipoUnidad,
-      //     'id_chofer': idChofer,
-      //     'hidrolina_inicial': hidrolina,
-      //     'kilometro_inicial': kilometraje,
-      //     'contenido': checkItems,
-      //     'contenido_modal': observaciones,
-      //   },
-      // );
-      // final decodedData = json.decode(resp.body);
-      print(checkItems);
-      print(observaciones);
-      //print(decodedData);
-      res.code = 2;
-      res.message = 'Ocurrió un error, inténtelo nuevamente';
+      final url = Uri.parse('$apiBaseURL/api/Vehiculo/guardar_checklist');
+      final resp = await http.post(
+        url,
+        body: {
+          'app': 'true',
+          'tn': token,
+          'id_user': idUser,
+          'id_vehiculo': vehiculo.idVehiculo,
+          'unidad': vehiculo.tipoUnidad,
+          'id_chofer': idChofer,
+          'hidrolina_inicial': hidrolina,
+          'kilometro_inicial': kilometraje,
+          'contenido': checkItems,
+          'contenido_modal': observaciones,
+        },
+      );
+      final decodedData = json.decode(resp.body);
+      if (decodedData == 1) {
+        await checkItemInspDB.deleteCheckItemInspeccionByIdVehiculo(vehiculo.idVehiculo.toString());
+        res.code = 1;
+        res.message = 'Ocurrió un error, inténtelo nuevamente';
+      } else {
+        res.code = 2;
+        res.message = 'Ocurrió un error, inténtelo nuevamente';
+      }
 
       return res;
     } catch (e) {

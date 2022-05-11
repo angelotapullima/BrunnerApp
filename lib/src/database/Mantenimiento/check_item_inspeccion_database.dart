@@ -158,4 +158,12 @@ class CheckItemInspeccionDatabase {
         "WHERE idCheckItemInsp='$idCheckItemInsp'");
     return res;
   }
+
+  deleteCheckItemInspeccionByIdVehiculo(String idVehiculo) async {
+    final db = await dbprovider.database;
+
+    final res = await db.rawDelete("DELETE FROM CheckItemInspeccion WHERE idVehiculo='$idVehiculo'");
+
+    return res;
+  }
 }
