@@ -5,6 +5,7 @@ class InspeccionVehiculoModel {
   String? numeroInspeccionVehiculo;
   String? estadoCheckInspeccionVehiculo;
   String? placaVehiculo;
+  String? marcaVehiculo;
   String? rucVehiculo;
   String? razonSocialVehiculo;
   String? imageVehiculo;
@@ -20,6 +21,7 @@ class InspeccionVehiculoModel {
     this.numeroInspeccionVehiculo,
     this.estadoCheckInspeccionVehiculo,
     this.placaVehiculo,
+    this.marcaVehiculo,
     this.rucVehiculo,
     this.razonSocialVehiculo,
     this.imageVehiculo,
@@ -38,6 +40,7 @@ class InspeccionVehiculoModel {
         'numeroInspeccionVehiculo': numeroInspeccionVehiculo,
         'estadoCheckInspeccionVehiculo': estadoCheckInspeccionVehiculo,
         'placaVehiculo': placaVehiculo,
+        'marcaVehiculo': marcaVehiculo,
         'rucVehiculo': rucVehiculo,
         'razonSocialVehiculo': razonSocialVehiculo,
         'imageVehiculo': imageVehiculo,
@@ -54,6 +57,7 @@ class InspeccionVehiculoModel {
         numeroInspeccionVehiculo: json["numeroInspeccionVehiculo"],
         estadoCheckInspeccionVehiculo: json["estadoCheckInspeccionVehiculo"],
         placaVehiculo: json["placaVehiculo"],
+        marcaVehiculo: json["marcaVehiculo"],
         rucVehiculo: json["rucVehiculo"],
         razonSocialVehiculo: json["razonSocialVehiculo"],
         imageVehiculo: json["imageVehiculo"],

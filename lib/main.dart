@@ -4,6 +4,7 @@ import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/core/router.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Check%20List/check_list.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
   runApp(const MyApp());
@@ -32,6 +33,19 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
               primarySwatch: Colors.green,
             ),
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale('es'),
+              Locale('es', 'ES'), // Spanish, no country code
+              //const Locale('en', 'EN'), // English, no country code
+            ],
+            localeResolutionCallback: (Locale? locale, Iterable<Locale> supportedLocales) {
+              return locale;
+            },
             onGenerateRoute: Routers.generateRoute,
             initialRoute: splashRoute,
           ),

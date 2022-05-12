@@ -1,6 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
+import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_model.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Check%20List/check_list.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/Consulta%20Informacion/resultados_consulta.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/choferes_search.dart';
 import 'package:provider/provider.dart';
 
@@ -19,8 +23,8 @@ class _ConsultaInformacionState extends State<ConsultaInformacion> {
   final _nroCheck = TextEditingController();
   final _tipo = TextEditingController();
 
-  String idTipo = '';
-  List<String> spinnerItems = ['Todos', 'Unidades habilitadas', 'Unidaddes habilitadas con restricciones', 'Unidades inhabilitadas'];
+  String _estado = '';
+  List<String> spinnerItems = ['Todos', 'Unidades habilitadas', 'Unidades habilitadas con restricciones', 'Unidades inhabilitadas'];
   int count = 0;
 
   @override
@@ -36,7 +40,7 @@ class _ConsultaInformacionState extends State<ConsultaInformacion> {
   @override
   void initState() {
     _tipo.text = 'Todos';
-    idTipo = 'Todos';
+    _estado = ' ';
     var data =
         "${DateTime.now().year.toString().padLeft(2, '0')}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().day.toString().padLeft(2, '0')}";
     _fechaInicio.text = data;
@@ -50,33 +54,117 @@ class _ConsultaInformacionState extends State<ConsultaInformacion> {
 
   @override
   Widget build(BuildContext context) {
-    if (count == 0) {
-      count++;
-    }
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Listar reportes generados',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: ScreenUtil().setSp(16),
-            fontWeight: FontWeight.w600,
+    final consultaInspBloc = ProviderBloc.consultaInsp(context);
+
+    return WillPopScope(
+      onWillPop: () async {
+        final consultaInspBloc = ProviderBloc.consultaInsp(context);
+        consultaInspBloc.limpiarSearch();
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Listar reportes generados',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: ScreenUtil().setSp(16),
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          elevation: 0,
+          centerTitle: true,
+          actions: [
+            IconButton(
+              autofocus: true,
+              onPressed: () {
+                filtroSearch();
+              },
+              icon: const Icon(Icons.search),
+            ),
+          ],
+        ),
+        body: StreamBuilder<bool>(
+          stream: consultaInspBloc.cargandoStream,
+          builder: (context, cargando) {
+            if (!cargando.hasData || cargando.data!) {
+              return const Center(
+                child: CupertinoActivityIndicator(),
+              );
+            }
+
+            return StreamBuilder<List<InspeccionVehiculoModel>>(
+              stream: consultaInspBloc.inspeccionesStream,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  if (snapshot.data!.isNotEmpty) {
+                    return ResultadosConsulta(
+                      inspecciones: snapshot.data!,
+                    );
+                  } else {
+                    if (count == 0) {
+                      count++;
+
+                      return buttonSeach();
+                    } else {
+                      return const Center(
+                        child: Text('No se encontraron resultados...'),
+                      );
+                    }
+                  }
+                } else {
+                  if (count == 0) {
+                    count++;
+
+                    return buttonSeach();
+                  } else {
+                    return const Center(
+                      child: CupertinoActivityIndicator(),
+                    );
+                  }
+                }
+              },
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget buttonSeach() {
+    return Center(
+      child: InkWell(
+        onTap: () async {
+          filtroSearch();
+        },
+        child: Container(
+          width: double.infinity,
+          height: ScreenUtil().setHeight(50),
+          margin: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: Colors.green,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                spreadRadius: 3,
+                blurRadius: 8,
+                offset: const Offset(0, 3), // changes position of shadow
+              ),
+            ],
+          ),
+          child: Center(
+            child: Text(
+              '¡Buscar ahora!',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: ScreenUtil().setSp(20),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ),
         ),
-        elevation: 0,
-        centerTitle: true,
-        actions: [
-          IconButton(
-            autofocus: true,
-            onPressed: () {
-              filtroSearch();
-            },
-            icon: const Icon(Icons.search),
-          ),
-        ],
-      ),
-      body: Column(
-        children: [],
       ),
     );
   }
@@ -270,11 +358,11 @@ class _ConsultaInformacionState extends State<ConsultaInformacion> {
                                     color: Color(0xffeeeeee),
                                   ),
                                 ),
-                                hintText: 'Estado de la unidad',
+                                hintText: '_Estado de la unidad',
                                 hintStyle: const TextStyle(
                                   color: Color(0xff808080),
                                 ),
-                                labelText: 'Estado de la unidad',
+                                labelText: '_Estado de la unidad',
                               ),
                             ),
                             SizedBox(
@@ -394,17 +482,11 @@ class _ConsultaInformacionState extends State<ConsultaInformacion> {
                             ),
                             InkWell(
                               onTap: () async {
-                                // if (_fechaInicio.text.isNotEmpty) {
-                                //   if (_fechaFin.text.isNotEmpty) {
-                                //     final solicitudesBloc = ProviderBloc.solicitudesReserva(context);
-                                //     solicitudesBloc.getBusquedaSolicitudes(_fechaInicio.text, _fechaFin.text, idTipo);
-                                //     Navigator.pop(context);
-                                //   } else {
-                                //     showToast2('Por favor, igresar fecha final', Colors.red);
-                                //   }
-                                // } else {
-                                //   showToast2('Por favor, igresar fecha inicial', Colors.red);
-                                // }
+                                final consultaInspBloc = ProviderBloc.consultaInsp(context);
+                                final provider = Provider.of<ConductorController>(context, listen: false);
+                                consultaInspBloc.getInspeccionesVehiculo(_fechaInicio.text.trim(), _fechaFin.text.trim(), _placaUnidad.text.trim(),
+                                    provider.idS.value.trim(), _estado.trim(), _nroCheck.text.trim());
+                                Navigator.pop(context);
                               },
                               child: Container(
                                 width: double.infinity,
@@ -498,12 +580,14 @@ class _ConsultaInformacionState extends State<ConsultaInformacion> {
                               return InkWell(
                                 onTap: () {
                                   _tipo.text = spinnerItems[index];
-                                  if (_tipo.text == 'PLIN') {
-                                    idTipo = '1';
-                                  } else if (_tipo.text == 'YAPE') {
-                                    idTipo = '2';
-                                  } else if (_tipo.text == 'TARJETA') {
-                                    idTipo = '3';
+                                  if (_tipo.text == 'Unidades habilitadas') {
+                                    _estado = '1';
+                                  } else if (_tipo.text == 'Unidades habilitadas con restricciones') {
+                                    _estado = '2';
+                                  } else if (_tipo.text == 'Unidades inhabilitadas') {
+                                    _estado = '3';
+                                  } else {
+                                    _estado = '';
                                   }
 
                                   Navigator.pop(context);

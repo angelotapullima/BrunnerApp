@@ -19,26 +19,28 @@ class InspeccionVehiculoDatabase {
     }
   }
 
-  Future<List<InspeccionVehiculoModel>> getInspeccion() async {
+  Future<List<InspeccionVehiculoModel>> getInspeccionFiltro(
+      String fechaInicial, String fechaFinal, String placaMarca, String operario, String estado, String nroCheck) async {
     try {
-      final Database db = await dbprovider.getDatabase();
-      List<InspeccionVehiculoModel> list = [];
-      List<Map> maps = await db.rawQuery("SELECT * FROM InspeccionVehiculos");
+      String query = '';
+      if (placaMarca.isNotEmpty) {
+        query += " AND (placaVehiculo LIKE '%$placaMarca%' OR marcaVehiculo  LIKE '%$placaMarca%')";
+      }
 
-      if (maps.isNotEmpty) list = InspeccionVehiculoModel.fromJsonList(maps);
-      return list;
-    } catch (e) {
-      e;
-      return [];
-    }
-  }
+      if (operario.isNotEmpty) {
+        query += " AND idchofer = '$operario'";
+      }
 
-  Future<List<InspeccionVehiculoModel>> getInpeccionesByQuery(String query) async {
-    try {
+      if (estado.isNotEmpty) {
+        query += " AND estadoCheckInspeccionVehiculo ='$estado'";
+      }
+      if (nroCheck.isNotEmpty) {
+        query += " AND numeroInspeccionVehiculo ='$nroCheck'";
+      }
       final Database db = await dbprovider.getDatabase();
       List<InspeccionVehiculoModel> list = [];
       List<Map> maps = await db.rawQuery(
-          "SELECT * FROM InspeccionVehiculos WHERE nombreChofer LIKE '%$query%' OR dniChofer LIKE '%$query%' ORDER BY CAST(idChofer AS INTEGER)");
+          "SELECT * FROM InspeccionVehiculos WHERE fechaInspeccionVehiculo BETWEEN '$fechaInicial' AND '$fechaFinal' $query ORDER BY CAST(idInspeccionVehiculo AS INTEGER)");
 
       if (maps.isNotEmpty) list = InspeccionVehiculoModel.fromJsonList(maps);
       return list;

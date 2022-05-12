@@ -9,7 +9,7 @@ import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_model.dart';
 class InspeccionApi {
   final inspeccionDB = InspeccionVehiculoDatabase();
 
-  Future<int> getInspeccionesVehiculos(String fechaIncial, String fechaFinal) async {
+  Future<int> getInspeccionesVehiculos(String fechaInicial, String fechaFinal) async {
     try {
       String? token = await Preferences.readData('token');
 
@@ -19,7 +19,8 @@ class InspeccionApi {
         body: {
           'app': 'true',
           'tn': token,
-          'parametro': '',
+          'fecha_ini': fechaInicial,
+          'fecha_fin': fechaFinal,
         },
       );
       final decodedData = json.decode(resp.body);
@@ -28,11 +29,15 @@ class InspeccionApi {
         var data = decodedData["code"]["inspecciones"][i];
 
         final inspeccion = InspeccionVehiculoModel();
+
+        var fechix = data["inspeccion_vehiculo_fecha"].split(' ');
         inspeccion.idInspeccionVehiculo = data["id_inspeccion_vehiculo"];
-        inspeccion.fechaInspeccionVehiculo = data["inspeccion_vehiculo_fecha"];
+        inspeccion.fechaInspeccionVehiculo = fechix[0].trim();
+        inspeccion.horaInspeccionVehiculo = fechix[1].trim();
         inspeccion.numeroInspeccionVehiculo = data["inspeccion_vehiculo_numero"];
         inspeccion.estadoCheckInspeccionVehiculo = data["inspeccion_vehiculo_estado_checkList"];
         inspeccion.placaVehiculo = data["vehiculo_placa"];
+        inspeccion.marcaVehiculo = data["vehiculo_marca"];
         inspeccion.rucVehiculo = data["vehiculo_ruc"];
         inspeccion.razonSocialVehiculo = data["vehiculo_razonsocial"];
         inspeccion.imageVehiculo = data["vehiculo_foto_izquierdo"];
