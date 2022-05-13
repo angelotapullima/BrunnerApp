@@ -10,8 +10,11 @@ class InspeccionVehiculoModel {
   String? razonSocialVehiculo;
   String? imageVehiculo;
   String? idchofer;
+  String? documentoChofer;
   String? nombreChofer;
   String? nombreUsuario;
+  String? hidrolinaVehiculo;
+  String? kilometrajeVehiculo;
   String? tipoUnidad;
 
   InspeccionVehiculoModel({
@@ -26,8 +29,11 @@ class InspeccionVehiculoModel {
     this.razonSocialVehiculo,
     this.imageVehiculo,
     this.idchofer,
+    this.documentoChofer,
     this.nombreChofer,
     this.nombreUsuario,
+    this.hidrolinaVehiculo,
+    this.kilometrajeVehiculo,
     this.tipoUnidad,
   });
 
@@ -45,8 +51,11 @@ class InspeccionVehiculoModel {
         'razonSocialVehiculo': razonSocialVehiculo,
         'imageVehiculo': imageVehiculo,
         'idchofer': idchofer,
+        'documentoChofer': documentoChofer,
         'nombreChofer': nombreChofer,
         'nombreUsuario': nombreUsuario,
+        'hidrolinaVehiculo': hidrolinaVehiculo,
+        'kilometrajeVehiculo': kilometrajeVehiculo,
         'tipoUnidad': tipoUnidad,
       };
 
@@ -62,8 +71,11 @@ class InspeccionVehiculoModel {
         razonSocialVehiculo: json["razonSocialVehiculo"],
         imageVehiculo: json["imageVehiculo"],
         idchofer: json["idchofer"],
+        documentoChofer: json["documentoChofer"],
         nombreChofer: json["nombreChofer"],
         nombreUsuario: json["nombreUsuario"],
+        hidrolinaVehiculo: json["hidrolinaVehiculo"],
+        kilometrajeVehiculo: json["kilometrajeVehiculo"],
         tipoUnidad: json["tipoUnidad"],
       );
 }

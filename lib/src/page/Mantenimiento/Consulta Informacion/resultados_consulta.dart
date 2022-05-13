@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/core/routes_constanst.dart';
-import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_model.dart';
+import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_model.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Consulta%20Informacion/inspeccion_detalle.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
 
@@ -76,7 +76,7 @@ class ResultadosConsulta extends StatelessWidget {
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) {
               return InspeccionDetalle(
-                idCheck: inspeccion.idInspeccionVehiculo.toString(),
+                inspeccion: inspeccion,
               );
             },
           ),

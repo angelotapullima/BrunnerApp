@@ -24,7 +24,7 @@ class ObservacionesInspeccion extends StatelessWidget {
             // );
 
             return SizedBox(
-              height: ScreenUtil().setHeight(70) * snapshot.data!.length,
+              height: ScreenUtil().setHeight(75) * snapshot.data!.length,
               child: ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: snapshot.data!.length,
@@ -93,10 +93,13 @@ class ObservacionesInspeccion extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                index.toString(),
-                style: TextStyle(
-                  fontSize: ScreenUtil().setSp(13),
+              SizedBox(
+                width: ScreenUtil().setWidth(20),
+                child: Text(
+                  index.toString(),
+                  style: TextStyle(
+                    fontSize: ScreenUtil().setSp(13),
+                  ),
                 ),
               ),
               SizedBox(
@@ -108,8 +111,7 @@ class ObservacionesInspeccion extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
-                width: ScreenUtil().setWidth(150),
+              Expanded(
                 child: Text(
                   item.observacionCkeckItemInsp.toString().trim(),
                   style: TextStyle(

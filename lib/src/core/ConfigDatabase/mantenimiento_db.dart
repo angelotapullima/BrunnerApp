@@ -24,7 +24,27 @@ class MantenimientoDB {
       ' imageVehiculo TEXT,'
       ' razonSocialVehiculo TEXT,'
       ' idchofer TEXT,'
+      ' documentoChofer TEXT,'
       ' nombreChofer TEXT,'
       ' nombreUsuario TEXT,'
+      ' hidrolinaVehiculo TEXT,'
+      ' kilometrajeVehiculo TEXT,'
       ' tipoUnidad TEXT)';
+
+  static const String inspeccionVehiculoItemTableSql = 'CREATE TABLE InspeccionVehiculoItem('
+      ' idCheckItemInsp TEXT PRIMARY KEY,'
+      ' idCatInspeccion TEXT,'
+      ' idItemInspeccion TEXT,'
+      ' idInspeccionVehiculo TEXT,'
+      ' conteoCheckItemInsp TEXT,'
+      ' descripcionCheckItemInsp TEXT,'
+      ' estadoMantenimientoCheckItemInsp TEXT,'
+      ' estadoCheckItemInsp TEXT,'
+      ' valueCheckItemInsp TEXT,'
+      ' ckeckItemHabilitado TEXT,'
+      ' observacionCkeckItemInsp TEXT,'
+      ' responsableCheckItemInsp TEXT,'
+      ' atencionCheckItemInsp TEXT,'
+      ' nombreCategoria TEXT,'
+      ' conclusionCheckItemInsp TEXT)';
 }

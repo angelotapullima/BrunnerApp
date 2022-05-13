@@ -48,6 +48,8 @@ class ListaVerificacion extends StatelessWidget {
           SizedBox(height: ScreenUtil().setWidth(30)),
           InkWell(
             onTap: () {
+              final searchVehiculoBloc = ProviderBloc.vehiculo(context);
+              searchVehiculoBloc.cargarVehiculos();
               final provider = Provider.of<ConductorController>(context, listen: false);
               provider.setData('', 'Seleccionar');
               Navigator.push(

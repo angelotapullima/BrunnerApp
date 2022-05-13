@@ -1,5 +1,5 @@
 import 'package:new_brunner_app/src/core/database_config.dart';
-import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_model.dart';
+import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_model.dart';
 import 'package:sqflite/sqlite_api.dart';
 
 class InspeccionVehiculoDatabase {
@@ -16,6 +16,21 @@ class InspeccionVehiculoDatabase {
       );
     } catch (e) {
       e;
+    }
+  }
+
+  Future<List<InspeccionVehiculoModel>> getInspeccionByIdInspeccion(String idInspeccionVehiculo) async {
+    try {
+      final Database db = await dbprovider.getDatabase();
+      List<InspeccionVehiculoModel> list = [];
+      List<Map> maps = await db.rawQuery(
+          "SELECT * FROM InspeccionVehiculos WHERE idInspeccionVehiculo='$idInspeccionVehiculo'  ORDER BY CAST(idInspeccionVehiculo AS INTEGER)");
+
+      if (maps.isNotEmpty) list = InspeccionVehiculoModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      e;
+      return [];
     }
   }
 
