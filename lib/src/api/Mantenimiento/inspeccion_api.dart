@@ -1,5 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:new_brunner_app/src/core/preferences.dart';
 import 'package:new_brunner_app/src/core/routes_constanst.dart';
@@ -8,6 +11,9 @@ import 'package:new_brunner_app/src/database/Mantenimiento/inspeccion_vehiculo_i
 import 'package:new_brunner_app/src/database/Mantenimiento/item_inspeccion_database.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_item_model.dart';
+import 'package:new_brunner_app/src/model/api_result_model.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
 
 class InspeccionApi {
   final inspeccionDB = InspeccionVehiculoDatabase();
@@ -93,7 +99,7 @@ class InspeccionApi {
         inspeccion.razonSocialVehiculo = data["vehiculo_razonsocial"];
         inspeccion.imageVehiculo = data["vehiculo_foto_izquierdo"];
         inspeccion.idchofer = data["id_chofer"];
-        inspeccion.documentoChofer = '';
+        inspeccion.documentoChofer = data["person_dni"];
         inspeccion.nombreChofer = data["nombre_chofer"];
         inspeccion.nombreUsuario = data["nombre_usuario"];
         inspeccion.tipoUnidad = data["tipo_unidad"];
@@ -162,6 +168,74 @@ class InspeccionApi {
       return '';
     } else {
       return data;
+    }
+  }
+
+  Future<ApiResultModel> getPDF(String idInspeccion) async {
+    final result = ApiResultModel();
+    try {
+      String? token = await Preferences.readData('token');
+
+      final url = Uri.parse('$apiBaseURL/api/ListaVerificacion/imprimir_pdf_checkList_app');
+      final resp = await http.post(
+        url,
+        body: {
+          'app': 'true',
+          'tn': token,
+          'id': idInspeccion,
+        },
+      );
+      final decodedData = json.decode(resp.body);
+
+      result.code = decodedData["code"]["result"];
+      result.message = decodedData["code"]["ruta"];
+
+      return result;
+    } catch (e) {
+      result.code = 2;
+      result.message = 'Ocurrió un error, inténtelo nuevamente';
+      return result;
+    }
+  }
+
+  Future openFile({required String url, String? fillname}) async {
+    final name = fillname ?? url.split('/').last;
+    final file = await descargarPDF(url, name);
+    //final file = await seleccionarDoc();
+
+    if (file == null) return;
+
+    OpenFile.open(file.path);
+  }
+
+  Future<File?> seleccionarDoc() async {
+    final result = await FilePicker.platform.pickFiles();
+    if (result == null) return null;
+
+    return File(result.files.first.path!);
+  }
+
+  Future<File?> descargarPDF(String url, String name) async {
+    final appStorage = await getApplicationDocumentsDirectory();
+    final file = File('${appStorage.path}/$name');
+
+    try {
+      //await Dio().download(url, '${appStorage.path}/$name');
+      final response = await Dio().get(
+        url,
+        options: Options(
+          responseType: ResponseType.bytes,
+          followRedirects: false,
+          receiveTimeout: 0,
+        ),
+      );
+
+      final raf = file.openSync(mode: FileMode.write);
+      raf.writeFromSync(response.data);
+      await raf.close();
+      return file;
+    } catch (e) {
+      return null;
     }
   }
 }

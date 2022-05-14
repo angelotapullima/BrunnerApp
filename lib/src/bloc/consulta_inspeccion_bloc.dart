@@ -43,15 +43,23 @@ class ConsultaInspeccionBloc {
     _inpeccionesController.sink.add(await _api.inspeccionDB.getInspeccionFiltro(fechaInicial, fechaFinal, placaMarca, operario, estado, nroCheck));
   }
 
+  void getInspeccionesVehiculoQuery() async {
+    _inpeccionesController.sink.add([]);
+    _inpeccionesController.sink.add(await _api.inspeccionDB.getInspeccionQuery());
+  }
+
   void limpiarSearch() {
     _inpeccionesController.sink.add([]);
   }
 
   void getDetalleInspeccionDetalle(String idInspeccionVehiculo, String tipoUnidad) async {
     _inspecionDetalleController.sink.add([]);
+    _observacionesCheckItemController.sink.add([]);
     _inspecionDetalleController.sink.add(await _api.inspeccionDB.getInspeccionByIdInspeccion(idInspeccionVehiculo));
     await _api.getDetalleInspeccion(idInspeccionVehiculo);
+    // Obtener detalle inspeccion
     _inspecionDetalleController.sink.add(await _api.inspeccionDB.getInspeccionByIdInspeccion(idInspeccionVehiculo));
+    //Obtener Categorias e Items
     _cartegoriasInspeccionController.sink.add(await checkCategoriasInspeccion(idInspeccionVehiculo, tipoUnidad));
     //Obtener las observaciones
     _observacionesCheckItemController.sink.add(await _api.checkItemInspDB.getObservacionesItemInspeccionByIdInspeccion(idInspeccionVehiculo));

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/core/routes_constanst.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_model.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Consulta%20Informacion/inspeccion_detalle.dart';
@@ -69,8 +70,6 @@ class ResultadosConsulta extends StatelessWidget {
     }
     return InkWell(
       onTap: () {
-        // final provider = Provider.of<ConductorController>(context, listen: false);
-        // provider.setData('', 'Seleccionar');
         Navigator.push(
           context,
           PageRouteBuilder(
@@ -85,6 +84,10 @@ class ResultadosConsulta extends StatelessWidget {
       child: Dismissible(
         key: UniqueKey(),
         direction: DismissDirection.endToStart,
+        onDismissed: (direction) {
+          final consultaInspBloc = ProviderBloc.consultaInsp(context);
+          consultaInspBloc.getInspeccionesVehiculoQuery();
+        },
         background: Container(
           padding: EdgeInsets.only(right: ScreenUtil().setWidth(16)),
           color: Colors.redAccent,
