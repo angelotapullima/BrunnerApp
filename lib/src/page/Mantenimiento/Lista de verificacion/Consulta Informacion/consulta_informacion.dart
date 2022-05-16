@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_model.dart';
-import 'package:new_brunner_app/src/page/Mantenimiento/Check%20List/check_list.dart';
-import 'package:new_brunner_app/src/page/Mantenimiento/Consulta%20Informacion/resultados_consulta.dart';
-import 'package:new_brunner_app/src/page/Mantenimiento/choferes_search.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Check%20List/check_list.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Consulta%20Informacion/resultados_consulta.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/choferes_search.dart';
 import 'package:provider/provider.dart';
 
 class ConsultaInformacion extends StatefulWidget {

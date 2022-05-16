@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/core/routes_constanst.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/vehiculo_model.dart';
-import 'package:new_brunner_app/src/page/Mantenimiento/Check%20List/check_list.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Check%20List/check_list.dart';
 import 'package:provider/provider.dart';
 
 class ListaVehiculosMaquinarias extends StatefulWidget {

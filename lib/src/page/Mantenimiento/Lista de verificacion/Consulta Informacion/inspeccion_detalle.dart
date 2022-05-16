@@ -4,9 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/api/Mantenimiento/inspeccion_api.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_model.dart';
-import 'package:new_brunner_app/src/page/Mantenimiento/Consulta%20Informacion/anular_inspeccion_vehiculo.dart';
-import 'package:new_brunner_app/src/page/Mantenimiento/Consulta%20Informacion/check_categorias_inspeccion.dart';
-import 'package:new_brunner_app/src/page/Mantenimiento/Consulta%20Informacion/observacion_inspeccion.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Consulta%20Informacion/anular_inspeccion_vehiculo.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Consulta%20Informacion/check_categorias_inspeccion.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Consulta%20Informacion/observacion_inspeccion.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
 
 class InspeccionDetalle extends StatefulWidget {

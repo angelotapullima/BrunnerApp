@@ -5,9 +5,9 @@ import 'package:new_brunner_app/src/api/Mantenimiento/mantenimiento_api.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/database/Mantenimiento/check_item_inspeccion_database.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/vehiculo_model.dart';
-import 'package:new_brunner_app/src/page/Mantenimiento/Check%20List/categorias_inspeccion.dart';
-import 'package:new_brunner_app/src/page/Mantenimiento/choferes_search.dart';
-import 'package:new_brunner_app/src/page/Mantenimiento/Check%20List/observaciones_inspeccion.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Check%20List/categorias_inspeccion.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Check%20List/observaciones_inspeccion.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/choferes_search.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
 import 'package:provider/provider.dart';
 
