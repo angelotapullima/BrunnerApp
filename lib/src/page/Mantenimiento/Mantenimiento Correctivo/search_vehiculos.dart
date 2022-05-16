@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
-import 'package:new_brunner_app/src/model/Mantenimiento/choferes_model.dart';
-import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Check%20List/check_list.dart';
+import 'package:new_brunner_app/src/model/Mantenimiento/vehiculo_model.dart';
 import 'package:provider/provider.dart';
 
-class ChoferesSearch extends StatefulWidget {
-  const ChoferesSearch({Key? key, required this.page}) : super(key: key);
-  final String page;
+class VehiculosSearch extends StatefulWidget {
+  const VehiculosSearch({Key? key, required this.tipoUnidad}) : super(key: key);
+  final String tipoUnidad;
 
   @override
-  State<ChoferesSearch> createState() => _ChoferesSearchState();
+  State<VehiculosSearch> createState() => _VehiculosSearchState();
 }
 
-class _ChoferesSearchState extends State<ChoferesSearch> {
+class _VehiculosSearchState extends State<VehiculosSearch> {
   final searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final searchBloc = ProviderBloc.checklist(context);
-    searchBloc.searchChoferes('');
+    final searchBloc = ProviderBloc.vehiculo(context);
+    searchBloc.searchVehiculosByPlaca('', widget.tipoUnidad);
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -41,7 +40,7 @@ class _ChoferesSearchState extends State<ChoferesSearch> {
               child: TextField(
                 controller: searchController,
                 onChanged: (query) {
-                  searchBloc.searchChoferes(query.trim());
+                  searchBloc.searchVehiculosByPlaca(query.trim(), widget.tipoUnidad);
                 },
                 textAlign: TextAlign.left,
                 style: TextStyle(
@@ -51,7 +50,7 @@ class _ChoferesSearchState extends State<ChoferesSearch> {
                 decoration: InputDecoration(
                   suffixIcon: const Icon(Icons.search),
                   label: Text(
-                    'Nombre y apellido',
+                    'Placa',
                     style: TextStyle(
                       fontSize: ScreenUtil().setSp(12),
                       fontWeight: FontWeight.w400,
@@ -65,8 +64,8 @@ class _ChoferesSearchState extends State<ChoferesSearch> {
               height: ScreenUtil().setHeight(10),
             ),
             Expanded(
-              child: StreamBuilder<List<ChoferesModel>>(
-                stream: searchBloc.choferesStream,
+              child: StreamBuilder<List<VehiculoModel>>(
+                stream: searchBloc.searchVehiculoPlacaStream,
                 builder: (context, snapshot) {
                   if (snapshot.hasData && snapshot.data!.isNotEmpty) {
                     return ListView.builder(
@@ -92,31 +91,27 @@ class _ChoferesSearchState extends State<ChoferesSearch> {
                             );
                           }
                           index = index - 1;
-                          var chofer = snapshot.data![index];
+                          var vehiculo = snapshot.data![index];
                           return InkWell(
                             onTap: () {
                               Navigator.pop(context);
-                              final provider = Provider.of<ConductorController>(context, listen: false);
+                              final provider = Provider.of<VehiculosController>(context, listen: false);
                               String data = '';
-                              if (widget.page == 'Check') {
-                                data = '${chofer.dniChofer}  |  ${chofer.nombreChofer}';
-                              } else {
-                                data = '${chofer.nombreChofer}';
-                              }
-                              provider.setData(chofer.idChofer.toString(), data);
+                              data = '${vehiculo.placaVehiculo}';
+                              provider.setData(vehiculo.idVehiculo.toString(), data);
                             },
                             child: Padding(
                               padding: EdgeInsets.symmetric(
                                 horizontal: ScreenUtil().setWidth(16),
                                 vertical: ScreenUtil().setHeight(8),
                               ),
-                              child: Text('${chofer.dniChofer}  |  ${chofer.nombreChofer}'),
+                              child: Text('${vehiculo.placaVehiculo}'),
                             ),
                           );
                         });
                   } else {
                     return const Center(
-                      child: Text('Sin conductores...'),
+                      child: Text('Sin vehiculos...'),
                     );
                   }
                 },
@@ -126,5 +121,18 @@ class _ChoferesSearchState extends State<ChoferesSearch> {
         ),
       ),
     );
+  }
+}
+
+class VehiculosController extends ChangeNotifier {
+  ValueNotifier<String> id = ValueNotifier('');
+  ValueNotifier<String> placa = ValueNotifier('Seleccione');
+
+  ValueNotifier<String> get idS => id;
+  ValueNotifier<String> get placaS => placa;
+
+  void setData(String idC, String placaN) {
+    id.value = idC;
+    placa.value = placaN;
   }
 }

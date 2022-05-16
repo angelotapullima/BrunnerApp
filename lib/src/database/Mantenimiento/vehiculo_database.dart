@@ -33,12 +33,41 @@ class VehiculoDatabase {
     }
   }
 
+  Future<List<VehiculoModel>> getVehiculosByTipoUnidad(String tipoUnidad) async {
+    try {
+      final Database db = await dbprovider.getDatabase();
+      List<VehiculoModel> list = [];
+      List<Map> maps = await db.rawQuery("SELECT * FROM Vehiculos WHERE tipoUnidad='$tipoUnidad' ORDER BY CAST(idVehiculo AS INTEGER)");
+
+      if (maps.isNotEmpty) list = VehiculoModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      e;
+      return [];
+    }
+  }
+
   Future<List<VehiculoModel>> getVehiculosQuery(String query) async {
     try {
       final Database db = await dbprovider.getDatabase();
       List<VehiculoModel> list = [];
       List<Map> maps = await db.rawQuery(
           "SELECT * FROM Vehiculos WHERE rucVehiculo LIKE '%$query%' OR razonSocialVehiculo LIKE '%$query%' OR placaVehiculo LIKE '%$query%' OR marcaVehiculo LIKE '%$query%' ORDER BY CAST(idVehiculo AS INTEGER)");
+
+      if (maps.isNotEmpty) list = VehiculoModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      e;
+      return [];
+    }
+  }
+
+  Future<List<VehiculoModel>> getVehiculosByPlaca(String placa, String tipoUnidad) async {
+    try {
+      final Database db = await dbprovider.getDatabase();
+      List<VehiculoModel> list = [];
+      List<Map> maps = await db
+          .rawQuery("SELECT * FROM Vehiculos WHERE placaVehiculo LIKE '%$placa%' AND tipoUnidad='$tipoUnidad' ORDER BY CAST(idVehiculo AS INTEGER)");
 
       if (maps.isNotEmpty) list = VehiculoModel.fromJsonList(maps);
       return list;

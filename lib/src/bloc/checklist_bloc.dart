@@ -22,7 +22,7 @@ class CheckListBloc {
     _observacionesCheckItemController.close();
   }
 
-  void searchVehiculos(String query) async {
+  void searchChoferes(String query) async {
     _choferesController.sink.add([]);
     if (query.isNotEmpty) {
       _choferesController.sink.add(await _api.choferesDB.getChoferesByQuery(query));

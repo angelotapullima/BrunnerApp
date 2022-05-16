@@ -5,26 +5,42 @@ import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_model.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Check%20List/check_list.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Consulta%20Informacion/resultados_consulta.dart';
-import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/choferes_search.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/search_vehiculos.dart';
 import 'package:provider/provider.dart';
 
-class ConsultaInformacion extends StatefulWidget {
-  const ConsultaInformacion({Key? key}) : super(key: key);
+class MantCorrectivo extends StatefulWidget {
+  const MantCorrectivo({Key? key}) : super(key: key);
 
   @override
-  State<ConsultaInformacion> createState() => _ConsultaInformacionState();
+  State<MantCorrectivo> createState() => _MantCorrectivoState();
 }
 
-class _ConsultaInformacionState extends State<ConsultaInformacion> {
+class _MantCorrectivoState extends State<MantCorrectivo> {
   final _placaUnidad = TextEditingController();
   final _operario = TextEditingController();
   final _fechaInicio = TextEditingController();
   final _fechaFin = TextEditingController();
   final _nroCheck = TextEditingController();
   final _tipo = TextEditingController();
+  final _tipoVehiculo = TextEditingController();
 
   String _estado = '';
-  List<String> spinnerItems = ['Todos', 'Unidades habilitadas', 'Unidades habilitadas con restricciones', 'Unidades inhabilitadas'];
+  List<String> spinnerItems = [
+    'Todos',
+    'Atendido',
+    'Informe Pendiente de Aprobación',
+    'Diagnosticado',
+    'En proceso de Atención',
+    'Sin Atender',
+    'Anulado',
+  ];
+
+  String _tipoVeh = '';
+  List<String> tiposVehiculo = [
+    'Seleccionar unidad',
+    'Vehiculo',
+    'Maquinaria',
+  ];
   int count = 0;
 
   @override
@@ -41,6 +57,8 @@ class _ConsultaInformacionState extends State<ConsultaInformacion> {
   void initState() {
     _tipo.text = 'Todos';
     _estado = '';
+    _tipoVehiculo.text = 'Seleccionar unidad';
+    _tipoVeh = '';
     var data =
         "${DateTime.now().year.toString().padLeft(2, '0')}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().day.toString().padLeft(2, '0')}";
     _fechaInicio.text = data;
@@ -58,14 +76,12 @@ class _ConsultaInformacionState extends State<ConsultaInformacion> {
 
     return WillPopScope(
       onWillPop: () async {
-        final consultaInspBloc = ProviderBloc.consultaInsp(context);
-        consultaInspBloc.limpiarSearch();
         return true;
       },
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            'Listar reportes generados',
+            'Mantenimiento Correctivo',
             style: TextStyle(
               color: Colors.white,
               fontSize: ScreenUtil().setSp(16),
@@ -94,7 +110,6 @@ class _ConsultaInformacionState extends State<ConsultaInformacion> {
             }
 
             return StreamBuilder<List<InspeccionVehiculoModel>>(
-              stream: consultaInspBloc.inspeccionesStream,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   if (snapshot.data!.isNotEmpty) {
@@ -171,6 +186,7 @@ class _ConsultaInformacionState extends State<ConsultaInformacion> {
 
   void filtroSearch() {
     final provider = Provider.of<ConductorController>(context, listen: false);
+    final providerPlaca = Provider.of<VehiculosController>(context, listen: false);
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -230,106 +246,7 @@ class _ConsultaInformacionState extends State<ConsultaInformacion> {
                               height: ScreenUtil().setHeight(20),
                             ),
                             TextField(
-                              controller: _placaUnidad,
-                              style: const TextStyle(
-                                color: Color(0xff808080),
-                              ),
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: const Color(0xffeeeeee),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                hintStyle: const TextStyle(
-                                  color: Color(0xff808080),
-                                ),
-                                labelText: 'Placa de la Unidad o Marca',
-                              ),
-                            ),
-                            SizedBox(
-                              height: ScreenUtil().setHeight(20),
-                            ),
-                            ValueListenableBuilder(
-                              valueListenable: provider.conductorS,
-                              builder: (BuildContext context, String data, Widget? child) {
-                                if (data != 'Seleccionar') {
-                                  _operario.text = data;
-                                }
-                                return TextField(
-                                  readOnly: true,
-                                  controller: _operario,
-                                  maxLines: null,
-                                  style: const TextStyle(
-                                    color: Color(0xff808080),
-                                  ),
-                                  onTap: () {
-                                    FocusScope.of(context).unfocus();
-                                    Navigator.push(
-                                      context,
-                                      PageRouteBuilder(
-                                        pageBuilder: (context, animation, secondaryAnimation) {
-                                          return const ChoferesSearch(
-                                            page: 'Consulta',
-                                          );
-                                        },
-                                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                          var begin = const Offset(0.0, 1.0);
-                                          var end = Offset.zero;
-                                          var curve = Curves.ease;
-
-                                          var tween = Tween(begin: begin, end: end).chain(
-                                            CurveTween(curve: curve),
-                                          );
-
-                                          return SlideTransition(
-                                            position: animation.drive(tween),
-                                            child: child,
-                                          );
-                                        },
-                                      ),
-                                    );
-                                  },
-                                  decoration: InputDecoration(
-                                    suffixIcon: const Icon(
-                                      Icons.person_outline,
-                                      color: Colors.green,
-                                    ),
-                                    filled: true,
-                                    fillColor: const Color(0xffeeeeee),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      borderSide: const BorderSide(
-                                        color: Color(0xffeeeeee),
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      borderSide: const BorderSide(
-                                        color: Color(0xffeeeeee),
-                                      ),
-                                    ),
-                                    hintStyle: const TextStyle(
-                                      color: Color(0xff808080),
-                                    ),
-                                    labelText: 'Nombre del operario',
-                                  ),
-                                );
-                              },
-                            ),
-                            SizedBox(
-                              height: ScreenUtil().setHeight(20),
-                            ),
-                            TextField(
-                              controller: _tipo,
+                              controller: _tipoVehiculo,
                               maxLines: null,
                               readOnly: true,
                               style: const TextStyle(
@@ -358,12 +275,116 @@ class _ConsultaInformacionState extends State<ConsultaInformacion> {
                                     color: Color(0xffeeeeee),
                                   ),
                                 ),
-                                hintText: 'Estado de la unidad',
+                                hintText: 'Unidad',
                                 hintStyle: const TextStyle(
                                   color: Color(0xff808080),
                                 ),
-                                labelText: 'Estado de la unidad',
+                                labelText: 'Unidad',
                               ),
+                            ),
+                            SizedBox(
+                              height: ScreenUtil().setHeight(20),
+                            ),
+                            ValueListenableBuilder(
+                              valueListenable: providerPlaca.placaS,
+                              builder: (BuildContext context, String data, Widget? child) {
+                                if (data != 'Seleccione') {
+                                  _placaUnidad.text = data;
+                                }
+                                return TextField(
+                                  readOnly: true,
+                                  controller: _placaUnidad,
+                                  maxLines: null,
+                                  style: const TextStyle(
+                                    color: Color(0xff808080),
+                                  ),
+                                  onTap: () {
+                                    FocusScope.of(context).unfocus();
+                                    if (_tipoVeh != '') {
+                                      Navigator.push(
+                                        context,
+                                        PageRouteBuilder(
+                                          pageBuilder: (context, animation, secondaryAnimation) {
+                                            return VehiculosSearch(
+                                              tipoUnidad: _tipoVeh,
+                                            );
+                                          },
+                                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                            var begin = const Offset(0.0, 1.0);
+                                            var end = Offset.zero;
+                                            var curve = Curves.ease;
+
+                                            var tween = Tween(begin: begin, end: end).chain(
+                                              CurveTween(curve: curve),
+                                            );
+
+                                            return SlideTransition(
+                                              position: animation.drive(tween),
+                                              child: child,
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  decoration: InputDecoration(
+                                    suffixIcon: const Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: Colors.green,
+                                    ),
+                                    filled: true,
+                                    fillColor: const Color(0xffeeeeee),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      borderSide: const BorderSide(
+                                        color: Color(0xffeeeeee),
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      borderSide: const BorderSide(
+                                        color: Color(0xffeeeeee),
+                                      ),
+                                    ),
+                                    hintStyle: const TextStyle(
+                                      color: Color(0xff808080),
+                                    ),
+                                    labelText: 'Placa',
+                                  ),
+                                );
+                              },
+                            ),
+                            SizedBox(
+                              height: ScreenUtil().setHeight(20),
+                            ),
+                            TextField(
+                              controller: _placaUnidad,
+                              style: const TextStyle(
+                                color: Color(0xff808080),
+                              ),
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: const Color(0xffeeeeee),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderSide: const BorderSide(
+                                    color: Color(0xffeeeeee),
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderSide: const BorderSide(
+                                    color: Color(0xffeeeeee),
+                                  ),
+                                ),
+                                hintStyle: const TextStyle(
+                                  color: Color(0xff808080),
+                                ),
+                                labelText: 'Placa de la Unidad o Marca',
+                              ),
+                            ),
+                            SizedBox(
+                              height: ScreenUtil().setHeight(20),
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(20),
@@ -561,7 +582,7 @@ class _ConsultaInformacionState extends State<ConsultaInformacion> {
                           color: Colors.grey[600],
                         ),
                         Text(
-                          'Seleccionar Tipo',
+                          'Seleccionar Unidad',
                           style: TextStyle(
                             color: const Color(0xff5a5a5a),
                             fontWeight: FontWeight.w600,
@@ -575,19 +596,17 @@ class _ConsultaInformacionState extends State<ConsultaInformacion> {
                         Expanded(
                           child: ListView.builder(
                             controller: controller,
-                            itemCount: spinnerItems.length,
+                            itemCount: tiposVehiculo.length,
                             itemBuilder: (_, index) {
                               return InkWell(
                                 onTap: () {
-                                  _tipo.text = spinnerItems[index];
-                                  if (_tipo.text == 'Unidades habilitadas') {
-                                    _estado = '1';
-                                  } else if (_tipo.text == 'Unidades habilitadas con restricciones') {
-                                    _estado = '2';
-                                  } else if (_tipo.text == 'Unidades inhabilitadas') {
-                                    _estado = '3';
+                                  _tipoVehiculo.text = tiposVehiculo[index];
+                                  if (_tipoVehiculo.text == 'Vehiculo') {
+                                    _tipoVeh = '1';
+                                  } else if (_tipo.text == 'Maquinaria') {
+                                    _tipoVeh = '2';
                                   } else {
-                                    _estado = '';
+                                    _tipoVeh = '';
                                   }
 
                                   Navigator.pop(context);
@@ -595,7 +614,7 @@ class _ConsultaInformacionState extends State<ConsultaInformacion> {
                                 child: Card(
                                   child: Padding(
                                     padding: const EdgeInsets.all(8),
-                                    child: Text(spinnerItems[index]),
+                                    child: Text(tiposVehiculo[index]),
                                   ),
                                 ),
                               );
