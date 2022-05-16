@@ -108,8 +108,8 @@ class _CategoriasInspeccionState extends State<CategoriasInspeccion> {
           ),
           check(
             context,
-            (item.valueCheckItemInsp == '3') ? Icons.close_rounded : Icons.circle_outlined,
-            (item.valueCheckItemInsp == '3') ? Colors.white : Colors.blueGrey,
+            (item.valueCheckItemInsp == '3') ? Icons.cancel : Icons.circle_outlined,
+            (item.valueCheckItemInsp == '3') ? Colors.red : Colors.blueGrey,
             '3',
             item,
           ),
@@ -137,11 +137,7 @@ class _CategoriasInspeccionState extends State<CategoriasInspeccion> {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: (color == Colors.white)
-              ? Colors.redAccent
-              : (item.ckeckItemHabilitado == '1')
-                  ? Colors.blueGrey.withOpacity(0.1)
-                  : Colors.white,
+          color: (item.ckeckItemHabilitado == '1') ? Colors.blueGrey.withOpacity(0.1) : Colors.white,
           shape: BoxShape.circle,
           border: Border.all(color: color),
         ),

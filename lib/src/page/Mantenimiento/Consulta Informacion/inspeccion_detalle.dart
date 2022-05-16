@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/api/Mantenimiento/inspeccion_api.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_model.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/Consulta%20Informacion/anular_inspeccion_vehiculo.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Consulta%20Informacion/check_categorias_inspeccion.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Consulta%20Informacion/observacion_inspeccion.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
@@ -135,19 +136,20 @@ class _InspeccionDetalleState extends State<InspeccionDetalle> {
                                 ),
                               ),
                               Container(
-                                decoration: const BoxDecoration(color: Colors.redAccent, shape: BoxShape.circle),
-                                child: const Icon(
-                                  Icons.close_rounded,
+                                decoration: BoxDecoration(
                                   color: Colors.white,
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: Colors.redAccent),
+                                ),
+                                child: const Icon(
+                                  Icons.cancel,
+                                  color: Colors.redAccent,
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        CheckCategoriasInspeccion(
-                          tipoUnidad: dato.tipoUnidad.toString(),
-                          idInpeccionVehiculo: dato.idInspeccionVehiculo.toString(),
-                        ),
+                        const CheckCategoriasInspeccion(),
                         SizedBox(height: ScreenUtil().setHeight(10)),
                         const Divider(),
                         _imputText(dato.hidrolinaVehiculo.toString(), dato.kilometrajeVehiculo.toString()),
@@ -162,7 +164,7 @@ class _InspeccionDetalleState extends State<InspeccionDetalle> {
                           tipoUnidad: dato.tipoUnidad.toString(),
                         ),
                         _buttonPDF(dato.idInspeccionVehiculo.toString()),
-                        _buttonDelete(context),
+                        (dato.estadoFinal == '1') ? _buttonDelete(context, dato) : Container(),
                         SizedBox(height: ScreenUtil().setHeight(20)),
                       ],
                     ),
@@ -435,7 +437,7 @@ class _InspeccionDetalleState extends State<InspeccionDetalle> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Descargar',
+              'Visualizar',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: ScreenUtil().setSp(20),
@@ -455,12 +457,14 @@ class _InspeccionDetalleState extends State<InspeccionDetalle> {
     );
   }
 
-  Widget _buttonDelete(BuildContext context) {
+  Widget _buttonDelete(BuildContext context, InspeccionVehiculoModel inspeccion) {
     return InkWell(
       onTap: () {
-        final consultaInspBloc = ProviderBloc.consultaInsp(context);
-        consultaInspBloc.getInspeccionesVehiculoQuery();
-        Navigator.pop(context);
+        // final consultaInspBloc = ProviderBloc.consultaInsp(context);
+        // consultaInspBloc.getInspeccionesVehiculoQuery();
+        // Navigator.pop(context);
+
+        anularCheck(context, inspeccion, 2);
       },
       child: Container(
         width: double.infinity,
@@ -472,7 +476,7 @@ class _InspeccionDetalleState extends State<InspeccionDetalle> {
         ),
         child: Center(
           child: Text(
-            'Eliminar',
+            'Anular',
             style: TextStyle(
               color: Colors.redAccent,
               fontSize: ScreenUtil().setSp(20),

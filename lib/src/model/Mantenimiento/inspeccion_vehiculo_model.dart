@@ -16,6 +16,9 @@ class InspeccionVehiculoModel {
   String? hidrolinaVehiculo;
   String? kilometrajeVehiculo;
   String? tipoUnidad;
+  String? estadoFinal;
+  String? observacionInspeccion;
+  String? estado;
 
   InspeccionVehiculoModel({
     this.idInspeccionVehiculo,
@@ -35,6 +38,9 @@ class InspeccionVehiculoModel {
     this.hidrolinaVehiculo,
     this.kilometrajeVehiculo,
     this.tipoUnidad,
+    this.estadoFinal,
+    this.observacionInspeccion,
+    this.estado,
   });
 
   static List<InspeccionVehiculoModel> fromJsonList(List<dynamic> json) => json.map((i) => InspeccionVehiculoModel.fromJson(i)).toList();
@@ -57,6 +63,9 @@ class InspeccionVehiculoModel {
         'hidrolinaVehiculo': hidrolinaVehiculo,
         'kilometrajeVehiculo': kilometrajeVehiculo,
         'tipoUnidad': tipoUnidad,
+        'estadoFinal': estadoFinal,
+        'observacionInspeccion': observacionInspeccion,
+        'estado': estado,
       };
 
   factory InspeccionVehiculoModel.fromJson(Map<String, dynamic> json) => InspeccionVehiculoModel(
@@ -77,5 +86,8 @@ class InspeccionVehiculoModel {
         hidrolinaVehiculo: json["hidrolinaVehiculo"],
         kilometrajeVehiculo: json["kilometrajeVehiculo"],
         tipoUnidad: json["tipoUnidad"],
+        estadoFinal: json["estadoFinal"],
+        observacionInspeccion: json["observacionInspeccion"],
+        estado: json["estado"],
       );
 }

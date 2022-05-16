@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/core/routes_constanst.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_model.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/Consulta%20Informacion/anular_inspeccion_vehiculo.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Consulta%20Informacion/inspeccion_detalle.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
 
@@ -42,6 +43,68 @@ class ResultadosConsulta extends StatelessWidget {
   }
 
   Widget _inspeccionItem(BuildContext context, InspeccionVehiculoModel inspeccion) {
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) {
+              return InspeccionDetalle(
+                inspeccion: inspeccion,
+              );
+            },
+          ),
+        );
+      },
+      child: (inspeccion.estadoFinal == '1')
+          ? Dismissible(
+              key: UniqueKey(),
+              direction: DismissDirection.endToStart,
+              // onDismissed: (direction) {
+              //   anularCheck(context, inspeccion);
+              //   final consultaInspBloc = ProviderBloc.consultaInsp(context);
+              //   consultaInspBloc.getInspeccionesVehiculoQuery();
+              // },
+              confirmDismiss: (value) async {
+                if (value == DismissDirection.endToStart) {
+                  anularCheck(context, inspeccion, 1);
+                  final consultaInspBloc = ProviderBloc.consultaInsp(context);
+                  consultaInspBloc.getInspeccionesVehiculoQuery();
+
+                  return true;
+                } else {
+                  return false;
+                }
+              },
+              background: Container(
+                padding: EdgeInsets.only(right: ScreenUtil().setWidth(16)),
+                color: Colors.redAccent,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(
+                          Icons.cancel,
+                          color: Colors.white,
+                        ),
+                        Text(
+                          'Anular',
+                          style: TextStyle(color: Colors.white),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              child: contenido(inspeccion),
+            )
+          : contenido(inspeccion),
+    );
+  }
+
+  Widget contenido(InspeccionVehiculoModel inspeccion) {
     Color colorEstado = const Color(0XFF09AD92);
     IconData iconEstado = Icons.checklist_rounded;
     String textEstado = 'No existe Check List';
@@ -59,7 +122,7 @@ class ResultadosConsulta extends StatelessWidget {
         break;
       case '3':
         colorEstado = Colors.redAccent;
-        iconEstado = Icons.close_rounded;
+        iconEstado = Icons.cancel;
         textEstado = 'Inhabilitado';
         break;
       default:
@@ -68,192 +131,159 @@ class ResultadosConsulta extends StatelessWidget {
         textEstado = 'No existe Check List';
         break;
     }
-    return InkWell(
-      onTap: () {
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) {
-              return InspeccionDetalle(
-                inspeccion: inspeccion,
-              );
-            },
+
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: ScreenUtil().setWidth(16),
+        vertical: ScreenUtil().setHeight(10),
+      ),
+      decoration: BoxDecoration(
+        color: (inspeccion.estadoFinal == '2') ? Colors.redAccent.withOpacity(0.7) : Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.transparent.withOpacity(0.2),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: const Offset(0, 3), // changes position of shadow
           ),
-        );
-      },
-      child: Dismissible(
-        key: UniqueKey(),
-        direction: DismissDirection.endToStart,
-        onDismissed: (direction) {
-          final consultaInspBloc = ProviderBloc.consultaInsp(context);
-          consultaInspBloc.getInspeccionesVehiculoQuery();
-        },
-        background: Container(
-          padding: EdgeInsets.only(right: ScreenUtil().setWidth(16)),
-          color: Colors.redAccent,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: const [
-              Icon(
-                Icons.delete,
-                color: Colors.white,
-              ),
-            ],
-          ),
-        ),
-        child: Container(
-            margin: EdgeInsets.symmetric(
-              horizontal: ScreenUtil().setWidth(16),
-              vertical: ScreenUtil().setHeight(10),
-            ),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.transparent.withOpacity(0.2),
-                  spreadRadius: 2,
-                  blurRadius: 5,
-                  offset: const Offset(0, 3), // changes position of shadow
-                ),
-              ],
-            ),
-            child: Row(
+        ],
+      ),
+      child: Row(
+        children: [
+          SizedBox(
+            width: ScreenUtil().setWidth(100),
+            child: Stack(
               children: [
+                Container(
+                  width: ScreenUtil().setWidth(100),
+                  height: ScreenUtil().setHeight(100),
+                  decoration: BoxDecoration(
+                    color: colorEstado,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
                 SizedBox(
                   width: ScreenUtil().setWidth(100),
-                  child: Stack(
-                    children: [
-                      Container(
-                        width: ScreenUtil().setWidth(100),
-                        height: ScreenUtil().setHeight(100),
+                  height: ScreenUtil().setHeight(100),
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(90),
+                      bottomLeft: Radius.circular(10),
+                    ),
+                    child: CachedNetworkImage(
+                      imageUrl: '$apiBaseURL/${inspeccion.imageVehiculo}',
+                      placeholder: (context, url) => Container(
+                        width: double.infinity,
+                        height: double.infinity,
+                        color: Colors.white,
+                        child: const CircularProgressIndicator(),
+                      ),
+                      errorWidget: (context, url, error) => Container(
+                        width: double.infinity,
+                        height: double.infinity,
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                        ),
+                        child: Center(
+                          child: Image.asset(
+                            'assets/img/logo.png',
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      imageBuilder: (context, imageProvider) => Container(
                         decoration: BoxDecoration(
-                          color: colorEstado,
-                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
-                      SizedBox(
-                        width: ScreenUtil().setWidth(100),
-                        height: ScreenUtil().setHeight(100),
-                        child: ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(90),
-                            bottomLeft: Radius.circular(10),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.5),
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(10),
+                      ),
+                    ),
+                    child: RichText(
+                      text: TextSpan(
+                          text: (inspeccion.tipoUnidad == '1') ? 'Vehiculo ' : 'Maquinaria ',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w400,
+                            fontSize: ScreenUtil().setSp(11),
                           ),
-                          child: CachedNetworkImage(
-                            imageUrl: '$apiBaseURL/${inspeccion.imageVehiculo}',
-                            placeholder: (context, url) => Container(
-                              width: double.infinity,
-                              height: double.infinity,
-                              color: Colors.white,
-                              child: const CircularProgressIndicator(),
-                            ),
-                            errorWidget: (context, url, error) => Container(
-                              width: double.infinity,
-                              height: double.infinity,
-                              decoration: const BoxDecoration(
+                          children: [
+                            TextSpan(
+                              text: inspeccion.placaVehiculo ?? '',
+                              style: TextStyle(
                                 color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                                fontSize: ScreenUtil().setSp(11),
                               ),
-                              child: Center(
-                                child: Image.asset(
-                                  'assets/img/logo.png',
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            imageBuilder: (context, imageProvider) => Container(
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: imageProvider,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        child: Container(
-                          padding: const EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.5),
-                            borderRadius: const BorderRadius.only(
-                              bottomLeft: Radius.circular(10),
-                            ),
-                          ),
-                          child: RichText(
-                            text: TextSpan(
-                                text: (inspeccion.tipoUnidad == '1') ? 'Vehiculo ' : 'Maquinaria ',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: ScreenUtil().setSp(11),
-                                ),
-                                children: [
-                                  TextSpan(
-                                    text: inspeccion.placaVehiculo ?? '',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: ScreenUtil().setSp(11),
-                                    ),
-                                  )
-                                ]),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        left: -8,
-                        top: -8,
-                        child: PopupMenuButton(
-                          padding: const EdgeInsets.all(1),
-                          icon: Icon(
-                            iconEstado,
-                            color: Colors.white.withOpacity(0.9),
-                            size: ScreenUtil().setHeight(20),
-                          ),
-                          itemBuilder: (context) => [
-                            PopupMenuItem(
-                              child: Text(
-                                textEstado,
-                                style: TextStyle(color: colorEstado),
-                              ),
-                              value: 1,
                             )
-                          ],
-                        ),
-                      ),
-                    ],
+                          ]),
+                    ),
                   ),
                 ),
-                SizedBox(
-                  width: ScreenUtil().setWidth(8),
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      fileData('N° CheckList', inspeccion.numeroInspeccionVehiculo.toString()),
-                      fileData2('Fecha', '${obtenerFecha(inspeccion.fechaInspeccionVehiculo.toString())} ${inspeccion.horaInspeccionVehiculo}'),
-                      Text(
-                        inspeccion.razonSocialVehiculo.toString(),
-                        style: TextStyle(
-                          fontSize: ScreenUtil().setSp(12),
+                Positioned(
+                  left: -8,
+                  top: -8,
+                  child: PopupMenuButton(
+                    padding: const EdgeInsets.all(1),
+                    icon: Icon(
+                      iconEstado,
+                      color: Colors.white.withOpacity(0.9),
+                      size: ScreenUtil().setHeight(20),
+                    ),
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        child: Text(
+                          textEstado,
+                          style: TextStyle(color: colorEstado),
                         ),
-                      ),
-                      fileData2('Chofer', inspeccion.nombreChofer.toString()),
-                      fileData2('Registrado por', inspeccion.nombreUsuario.toString()),
+                        value: 1,
+                      )
                     ],
                   ),
-                ),
-                SizedBox(
-                  width: ScreenUtil().setWidth(4),
                 ),
               ],
-            )),
+            ),
+          ),
+          SizedBox(
+            width: ScreenUtil().setWidth(8),
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                fileData('N° CheckList', inspeccion.numeroInspeccionVehiculo.toString()),
+                fileData2('Fecha', '${obtenerFecha(inspeccion.fechaInspeccionVehiculo.toString())} ${inspeccion.horaInspeccionVehiculo}'),
+                Text(
+                  inspeccion.razonSocialVehiculo.toString(),
+                  style: TextStyle(
+                    fontSize: ScreenUtil().setSp(12),
+                  ),
+                ),
+                fileData2('Chofer', inspeccion.nombreChofer.toString()),
+                fileData2('Registrado por', inspeccion.nombreUsuario.toString()),
+              ],
+            ),
+          ),
+          SizedBox(
+            width: ScreenUtil().setWidth(4),
+          ),
+        ],
       ),
     );
   }

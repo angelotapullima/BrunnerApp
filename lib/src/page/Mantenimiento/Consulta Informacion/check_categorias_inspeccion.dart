@@ -6,14 +6,11 @@ import 'package:new_brunner_app/src/model/Mantenimiento/categoria_inspeccion_mod
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_item_model.dart';
 
 class CheckCategoriasInspeccion extends StatelessWidget {
-  const CheckCategoriasInspeccion({Key? key, required this.tipoUnidad, required this.idInpeccionVehiculo}) : super(key: key);
-  final String idInpeccionVehiculo;
-  final String tipoUnidad;
+  const CheckCategoriasInspeccion({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final inspeccionBloc = ProviderBloc.consultaInsp(context);
-    inspeccionBloc.getCatCheckInspeccion(idInpeccionVehiculo, tipoUnidad);
 
     return StreamBuilder<List<CategoriaInspeccionModel>>(
       stream: inspeccionBloc.catInspeccionStream,
@@ -97,8 +94,8 @@ class CheckCategoriasInspeccion extends StatelessWidget {
           ),
           check(
             context,
-            (item.valueCheckItemInsp == '3') ? Icons.close_rounded : Icons.circle_outlined,
-            (item.valueCheckItemInsp == '3') ? Colors.white : Colors.blueGrey,
+            (item.valueCheckItemInsp == '3') ? Icons.cancel : Icons.circle_outlined,
+            (item.valueCheckItemInsp == '3') ? Colors.redAccent : Colors.blueGrey,
             '3',
             item,
           ),
@@ -110,11 +107,7 @@ class CheckCategoriasInspeccion extends StatelessWidget {
   Widget check(BuildContext context, IconData icon, Color color, String value, InspeccionVehiculoItemModel item) {
     return Container(
       decoration: BoxDecoration(
-        color: (color == Colors.white)
-            ? Colors.redAccent
-            : (item.ckeckItemHabilitado == '1')
-                ? Colors.blueGrey.withOpacity(0.1)
-                : Colors.white,
+        color: (item.ckeckItemHabilitado == '1') ? Colors.blueGrey.withOpacity(0.1) : Colors.white,
         shape: BoxShape.circle,
         border: Border.all(color: color),
       ),

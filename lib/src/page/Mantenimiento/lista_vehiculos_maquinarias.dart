@@ -179,7 +179,7 @@ class _ListaVehiculosMaquinariasState extends State<ListaVehiculosMaquinarias> {
         break;
       case '3':
         colorEstado = Colors.redAccent;
-        iconEstado = Icons.close_rounded;
+        iconEstado = Icons.cancel;
         textEstado = 'Inhabilitado';
         break;
       default:

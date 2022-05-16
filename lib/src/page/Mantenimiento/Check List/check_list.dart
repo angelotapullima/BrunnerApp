@@ -161,10 +161,14 @@ class _CheckListState extends State<CheckList> {
                         ),
                       ),
                       Container(
-                        decoration: const BoxDecoration(color: Colors.redAccent, shape: BoxShape.circle),
-                        child: const Icon(
-                          Icons.close_rounded,
+                        decoration: BoxDecoration(
                           color: Colors.white,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.redAccent),
+                        ),
+                        child: const Icon(
+                          Icons.cancel,
+                          color: Colors.redAccent,
                         ),
                       ),
                     ],

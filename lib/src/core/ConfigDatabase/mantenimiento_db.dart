@@ -29,6 +29,9 @@ class MantenimientoDB {
       ' nombreUsuario TEXT,'
       ' hidrolinaVehiculo TEXT,'
       ' kilometrajeVehiculo TEXT,'
+      ' estadoFinal TEXT,'
+      ' observacionInspeccion TEXT,'
+      ' estado TEXT,'
       ' tipoUnidad TEXT)';
 
   static const String inspeccionVehiculoItemTableSql = 'CREATE TABLE InspeccionVehiculoItem('

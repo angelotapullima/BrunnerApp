@@ -59,6 +59,9 @@ class InspeccionApi {
         inspeccion.tipoUnidad = data["tipo_unidad"];
         inspeccion.hidrolinaVehiculo = '';
         inspeccion.kilometrajeVehiculo = '';
+        inspeccion.estadoFinal = data["inspeccion_vehiculo_estadoFinal"];
+        inspeccion.observacionInspeccion = data["inspeccion_vehiculo_observacion"];
+        inspeccion.estado = data["inspeccion_vehiculo_estado"];
 
         await inspeccionDB.insertarInspeccion(inspeccion);
       }
@@ -105,6 +108,9 @@ class InspeccionApi {
         inspeccion.tipoUnidad = data["tipo_unidad"];
         inspeccion.hidrolinaVehiculo = data["inspeccion_vehiculo_hidrolina_inicial"];
         inspeccion.kilometrajeVehiculo = data["inspeccion_vehiculo_kilometro_inicial"];
+        inspeccion.estadoFinal = data["inspeccion_vehiculo_estadoFinal"];
+        inspeccion.observacionInspeccion = data["inspeccion_vehiculo_observacion"];
+        inspeccion.estado = data["inspeccion_vehiculo_estado"];
 
         await inspeccionDB.insertarInspeccion(inspeccion);
       }
@@ -236,6 +242,34 @@ class InspeccionApi {
       return file;
     } catch (e) {
       return null;
+    }
+  }
+
+  Future<int> anularInspeccion(String idInspeccion, String observacion) async {
+    try {
+      String? token = await Preferences.readData('token');
+      String? fechaInicial = await Preferences.readData('fechaInicial');
+      String? fechaFinal = await Preferences.readData('fechaFinal');
+
+      final url = Uri.parse('$apiBaseURL/api/ListaVerificacion/anular_inspeccion_vehiculo');
+      final resp = await http.post(
+        url,
+        body: {
+          'app': 'true',
+          'tn': token,
+          'id': idInspeccion,
+          'observacion': observacion,
+        },
+      );
+      final decodedData = json.decode(resp.body);
+      if (decodedData["result"] == 1) {
+        await getInspeccionesVehiculos(fechaInicial.toString(), fechaFinal.toString());
+        return 1;
+      } else {
+        return 3;
+      }
+    } catch (e) {
+      return 2;
     }
   }
 }

@@ -83,7 +83,7 @@ class InspeccionVehiculoItemDatabase {
       final Database db = await dbprovider.getDatabase();
       List<InspeccionVehiculoItemModel> list = [];
       List<Map> maps = await db.rawQuery(
-          "SELECT * FROM InspeccionVehiculoItem WHERE idInspeccionVehiculo='$idInspeccionVehiculo' AND observacionCkeckItemInsp!='' AND (valueCheckItemInsp=='2' OR valueCheckItemInsp=='3')   ORDER BY CAST(idCheckItemInsp AS INTEGER)");
+          "SELECT * FROM InspeccionVehiculoItem WHERE idInspeccionVehiculo='$idInspeccionVehiculo' AND (valueCheckItemInsp=='2' OR valueCheckItemInsp=='3')   ORDER BY CAST(idCheckItemInsp AS INTEGER)");
 
       if (maps.isNotEmpty) list = InspeccionVehiculoItemModel.fromJsonList(maps);
       return list;

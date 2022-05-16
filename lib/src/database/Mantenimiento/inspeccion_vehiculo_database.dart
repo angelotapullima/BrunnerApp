@@ -57,6 +57,8 @@ class InspeccionVehiculoDatabase {
       query += " ORDER BY CAST(idInspeccionVehiculo AS INTEGER)";
 
       Preferences.saveData('query', query);
+      Preferences.saveData('fechaInicial', fechaInicial);
+      Preferences.saveData('fechaFinal', fechaFinal);
       final Database db = await dbprovider.getDatabase();
       List<InspeccionVehiculoModel> list = [];
       List<Map> maps = await db.rawQuery(query);
