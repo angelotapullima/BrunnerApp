@@ -19,10 +19,11 @@ class VehiculosDB {
       ' imagenVehiculo TEXT,'
       ' estadoVehiculo TEXT)';
 
-  static const String choferesTableSql = 'CREATE TABLE Choferes('
-      ' idChofer TEXT PRIMARY KEY,'
-      ' nombreChofer TEXT,'
-      ' dniChofer TEXT)';
+  static const String peronasTableSql = 'CREATE TABLE Personas('
+      ' idPerson TEXT PRIMARY KEY,'
+      ' nombrePerson TEXT,'
+      ' dniPerson TEXT,'
+      ' idCargo TEXT)';
 
   static const String categoriasInspeccionTableSql = 'CREATE TABLE CategoriasInspeccion('
       ' idCatInspeccion TEXT PRIMARY KEY,'

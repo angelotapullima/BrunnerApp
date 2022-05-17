@@ -5,19 +5,19 @@ import 'package:new_brunner_app/src/core/preferences.dart';
 import 'package:new_brunner_app/src/core/routes_constanst.dart';
 import 'package:new_brunner_app/src/database/Mantenimiento/categorias_inspeccion_database.dart';
 import 'package:new_brunner_app/src/database/Mantenimiento/check_item_inspeccion_database.dart';
-import 'package:new_brunner_app/src/database/Mantenimiento/choferes_database.dart';
+import 'package:new_brunner_app/src/database/personas_database.dart';
 import 'package:new_brunner_app/src/database/Mantenimiento/item_inspeccion_database.dart';
 import 'package:new_brunner_app/src/database/Mantenimiento/vehiculo_database.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/categoria_inspeccion_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/check_item_inspeccion_model.dart';
-import 'package:new_brunner_app/src/model/Mantenimiento/choferes_model.dart';
+import 'package:new_brunner_app/src/model/Mantenimiento/personas_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/item_inspeccion_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/vehiculo_model.dart';
 import 'package:new_brunner_app/src/model/api_result_model.dart';
 
 class MantenimientoApi {
   final vehiculosDB = VehiculoDatabase();
-  final choferesDB = ChoferesDatabase();
+  final choferesDB = PersonasDatabase();
   final catInspeccionDB = CategoriaInspeccionDatabase();
   final itemInspeccionDB = ItemInspeccionDatabase();
   final checkItemInspDB = CheckItemInspeccionDatabase();
@@ -99,12 +99,12 @@ class MantenimientoApi {
       for (var i = 0; i < decodedData["result"]["choferes"].length; i++) {
         var data = decodedData["result"]["choferes"][i];
 
-        final chofer = ChoferesModel();
-        chofer.idChofer = data["id_person"];
-        chofer.dniChofer = data["person_dni"];
-        chofer.nombreChofer = data["nombre"];
+        final chofer = PersonasModel();
+        chofer.idPerson = data["id_person"];
+        chofer.dniPerson = data["person_dni"];
+        chofer.nombrePerson = data["nombre"];
 
-        await choferesDB.insertarChofer(chofer);
+        await choferesDB.insertarPerson(chofer);
       }
 
       return true;

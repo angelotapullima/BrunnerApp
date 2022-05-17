@@ -138,7 +138,7 @@ class ResultadosConsulta extends StatelessWidget {
         vertical: ScreenUtil().setHeight(10),
       ),
       decoration: BoxDecoration(
-        color: (inspeccion.estadoFinal == '2') ? Colors.redAccent.withOpacity(0.7) : Colors.white,
+        color: (inspeccion.estadoFinal == '1') ? Colors.white : Colors.redAccent.withOpacity(0.7),
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(

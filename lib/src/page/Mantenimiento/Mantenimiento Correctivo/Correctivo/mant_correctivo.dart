@@ -21,11 +21,11 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
   final _fechaInicio = TextEditingController();
   final _fechaFin = TextEditingController();
   final _nroCheck = TextEditingController();
-  final _tipo = TextEditingController();
+  final _estadoController = TextEditingController();
   final _tipoVehiculo = TextEditingController();
 
   String _estado = '';
-  List<String> spinnerItems = [
+  List<String> estadoItems = [
     'Todos',
     'Atendido',
     'Informe Pendiente de Aprobación',
@@ -49,13 +49,13 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
     _fechaInicio.dispose();
     _fechaFin.dispose();
     _nroCheck.dispose();
-    _tipo.dispose();
+    _estadoController.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
-    _tipo.text = 'Todos';
+    _estadoController.text = 'Todos';
     _estado = '';
     _tipoVehiculo.text = 'Seleccionar unidad';
     _tipoVeh = '';
@@ -199,9 +199,9 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
             child: GestureDetector(
               onTap: () {},
               child: DraggableScrollableSheet(
-                initialChildSize: 0.8,
+                initialChildSize: 0.9,
                 minChildSize: 0.3,
-                maxChildSize: 0.9,
+                maxChildSize: 0.95,
                 builder: (_, controller) {
                   return Container(
                     decoration: const BoxDecoration(
@@ -254,7 +254,7 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                               ),
                               onTap: () {
                                 FocusScope.of(context).unfocus();
-                                _bottomShetTipe(context);
+                                _seleccionarTipoUnidad(context);
                               },
                               decoration: InputDecoration(
                                 suffixIcon: const Icon(
@@ -290,6 +290,8 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                               builder: (BuildContext context, String data, Widget? child) {
                                 if (data != 'Seleccione') {
                                   _placaUnidad.text = data;
+                                } else {
+                                  _placaUnidad.text = '';
                                 }
                                 return TextField(
                                   readOnly: true,
@@ -349,7 +351,7 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                                     hintStyle: const TextStyle(
                                       color: Color(0xff808080),
                                     ),
-                                    labelText: 'Placa',
+                                    labelText: 'Placa de la unidad',
                                   ),
                                 );
                               },
@@ -358,11 +360,15 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                               height: ScreenUtil().setHeight(20),
                             ),
                             TextField(
-                              controller: _placaUnidad,
+                              controller: _operario,
                               style: const TextStyle(
                                 color: Color(0xff808080),
                               ),
                               decoration: InputDecoration(
+                                suffixIcon: const Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: Colors.green,
+                                ),
                                 filled: true,
                                 fillColor: const Color(0xffeeeeee),
                                 enabledBorder: OutlineInputBorder(
@@ -380,11 +386,48 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                                 hintStyle: const TextStyle(
                                   color: Color(0xff808080),
                                 ),
-                                labelText: 'Placa de la Unidad o Marca',
+                                labelText: 'Responsable',
                               ),
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(20),
+                            ),
+                            TextField(
+                              controller: _estadoController,
+                              maxLines: null,
+                              readOnly: true,
+                              style: const TextStyle(
+                                color: Color(0xff808080),
+                              ),
+                              onTap: () {
+                                FocusScope.of(context).unfocus();
+                                _seleccionarEstadoInspeccion(context);
+                              },
+                              decoration: InputDecoration(
+                                suffixIcon: const Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: Colors.green,
+                                ),
+                                filled: true,
+                                fillColor: const Color(0xffeeeeee),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderSide: const BorderSide(
+                                    color: Color(0xffeeeeee),
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderSide: const BorderSide(
+                                    color: Color(0xffeeeeee),
+                                  ),
+                                ),
+                                hintText: 'Estado',
+                                hintStyle: const TextStyle(
+                                  color: Color(0xff808080),
+                                ),
+                                labelText: 'Estado',
+                              ),
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(20),
@@ -551,7 +594,7 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
     );
   }
 
-  void _bottomShetTipe(BuildContext context) {
+  void _seleccionarTipoUnidad(BuildContext context) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -603,11 +646,14 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                                   _tipoVehiculo.text = tiposVehiculo[index];
                                   if (_tipoVehiculo.text == 'Vehiculo') {
                                     _tipoVeh = '1';
-                                  } else if (_tipo.text == 'Maquinaria') {
+                                  } else if (_tipoVehiculo.text == 'Maquinaria') {
                                     _tipoVeh = '2';
                                   } else {
                                     _tipoVeh = '';
                                   }
+                                  final provider = Provider.of<VehiculosController>(context, listen: false);
+
+                                  provider.setData('', 'Seleccione');
 
                                   Navigator.pop(context);
                                 },
@@ -615,6 +661,105 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(8),
                                     child: Text(tiposVehiculo[index]),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _seleccionarEstadoInspeccion(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return GestureDetector(
+          child: Container(
+            color: const Color.fromRGBO(0, 0, 0, 0.001),
+            child: GestureDetector(
+              onTap: () {},
+              child: DraggableScrollableSheet(
+                initialChildSize: 0.7,
+                minChildSize: 0.2,
+                maxChildSize: 0.9,
+                builder: (_, controller) {
+                  return Container(
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(25.0),
+                        topRight: Radius.circular(25.0),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.remove,
+                          color: Colors.grey[600],
+                        ),
+                        Text(
+                          'Seleccionar Estado',
+                          style: TextStyle(
+                            color: const Color(0xff5a5a5a),
+                            fontWeight: FontWeight.w600,
+                            fontSize: ScreenUtil().setSp(20),
+                          ),
+                        ),
+                        const Divider(
+                          thickness: 1,
+                          color: Colors.black,
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                            controller: controller,
+                            itemCount: estadoItems.length,
+                            itemBuilder: (_, index) {
+                              return InkWell(
+                                onTap: () {
+                                  _estadoController.text = estadoItems[index];
+
+                                  switch (estadoItems[index]) {
+                                    case 'Atendido':
+                                      _estado = '1';
+                                      break;
+                                    case 'Informe Pendiente de Aprobación':
+                                      _estado = '2';
+                                      break;
+                                    case 'Diagnosticado':
+                                      _estado = '3';
+                                      break;
+                                    case 'En proceso de Atención':
+                                      _estado = '4';
+                                      break;
+                                    case 'Sin Atender':
+                                      _estado = '5';
+                                      break;
+                                    case 'Anulado':
+                                      _estado = '6';
+                                      break;
+                                    default:
+                                      _estado = '';
+                                      break;
+                                  }
+
+                                  Navigator.pop(context);
+                                },
+                                child: Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8),
+                                    child: Text(estadoItems[index]),
                                   ),
                                 ),
                               );

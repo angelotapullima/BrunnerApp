@@ -150,8 +150,8 @@ void anularCheck(BuildContext context, InspeccionVehiculoModel item, int lugar) 
 
                                   if (_observacionesController.text.trim().isNotEmpty) {
                                     final _api = InspeccionApi();
-                                    //item.idInspeccionVehiculo.toString()
-                                    final res = await _api.anularInspeccion('', _observacionesController.text.trim());
+                                    final res =
+                                        await _api.anularInspeccion(item.idInspeccionVehiculo.toString(), _observacionesController.text.trim());
 
                                     if (res == 1) {
                                       final consultaInspBloc = ProviderBloc.consultaInsp(context);

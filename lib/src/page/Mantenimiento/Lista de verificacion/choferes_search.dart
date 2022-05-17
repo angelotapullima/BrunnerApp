@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
-import 'package:new_brunner_app/src/model/Mantenimiento/choferes_model.dart';
+import 'package:new_brunner_app/src/model/Mantenimiento/personas_model.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Check%20List/check_list.dart';
 import 'package:provider/provider.dart';
 
@@ -65,7 +65,7 @@ class _ChoferesSearchState extends State<ChoferesSearch> {
               height: ScreenUtil().setHeight(10),
             ),
             Expanded(
-              child: StreamBuilder<List<ChoferesModel>>(
+              child: StreamBuilder<List<PersonasModel>>(
                 stream: searchBloc.choferesStream,
                 builder: (context, snapshot) {
                   if (snapshot.hasData && snapshot.data!.isNotEmpty) {
@@ -99,18 +99,18 @@ class _ChoferesSearchState extends State<ChoferesSearch> {
                               final provider = Provider.of<ConductorController>(context, listen: false);
                               String data = '';
                               if (widget.page == 'Check') {
-                                data = '${chofer.dniChofer}  |  ${chofer.nombreChofer}';
+                                data = '${chofer.dniPerson}  |  ${chofer.nombrePerson}';
                               } else {
-                                data = '${chofer.nombreChofer}';
+                                data = '${chofer.nombrePerson}';
                               }
-                              provider.setData(chofer.idChofer.toString(), data);
+                              provider.setData(chofer.idPerson.toString(), data);
                             },
                             child: Padding(
                               padding: EdgeInsets.symmetric(
                                 horizontal: ScreenUtil().setWidth(16),
                                 vertical: ScreenUtil().setHeight(8),
                               ),
-                              child: Text('${chofer.dniChofer}  |  ${chofer.nombreChofer}'),
+                              child: Text('${chofer.dniPerson}  |  ${chofer.nombrePerson}'),
                             ),
                           );
                         });

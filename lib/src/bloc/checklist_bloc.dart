@@ -1,14 +1,14 @@
 import 'package:new_brunner_app/src/api/Mantenimiento/mantenimiento_api.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/categoria_inspeccion_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/check_item_inspeccion_model.dart';
-import 'package:new_brunner_app/src/model/Mantenimiento/choferes_model.dart';
+import 'package:new_brunner_app/src/model/Mantenimiento/personas_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 class CheckListBloc {
   final _api = MantenimientoApi();
 
-  final _choferesController = BehaviorSubject<List<ChoferesModel>>();
-  Stream<List<ChoferesModel>> get choferesStream => _choferesController.stream;
+  final _choferesController = BehaviorSubject<List<PersonasModel>>();
+  Stream<List<PersonasModel>> get choferesStream => _choferesController.stream;
 
   final _cartegoriasInspeccionController = BehaviorSubject<List<CategoriaInspeccionModel>>();
   Stream<List<CategoriaInspeccionModel>> get catInspeccionStream => _cartegoriasInspeccionController.stream;
@@ -25,9 +25,9 @@ class CheckListBloc {
   void searchChoferes(String query) async {
     _choferesController.sink.add([]);
     if (query.isNotEmpty) {
-      _choferesController.sink.add(await _api.choferesDB.getChoferesByQuery(query));
+      _choferesController.sink.add(await _api.choferesDB.getPersonasByQuery(query));
     } else {
-      _choferesController.sink.add(await _api.choferesDB.getChoferes());
+      _choferesController.sink.add(await _api.choferesDB.getPersonas());
     }
   }
 

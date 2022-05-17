@@ -20,7 +20,7 @@ class DatabaseHelper {
 
       //Mantenimiento
       db.execute(VehiculosDB.vehiculosTableSql);
-      db.execute(VehiculosDB.choferesTableSql);
+      db.execute(VehiculosDB.peronasTableSql);
       db.execute(VehiculosDB.categoriasInspeccionTableSql);
       db.execute(VehiculosDB.itemInspeccionTableSql);
       db.execute(MantenimientoDB.checkItemInspeccionTableSql);

@@ -105,7 +105,7 @@ class _VehiculosSearchState extends State<VehiculosSearch> {
                                 horizontal: ScreenUtil().setWidth(16),
                                 vertical: ScreenUtil().setHeight(8),
                               ),
-                              child: Text('${vehiculo.placaVehiculo}'),
+                              child: fileData('${vehiculo.placaVehiculo} |', '${vehiculo.razonSocialVehiculo}', 14),
                             ),
                           );
                         });
@@ -120,6 +120,28 @@ class _VehiculosSearchState extends State<VehiculosSearch> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget fileData(String titulo, String data, num size) {
+    return RichText(
+      text: TextSpan(
+          text: '$titulo ',
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w500,
+            fontSize: ScreenUtil().setSp(size),
+          ),
+          children: [
+            TextSpan(
+              text: data,
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.w400,
+                fontSize: ScreenUtil().setSp(11),
+              ),
+            )
+          ]),
     );
   }
 }
