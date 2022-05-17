@@ -29,14 +29,14 @@ class MantenimientoCorrectivo extends StatelessWidget {
         children: [
           InkWell(
             onTap: () {
-              Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) {
-                    return const MantCorrectivo();
-                  },
-                ),
-              );
+              // Navigator.push(
+              //   context,
+              //   PageRouteBuilder(
+              //     pageBuilder: (context, animation, secondaryAnimation) {
+              //       return const MantCorrectivo();
+              //     },
+              //   ),
+              // );
             },
             child: const OptionWidget(
               titulo: 'Mantenimiento Correctivo',
