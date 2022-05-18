@@ -33,12 +33,41 @@ class PersonasDatabase {
     }
   }
 
+  Future<List<PersonasModel>> getPersonasMantenimiento() async {
+    try {
+      final Database db = await dbprovider.getDatabase();
+      List<PersonasModel> list = [];
+      List<Map> maps = await db.rawQuery("SELECT * FROM Personas WHERE idCargo='10'");
+
+      if (maps.isNotEmpty) list = PersonasModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      e;
+      return [];
+    }
+  }
+
   Future<List<PersonasModel>> getPersonasByQuery(String query) async {
     try {
       final Database db = await dbprovider.getDatabase();
       List<PersonasModel> list = [];
       List<Map> maps = await db
           .rawQuery("SELECT * FROM Personas WHERE nombrePerson LIKE '%$query%' OR dniPerson LIKE '%$query%' ORDER BY CAST(idPerson AS INTEGER)");
+
+      if (maps.isNotEmpty) list = PersonasModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      e;
+      return [];
+    }
+  }
+
+  Future<List<PersonasModel>> getPersonasMantenimientoByQuery(String query) async {
+    try {
+      final Database db = await dbprovider.getDatabase();
+      List<PersonasModel> list = [];
+      List<Map> maps =
+          await db.rawQuery("SELECT * FROM Personas WHERE idCargo='10' AND nombrePerson LIKE '%$query%' ORDER BY CAST(idPerson AS INTEGER)");
 
       if (maps.isNotEmpty) list = PersonasModel.fromJsonList(maps);
       return list;

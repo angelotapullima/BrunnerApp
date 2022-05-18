@@ -2,9 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
+import 'package:new_brunner_app/src/model/Mantenimiento/categoria_inspeccion_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_model.dart';
+import 'package:new_brunner_app/src/model/Mantenimiento/item_inspeccion_model.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Check%20List/check_list.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Consulta%20Informacion/resultados_consulta.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/search_person_mantenimiento.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/search_vehiculos.dart';
 import 'package:provider/provider.dart';
 
@@ -17,12 +20,14 @@ class MantCorrectivo extends StatefulWidget {
 
 class _MantCorrectivoState extends State<MantCorrectivo> {
   final _placaUnidad = TextEditingController();
-  final _operario = TextEditingController();
+  final _responsable = TextEditingController();
   final _fechaInicio = TextEditingController();
   final _fechaFin = TextEditingController();
   final _nroCheck = TextEditingController();
   final _estadoController = TextEditingController();
   final _tipoVehiculo = TextEditingController();
+  final _categoriaController = TextEditingController();
+  final _itemCatController = TextEditingController();
 
   String _estado = '';
   List<String> estadoItems = [
@@ -41,6 +46,10 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
     'Vehiculo',
     'Maquinaria',
   ];
+
+  String idCategoria = '';
+  String idItemCategoria = '';
+
   int count = 0;
 
   @override
@@ -185,7 +194,7 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
   }
 
   void filtroSearch() {
-    final provider = Provider.of<ConductorController>(context, listen: false);
+    final providerPerson = Provider.of<PersonaMantenimientoController>(context, listen: false);
     final providerPlaca = Provider.of<VehiculosController>(context, listen: false);
     showModalBottomSheet(
       context: context,
@@ -199,7 +208,7 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
             child: GestureDetector(
               onTap: () {},
               child: DraggableScrollableSheet(
-                initialChildSize: 0.9,
+                initialChildSize: 0.95,
                 minChildSize: 0.3,
                 maxChildSize: 0.95,
                 builder: (_, controller) {
@@ -232,7 +241,7 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                               ),
                             ),
                             SizedBox(
-                              height: ScreenUtil().setHeight(20),
+                              height: ScreenUtil().setHeight(10),
                             ),
                             Text(
                               'Filtros',
@@ -283,7 +292,7 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                               ),
                             ),
                             SizedBox(
-                              height: ScreenUtil().setHeight(20),
+                              height: ScreenUtil().setHeight(10),
                             ),
                             ValueListenableBuilder(
                               valueListenable: providerPlaca.placaS,
@@ -351,19 +360,99 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                                     hintStyle: const TextStyle(
                                       color: Color(0xff808080),
                                     ),
+                                    hintText: 'Seleccionar',
                                     labelText: 'Placa de la unidad',
                                   ),
                                 );
                               },
                             ),
                             SizedBox(
-                              height: ScreenUtil().setHeight(20),
+                              height: ScreenUtil().setHeight(10),
+                            ),
+                            ValueListenableBuilder(
+                              valueListenable: providerPerson.personaS,
+                              builder: (BuildContext context, String data, Widget? child) {
+                                if (data != 'Seleccionar responsable') {
+                                  _responsable.text = data;
+                                } else {
+                                  _responsable.text = '';
+                                }
+                                return TextField(
+                                  readOnly: true,
+                                  controller: _responsable,
+                                  maxLines: null,
+                                  style: const TextStyle(
+                                    color: Color(0xff808080),
+                                  ),
+                                  onTap: () {
+                                    FocusScope.of(context).unfocus();
+                                    Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        pageBuilder: (context, animation, secondaryAnimation) {
+                                          return PersonMantenimiento();
+                                        },
+                                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                          var begin = const Offset(0.0, 1.0);
+                                          var end = Offset.zero;
+                                          var curve = Curves.ease;
+
+                                          var tween = Tween(begin: begin, end: end).chain(
+                                            CurveTween(curve: curve),
+                                          );
+
+                                          return SlideTransition(
+                                            position: animation.drive(tween),
+                                            child: child,
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  },
+                                  decoration: InputDecoration(
+                                    suffixIcon: const Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: Colors.green,
+                                    ),
+                                    filled: true,
+                                    fillColor: const Color(0xffeeeeee),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      borderSide: const BorderSide(
+                                        color: Color(0xffeeeeee),
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      borderSide: const BorderSide(
+                                        color: Color(0xffeeeeee),
+                                      ),
+                                    ),
+                                    hintStyle: const TextStyle(
+                                      color: Color(0xff808080),
+                                    ),
+                                    hintText: 'Seleccionar responsable',
+                                    labelText: 'Responsable',
+                                  ),
+                                );
+                              },
+                            ),
+                            SizedBox(
+                              height: ScreenUtil().setHeight(10),
                             ),
                             TextField(
-                              controller: _operario,
+                              controller: _categoriaController,
                               style: const TextStyle(
                                 color: Color(0xff808080),
                               ),
+                              readOnly: true,
+                              maxLines: null,
+                              onTap: () {
+                                FocusScope.of(context).unfocus();
+                                if (_tipoVeh != '') {
+                                  _seleccionarCategorias(context);
+                                }
+                              },
                               decoration: InputDecoration(
                                 suffixIcon: const Icon(
                                   Icons.keyboard_arrow_down,
@@ -386,11 +475,54 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                                 hintStyle: const TextStyle(
                                   color: Color(0xff808080),
                                 ),
-                                labelText: 'Responsable',
+                                hintText: 'Seleccionar',
+                                labelText: 'Clase',
                               ),
                             ),
                             SizedBox(
-                              height: ScreenUtil().setHeight(20),
+                              height: ScreenUtil().setHeight(10),
+                            ),
+                            TextField(
+                              controller: _itemCatController,
+                              style: const TextStyle(
+                                color: Color(0xff808080),
+                              ),
+                              readOnly: true,
+                              maxLines: null,
+                              onTap: () {
+                                FocusScope.of(context).unfocus();
+                                if (idCategoria != '') {
+                                  _seleccionarItems(context);
+                                }
+                              },
+                              decoration: InputDecoration(
+                                suffixIcon: const Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: Colors.green,
+                                ),
+                                filled: true,
+                                fillColor: const Color(0xffeeeeee),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderSide: const BorderSide(
+                                    color: Color(0xffeeeeee),
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderSide: const BorderSide(
+                                    color: Color(0xffeeeeee),
+                                  ),
+                                ),
+                                hintStyle: const TextStyle(
+                                  color: Color(0xff808080),
+                                ),
+                                hintText: 'Seleccionar',
+                                labelText: 'Descripción',
+                              ),
+                            ),
+                            SizedBox(
+                              height: ScreenUtil().setHeight(10),
                             ),
                             TextField(
                               controller: _estadoController,
@@ -430,7 +562,7 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                               ),
                             ),
                             SizedBox(
-                              height: ScreenUtil().setHeight(20),
+                              height: ScreenUtil().setHeight(10),
                             ),
                             TextField(
                               controller: _nroCheck,
@@ -464,7 +596,7 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                               ),
                             ),
                             SizedBox(
-                              height: ScreenUtil().setHeight(20),
+                              height: ScreenUtil().setHeight(10),
                             ),
                             TextField(
                               controller: _fechaInicio,
@@ -503,7 +635,7 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                               ),
                             ),
                             SizedBox(
-                              height: ScreenUtil().setHeight(20),
+                              height: ScreenUtil().setHeight(10),
                             ),
                             TextField(
                               controller: _fechaFin,
@@ -542,7 +674,7 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                               ),
                             ),
                             SizedBox(
-                              height: ScreenUtil().setHeight(20),
+                              height: ScreenUtil().setHeight(10),
                             ),
                             InkWell(
                               onTap: () async {
@@ -652,6 +784,11 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                                     _tipoVeh = '';
                                   }
                                   final provider = Provider.of<VehiculosController>(context, listen: false);
+
+                                  idCategoria = '';
+                                  _categoriaController.clear();
+                                  idItemCategoria = '';
+                                  _itemCatController.clear();
 
                                   provider.setData('', 'Seleccione');
 
@@ -765,6 +902,196 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                               );
                             },
                           ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _seleccionarCategorias(BuildContext context) {
+    final categoriasBloc = ProviderBloc.mantenimientoCorrectivo(context);
+    categoriasBloc.getCategorias(_tipoVeh);
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return GestureDetector(
+          child: Container(
+            color: const Color.fromRGBO(0, 0, 0, 0.001),
+            child: GestureDetector(
+              onTap: () {},
+              child: DraggableScrollableSheet(
+                initialChildSize: 0.7,
+                minChildSize: 0.2,
+                maxChildSize: 0.9,
+                builder: (_, controller) {
+                  return Container(
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(25.0),
+                        topRight: Radius.circular(25.0),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.remove,
+                          color: Colors.grey[600],
+                        ),
+                        Text(
+                          'Seleccionar Estado',
+                          style: TextStyle(
+                            color: const Color(0xff5a5a5a),
+                            fontWeight: FontWeight.w600,
+                            fontSize: ScreenUtil().setSp(20),
+                          ),
+                        ),
+                        const Divider(
+                          thickness: 1,
+                          color: Colors.black,
+                        ),
+                        Expanded(
+                          child: StreamBuilder<List<CategoriaInspeccionModel>>(
+                              stream: categoriasBloc.categoriasStream,
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return Center(
+                                    child: CupertinoActivityIndicator(),
+                                  );
+                                }
+
+                                if (snapshot.data!.isEmpty) {
+                                  return Center(
+                                    child: Text('Sin información disponible'),
+                                  );
+                                }
+
+                                return ListView.builder(
+                                  controller: controller,
+                                  itemCount: snapshot.data!.length,
+                                  itemBuilder: (_, index) {
+                                    var categories = snapshot.data![index];
+                                    return InkWell(
+                                      onTap: () {
+                                        idCategoria = categories.idCatInspeccion.toString();
+                                        _categoriaController.text = categories.descripcionCatInspeccion.toString().trim();
+
+                                        Navigator.pop(context);
+                                      },
+                                      child: Card(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8),
+                                          child: Text(categories.descripcionCatInspeccion.toString().trim()),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              }),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _seleccionarItems(BuildContext context) {
+    final itemsBloc = ProviderBloc.mantenimientoCorrectivo(context);
+    itemsBloc.getItemsCategoria(idCategoria);
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return GestureDetector(
+          child: Container(
+            color: const Color.fromRGBO(0, 0, 0, 0.001),
+            child: GestureDetector(
+              onTap: () {},
+              child: DraggableScrollableSheet(
+                initialChildSize: 0.7,
+                minChildSize: 0.2,
+                maxChildSize: 0.9,
+                builder: (_, controller) {
+                  return Container(
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(25.0),
+                        topRight: Radius.circular(25.0),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.remove,
+                          color: Colors.grey[600],
+                        ),
+                        Text(
+                          'Seleccionar Estado',
+                          style: TextStyle(
+                            color: const Color(0xff5a5a5a),
+                            fontWeight: FontWeight.w600,
+                            fontSize: ScreenUtil().setSp(20),
+                          ),
+                        ),
+                        const Divider(
+                          thickness: 1,
+                          color: Colors.black,
+                        ),
+                        Expanded(
+                          child: StreamBuilder<List<ItemInspeccionModel>>(
+                              stream: itemsBloc.itemsCatStream,
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return Center(
+                                    child: CupertinoActivityIndicator(),
+                                  );
+                                }
+
+                                if (snapshot.data!.isEmpty) {
+                                  return Center(
+                                    child: Text('Sin información disponible'),
+                                  );
+                                }
+
+                                return ListView.builder(
+                                  controller: controller,
+                                  itemCount: snapshot.data!.length,
+                                  itemBuilder: (_, index) {
+                                    var item = snapshot.data![index];
+                                    return InkWell(
+                                      onTap: () {
+                                        idItemCategoria = item.idItemInspeccion.toString();
+                                        _itemCatController.text = item.descripcionItemInspeccion.toString().trim();
+
+                                        Navigator.pop(context);
+                                      },
+                                      child: Card(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8),
+                                          child: Text(item.descripcionItemInspeccion.toString().trim()),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              }),
                         ),
                       ],
                     ),

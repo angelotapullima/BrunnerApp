@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:new_brunner_app/src/bloc/checklist_bloc.dart';
 import 'package:new_brunner_app/src/bloc/consulta_inspeccion_bloc.dart';
 import 'package:new_brunner_app/src/bloc/data_user_bloc.dart';
+import 'package:new_brunner_app/src/bloc/mantenimiento_correctivo_bloc.dart';
 import 'package:new_brunner_app/src/bloc/modulos_bloc.dart';
 import 'package:new_brunner_app/src/bloc/vehiculo_bloc.dart';
 
@@ -13,6 +14,8 @@ class ProviderBloc extends InheritedWidget {
   final vehiculosBloc = VehiculoBloc();
   final checklistBloc = CheckListBloc();
   final consultaInspBloc = ConsultaInspeccionBloc();
+  //Manteniineto Correctivo
+  final mantenimientoCorrectivoBloc = MantenimientoCorrectivoBloc();
 
   ProviderBloc({Key? key, required Widget child}) : super(key: key, child: child);
 
@@ -37,5 +40,9 @@ class ProviderBloc extends InheritedWidget {
 
   static ConsultaInspeccionBloc consultaInsp(BuildContext context) {
     return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.consultaInspBloc;
+  }
+
+  static MantenimientoCorrectivoBloc mantenimientoCorrectivo(BuildContext context) {
+    return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.mantenimientoCorrectivoBloc;
   }
 }
