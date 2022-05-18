@@ -50,4 +50,33 @@ class MantenimientoDB {
       ' atencionCheckItemInsp TEXT,'
       ' nombreCategoria TEXT,'
       ' conclusionCheckItemInsp TEXT)';
+
+  static const String inspeccionVehiculoDetalleTableSql = 'CREATE TABLE InspeccionVehiculoDetalle('
+      ' idInspeccionDetalle TEXT PRIMARY KEY,'
+      ' tipoUnidad TEXT,'
+      ' plavaVehiculo TEXT,'
+      ' nroCheckList TEXT,'
+      ' fechsInspeccion TEXT,'
+      ' horaInspeccion TEXT,'
+      ' idCategoria TEXT,'
+      ' descripcionCategoria TEXT,'
+      ' idItemInspeccion TEXT,'
+      ' descripcionItem TEXT,'
+      ' idInspeccionVehiculo TEXT,'
+      ' estadoInspeccionDetalle TEXT,'
+      ' observacionInspeccionDetalle TEXT,'
+      ' estadoFinalInspeccionDetalle TEXT)';
+
+  static const String mantenimientoCorrectivoTableSql = 'CREATE TABLE MantenimientoCorrectivo('
+      ' idMantenimiento TEXT PRIMARY KEY,'
+      ' idInspeccionDetalle TEXT,'
+      ' responsable TEXT,'
+      ' idResponsable TEXT,'
+      ' estado TEXT,'
+      ' diagnostico TEXT,'
+      ' fechaDiagnostico TEXT,'
+      ' conclusion TEXT,'
+      ' dateTimeMantenimiento TEXT,'
+      ' estadoFinal TEXT,'
+      ' fechaFinalMantenimiento TEXT)';
 }
