@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/categoria_inspeccion_model.dart';
-import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_model.dart';
+import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_detalle_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/item_inspeccion_model.dart';
-import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Check%20List/check_list.dart';
-import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Consulta%20Informacion/resultados_consulta.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/Correctivo/resultados_consulta_detalle.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/search_person_mantenimiento.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/search_vehiculos.dart';
+import 'package:new_brunner_app/src/util/utils.dart';
 import 'package:provider/provider.dart';
 
 class MantCorrectivo extends StatefulWidget {
@@ -68,10 +68,10 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
     _estado = '';
     _tipoVehiculo.text = 'Seleccionar unidad';
     _tipoVeh = '';
-    var data =
-        "${DateTime.now().year.toString().padLeft(2, '0')}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().day.toString().padLeft(2, '0')}";
-    _fechaInicio.text = data;
-    _fechaFin.text = data;
+    // var data =
+    //     "${DateTime.now().year.toString().padLeft(2, '0')}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().day.toString().padLeft(2, '0')}";
+    // _fechaInicio.text = data;
+    // _fechaFin.text = data;
     Future.delayed(const Duration(microseconds: 100), () async {
       filtroSearch();
     });
@@ -81,7 +81,7 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
 
   @override
   Widget build(BuildContext context) {
-    final consultaInspBloc = ProviderBloc.consultaInsp(context);
+    final consultaDetallesBloc = ProviderBloc.mantenimientoCorrectivo(context);
 
     return WillPopScope(
       onWillPop: () async {
@@ -110,7 +110,7 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
           ],
         ),
         body: StreamBuilder<bool>(
-          stream: consultaInspBloc.cargandoStream,
+          stream: consultaDetallesBloc.cargandoStream,
           builder: (context, cargando) {
             if (!cargando.hasData || cargando.data!) {
               return const Center(
@@ -118,12 +118,13 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
               );
             }
 
-            return StreamBuilder<List<InspeccionVehiculoModel>>(
+            return StreamBuilder<List<InspeccionVehiculoDetalleModel>>(
+              stream: consultaDetallesBloc.detallesStream,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   if (snapshot.data!.isNotEmpty) {
-                    return ResultadosConsulta(
-                      inspecciones: snapshot.data!,
+                    return ResultadosConsultaDetalle(
+                      detalles: snapshot.data!,
                     );
                   } else {
                     if (count == 0) {
@@ -297,10 +298,10 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                             ValueListenableBuilder(
                               valueListenable: providerPlaca.placaS,
                               builder: (BuildContext context, String data, Widget? child) {
-                                if (data != 'Seleccione') {
+                                if (data != '') {
                                   _placaUnidad.text = data;
                                 } else {
-                                  _placaUnidad.text = '';
+                                  _placaUnidad.clear();
                                 }
                                 return TextField(
                                   readOnly: true,
@@ -678,11 +679,24 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                             ),
                             InkWell(
                               onTap: () async {
-                                final consultaInspBloc = ProviderBloc.consultaInsp(context);
-                                final provider = Provider.of<ConductorController>(context, listen: false);
-                                consultaInspBloc.getInspeccionesVehiculo(_fechaInicio.text.trim(), _fechaFin.text.trim(), _placaUnidad.text.trim(),
-                                    provider.idS.value.trim(), _estado.trim(), _nroCheck.text.trim());
-                                Navigator.pop(context);
+                                if (_tipoVeh.isNotEmpty && _tipoVeh != '') {
+                                  print(providerPlaca.placaS.value);
+                                  final consultaDetallespBloc = ProviderBloc.mantenimientoCorrectivo(context);
+                                  consultaDetallespBloc.getDetalleInsppeccionFiltro(
+                                    _tipoVeh,
+                                    providerPlaca.placaS.value,
+                                    providerPerson.idS.value,
+                                    idCategoria.trim(),
+                                    idItemCategoria.trim(),
+                                    _estado.trim(),
+                                    _nroCheck.text.trim(),
+                                    _fechaInicio.text.trim(),
+                                    _fechaFin.text.trim(),
+                                  );
+                                  Navigator.pop(context);
+                                } else {
+                                  showToast2('Debe seleecionar por lo menos una unidad', Colors.redAccent);
+                                }
                               },
                               child: Container(
                                 width: double.infinity,
@@ -790,7 +804,7 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                                   idItemCategoria = '';
                                   _itemCatController.clear();
 
-                                  provider.setData('', 'Seleccione');
+                                  provider.setData('', '');
 
                                   Navigator.pop(context);
                                 },

@@ -4,7 +4,7 @@ import 'package:new_brunner_app/src/core/preferences.dart';
 import 'package:new_brunner_app/src/core/routes_constanst.dart';
 import 'package:http/http.dart' as http;
 import 'package:new_brunner_app/src/database/Mantenimiento/categorias_inspeccion_database.dart';
-import 'package:new_brunner_app/src/database/Mantenimiento/inspeccion_vehiculo_detalle.dart';
+import 'package:new_brunner_app/src/database/Mantenimiento/inspeccion_vehiculo_detalle_database.dart';
 import 'package:new_brunner_app/src/database/Mantenimiento/item_inspeccion_database.dart';
 import 'package:new_brunner_app/src/database/Mantenimiento/mantenimiento_correctivo_database.dart';
 import 'package:new_brunner_app/src/database/personas_database.dart';
@@ -77,7 +77,7 @@ class MantenimientoCorrectivoApi {
         detalle.plavaVehiculo = data["vehiculo_placa"];
         detalle.nroCheckList = data["numero_checklist"];
         var fechix = data["inspeccion_vehiculo_fecha"].split(' ');
-        detalle.fechsInspeccion = fechix[0].trim();
+        detalle.fechaInspeccion = fechix[0].trim();
         detalle.horaInspeccion = fechix[1].trim();
         detalle.idCategoria = data["id_vehiculo_inspeccion_categoria"];
         detalle.descripcionCategoria = data["vehiculo_inspeccion_categoria_descripcion"];

@@ -36,10 +36,10 @@ class InspeccionVehiculoDetalleDatabase {
   Future<List<InspeccionVehiculoDetalleModel>> getDetalleInspeccionFiltro(String tipoUnidad, String fechaInicial, String fechaFinal, String placa,
       String idCategoria, String idItem, String estado, String nroCheck) async {
     try {
-      String query = "SELECT * FROM InspeccionVehiculos WHERE tipoUnidad='$tipoUnidad'";
+      String query = "SELECT * FROM InspeccionVehiculoDetalle WHERE tipoUnidad='$tipoUnidad'";
 
       if (fechaInicial.isNotEmpty && fechaFinal.isNotEmpty) {
-        query += " AND fechsInspeccion BETWEEN '$fechaInicial' AND '$fechaFinal'";
+        query += " AND fechaInspeccion BETWEEN '$fechaInicial' AND '$fechaFinal'";
       }
 
       if (placa.isNotEmpty) {

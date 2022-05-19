@@ -5,7 +5,7 @@ class InspeccionVehiculoDetalleModel {
   String? tipoUnidad;
   String? plavaVehiculo;
   String? nroCheckList;
-  String? fechsInspeccion;
+  String? fechaInspeccion;
   String? horaInspeccion;
   String? idCategoria;
   String? descripcionCategoria;
@@ -23,7 +23,7 @@ class InspeccionVehiculoDetalleModel {
     this.tipoUnidad,
     this.plavaVehiculo,
     this.nroCheckList,
-    this.fechsInspeccion,
+    this.fechaInspeccion,
     this.horaInspeccion,
     this.idCategoria,
     this.descripcionCategoria,
@@ -44,7 +44,7 @@ class InspeccionVehiculoDetalleModel {
         'tipoUnidad': tipoUnidad,
         'plavaVehiculo': plavaVehiculo,
         'nroCheckList': nroCheckList,
-        'fechsInspeccion': fechsInspeccion,
+        'fechaInspeccion': fechaInspeccion,
         'horaInspeccion': horaInspeccion,
         'idCategoria': idCategoria,
         'descripcionCategoria': descripcionCategoria,
@@ -61,7 +61,7 @@ class InspeccionVehiculoDetalleModel {
         tipoUnidad: json["tipoUnidad"],
         plavaVehiculo: json["plavaVehiculo"],
         nroCheckList: json["nroCheckList"],
-        fechsInspeccion: json["fechsInspeccion"],
+        fechaInspeccion: json["fechaInspeccion"],
         horaInspeccion: json["horaInspeccion"],
         idCategoria: json["idCategoria"],
         descripcionCategoria: json["descripcionCategoria"],

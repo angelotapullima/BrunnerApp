@@ -148,7 +148,7 @@ class _VehiculosSearchState extends State<VehiculosSearch> {
 
 class VehiculosController extends ChangeNotifier {
   ValueNotifier<String> id = ValueNotifier('');
-  ValueNotifier<String> placa = ValueNotifier('Seleccione');
+  ValueNotifier<String> placa = ValueNotifier('');
 
   ValueNotifier<String> get idS => id;
   ValueNotifier<String> get placaS => placa;

@@ -56,7 +56,7 @@ class MantenimientoDB {
       ' tipoUnidad TEXT,'
       ' plavaVehiculo TEXT,'
       ' nroCheckList TEXT,'
-      ' fechsInspeccion TEXT,'
+      ' fechaInspeccion TEXT,'
       ' horaInspeccion TEXT,'
       ' idCategoria TEXT,'
       ' descripcionCategoria TEXT,'

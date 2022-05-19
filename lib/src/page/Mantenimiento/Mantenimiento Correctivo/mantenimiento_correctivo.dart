@@ -36,7 +36,7 @@ class MantenimientoCorrectivo extends StatelessWidget {
               final correctivoBloc = ProviderBloc.mantenimientoCorrectivo(context);
               correctivoBloc.getCategorias('');
               final providerPlaca = Provider.of<VehiculosController>(context, listen: false);
-              providerPlaca.setData('', 'Seleccione');
+              providerPlaca.setData('', '');
               final providerPerson = Provider.of<PersonaMantenimientoController>(context, listen: false);
               providerPerson.setData('', 'Seleccionar responsable');
               Navigator.push(
