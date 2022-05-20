@@ -39,37 +39,6 @@ class ResultadosConsultaDetalle extends StatelessWidget {
   }
 
   Widget _detalle(BuildContext context, InspeccionVehiculoDetalleModel detalle) {
-    Color color = Colors.redAccent;
-    String textEstado = 'Sin Atender';
-    if (detalle.estadoFinalInspeccionDetalle == '0') {
-      textEstado = 'Anulado';
-    }
-    if (detalle.mantCorrectivos!.isNotEmpty) {
-      switch (detalle.mantCorrectivos![0].estado) {
-        case '1':
-          color = Colors.blue;
-          textEstado = 'Informe Pendiente de Aprobación';
-
-          break;
-        case '2':
-          color = Colors.orangeAccent;
-          textEstado = 'En Proceso de Aprobación';
-
-          break;
-        case '4':
-          color = Colors.green;
-          textEstado = 'Atendido';
-
-          break;
-        case '5':
-          color = Colors.deepPurpleAccent;
-          textEstado = 'Diagnosticado';
-
-          break;
-        default:
-          color = Colors.redAccent;
-      }
-    }
     return Container(
       margin: EdgeInsets.symmetric(
         horizontal: ScreenUtil().setWidth(16),
@@ -77,87 +46,89 @@ class ResultadosConsultaDetalle extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          Container(
-            margin: EdgeInsets.only(top: ScreenUtil().setHeight(10)),
-            padding: EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: (detalle.estadoFinalInspeccionDetalle == '0') ? Colors.redAccent.withOpacity(0.5) : Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.transparent.withOpacity(0.2),
-                  spreadRadius: 2,
-                  blurRadius: 5,
-                  offset: const Offset(0, 3), // changes position of shadow
-                ),
-              ],
-            ),
-            child: Row(
-              children: [
-                SizedBox(
-                  width: ScreenUtil().setWidth(90),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      PopupMenuButton(
-                        padding: EdgeInsets.all(0),
-                        icon: Icon(
-                          Icons.error,
-                          color: color,
-                          size: ScreenUtil().setHeight(30),
-                        ),
-                        itemBuilder: (context) => [
+          (detalle.estadoFinalInspeccionDetalle == '1')
+              ? PopupMenuButton(
+                  itemBuilder: (context) => (detalle.mantCorrectivos!.isEmpty)
+                      ? [
                           PopupMenuItem(
-                            child: Text(
-                              textEstado,
-                              style: TextStyle(color: color),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.close,
+                                  color: Colors.redAccent,
+                                ),
+                                SizedBox(
+                                  width: ScreenUtil().setWidth(8),
+                                ),
+                                Text(
+                                  'Anular',
+                                  style: TextStyle(color: Colors.redAccent),
+                                ),
+                              ],
                             ),
                             value: 1,
+                          ),
+                        ]
+                      : [
+                          PopupMenuItem(
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.remove_red_eye,
+                                  color: Colors.blueGrey,
+                                ),
+                                SizedBox(
+                                  width: ScreenUtil().setWidth(8),
+                                ),
+                                Text(
+                                  'Visualizar',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ],
+                            ),
+                            value: 1,
+                          ),
+                          PopupMenuItem(
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.add_outlined,
+                                  color: Colors.green,
+                                ),
+                                SizedBox(
+                                  width: ScreenUtil().setWidth(8),
+                                ),
+                                Text(
+                                  'Agregar',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ],
+                            ),
+                            value: 2,
+                          ),
+                          PopupMenuItem(
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.edit_note,
+                                  color: Colors.orangeAccent,
+                                ),
+                                SizedBox(
+                                  width: ScreenUtil().setWidth(8),
+                                ),
+                                Text(
+                                  'Editar',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ],
+                            ),
+                            value: 3,
                           )
                         ],
-                      ),
-                      Text(
-                        'Nro CheckList',
-                        style: TextStyle(
-                          color: (detalle.estadoFinalInspeccionDetalle == '0') ? Colors.black : Colors.grey,
-                          fontSize: ScreenUtil().setSp(8),
-                        ),
-                      ),
-                      Text(
-                        detalle.nroCheckList.toString(),
-                        style: TextStyle(fontWeight: FontWeight.w500),
-                      ),
-                    ],
-                  ),
+                  child: contenidoItem(detalle))
+              : InkWell(
+                  child: contenidoItem(detalle),
                 ),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          '${obtenerFecha(detalle.fechaInspeccion.toString())} ${detalle.horaInspeccion}',
-                          style: TextStyle(
-                            color: (detalle.estadoFinalInspeccionDetalle == '0') ? Colors.black : Colors.grey,
-                            fontSize: ScreenUtil().setSp(10),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(5),
-                      ),
-                      fileData('Clase', detalle.descripcionCategoria.toString(), 10, 12, FontWeight.w600, FontWeight.w400),
-                      fileData('Descripción', detalle.descripcionItem.toString(), 10, 12, FontWeight.w600, FontWeight.w500),
-                      fileData('Observación', detalle.observacionInspeccionDetalle.toString(), 10, 12, FontWeight.w600, FontWeight.w400),
-                      fileData('Mantenimiento', detalle.mantCorrectivos!.length.toString(), 10, 12, FontWeight.w600, FontWeight.w400),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
           Align(
             alignment: Alignment.topLeft,
             child: Container(
@@ -200,6 +171,150 @@ class ResultadosConsultaDetalle extends StatelessWidget {
               ),
             )
           ]),
+    );
+  }
+
+  Widget optionAddPerson() {
+    return PopupMenuButton(
+      padding: EdgeInsets.all(0),
+      icon: Icon(
+        Icons.person_add,
+        color: Colors.green,
+        size: ScreenUtil().setHeight(30),
+      ),
+      itemBuilder: (context) => [
+        PopupMenuItem(
+          child: Text(
+            'Seleccionar responsable',
+            style: TextStyle(color: Colors.black),
+          ),
+          value: 1,
+        )
+      ],
+    );
+  }
+
+  Widget contenidoItem(InspeccionVehiculoDetalleModel detalle) {
+    Color color = Colors.redAccent;
+    String textEstado = 'Sin Atender';
+    String responsable = '';
+    if (detalle.estadoFinalInspeccionDetalle == '0') {
+      textEstado = 'Anulado';
+    }
+    if (detalle.mantCorrectivos!.isNotEmpty) {
+      for (var i = 0; i < detalle.mantCorrectivos!.length; i++) {
+        if (detalle.mantCorrectivos![i].estadoFinal == '1') {
+          responsable = detalle.mantCorrectivos![i].responsable ?? '';
+          switch (detalle.mantCorrectivos![i].estado) {
+            case '1':
+              color = Colors.blue;
+              textEstado = 'Informe Pendiente de Aprobación';
+              break;
+            case '2':
+              color = Colors.orangeAccent;
+              textEstado = 'En Proceso de Aprobación';
+              break;
+            case '4':
+              color = Colors.green;
+              textEstado = 'Atendido';
+              break;
+            case '5':
+              color = Colors.deepPurpleAccent;
+              textEstado = 'Diagnosticado';
+              break;
+            default:
+              color = Colors.redAccent;
+          }
+        }
+      }
+    }
+    return Container(
+      margin: EdgeInsets.only(top: ScreenUtil().setHeight(10)),
+      padding: EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: (detalle.estadoFinalInspeccionDetalle == '0') ? Colors.redAccent.withOpacity(0.5) : Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.transparent.withOpacity(0.2),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: const Offset(0, 3), // changes position of shadow
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          SizedBox(
+            width: ScreenUtil().setWidth(90),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                PopupMenuButton(
+                  padding: EdgeInsets.all(0),
+                  icon: Icon(
+                    Icons.error,
+                    color: color,
+                    size: ScreenUtil().setHeight(30),
+                  ),
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      child: Text(
+                        textEstado,
+                        style: TextStyle(color: color),
+                      ),
+                      value: 1,
+                    )
+                  ],
+                ),
+                Text(
+                  'Nro CheckList',
+                  style: TextStyle(
+                    color: (detalle.estadoFinalInspeccionDetalle == '0') ? Colors.black : Colors.grey,
+                    fontSize: ScreenUtil().setSp(8),
+                  ),
+                ),
+                Text(
+                  detalle.nroCheckList.toString(),
+                  style: TextStyle(fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    '${obtenerFecha(detalle.fechaInspeccion.toString())} ${detalle.horaInspeccion}',
+                    style: TextStyle(
+                      color: (detalle.estadoFinalInspeccionDetalle == '0') ? Colors.black : Colors.grey,
+                      fontSize: ScreenUtil().setSp(10),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: ScreenUtil().setHeight(5),
+                ),
+                fileData('Clase', detalle.descripcionCategoria.toString(), 10, 12, FontWeight.w600, FontWeight.w400),
+                fileData('Descripción', detalle.descripcionItem.toString(), 10, 12, FontWeight.w600, FontWeight.w500),
+                fileData('Observación', detalle.observacionInspeccionDetalle ?? '', 10, 12, FontWeight.w600, FontWeight.w400),
+                (detalle.estadoFinalInspeccionDetalle == '0')
+                    ? Container()
+                    : (responsable == '')
+                        ? Align(
+                            alignment: Alignment.centerRight,
+                            child: optionAddPerson(),
+                          )
+                        : fileData('Responsable', responsable, 10, 12, FontWeight.w600, FontWeight.w400),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
