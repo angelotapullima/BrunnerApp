@@ -68,6 +68,11 @@ class MantenimientoCorrectivoApi {
 
       //Insertar Detalle Inspecciones y Mantenimiento Correctivo
 
+      if (decodedData["code"]["inspeccion_detalle"].length > 0) {
+        await detalleInspDB.deleteDetalleInspeccion();
+        await mantCorrectivoDB.deleteMantenimiento();
+      }
+
       for (var i = 0; i < decodedData["code"]["inspeccion_detalle"].length; i++) {
         var data = decodedData["code"]["inspeccion_detalle"][i];
 

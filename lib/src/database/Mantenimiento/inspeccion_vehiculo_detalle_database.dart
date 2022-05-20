@@ -61,7 +61,7 @@ class InspeccionVehiculoDetalleDatabase {
         query += " AND nroCheckList='$nroCheck'";
       }
 
-      query += " ORDER BY CAST(idInspeccionDetalle AS INTEGER)";
+      //query += " ORDER BY CAST(idInspeccionDetalle AS INTEGER)";
       final Database db = await dbprovider.getDatabase();
       List<InspeccionVehiculoDetalleModel> list = [];
       List<Map> maps = await db.rawQuery(query);

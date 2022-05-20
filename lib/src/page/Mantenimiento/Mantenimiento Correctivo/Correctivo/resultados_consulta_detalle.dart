@@ -10,14 +10,66 @@ class ResultadosConsultaDetalle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-        itemCount: detalles.length,
+        itemCount: detalles.length + 1,
         itemBuilder: (_, index) {
+          if (index == 0) {
+            return Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: ScreenUtil().setHeight(5),
+                horizontal: ScreenUtil().setWidth(16),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    'Se encontraron ${detalles.length} resultados',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: ScreenUtil().setSp(10),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+          index = index - 1;
           var data = detalles[index];
           return _detalle(context, data);
         });
   }
 
   Widget _detalle(BuildContext context, InspeccionVehiculoDetalleModel detalle) {
+    Color color = Colors.redAccent;
+    String textEstado = 'Sin Atender';
+    if (detalle.estadoFinalInspeccionDetalle == '0') {
+      textEstado = 'Anulado';
+    }
+    if (detalle.mantCorrectivos!.isNotEmpty) {
+      switch (detalle.mantCorrectivos![0].estado) {
+        case '1':
+          color = Colors.blue;
+          textEstado = 'Informe Pendiente de Aprobación';
+
+          break;
+        case '2':
+          color = Colors.orangeAccent;
+          textEstado = 'En Proceso de Aprobación';
+
+          break;
+        case '4':
+          color = Colors.green;
+          textEstado = 'Atendido';
+
+          break;
+        case '5':
+          color = Colors.deepPurpleAccent;
+          textEstado = 'Diagnosticado';
+
+          break;
+        default:
+          color = Colors.redAccent;
+      }
+    }
     return Container(
       margin: EdgeInsets.symmetric(
         horizontal: ScreenUtil().setWidth(16),
@@ -29,7 +81,7 @@ class ResultadosConsultaDetalle extends StatelessWidget {
             margin: EdgeInsets.only(top: ScreenUtil().setHeight(10)),
             padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: (detalle.estadoFinalInspeccionDetalle == '0') ? Colors.redAccent.withOpacity(0.5) : Colors.white,
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
@@ -43,39 +95,63 @@ class ResultadosConsultaDetalle extends StatelessWidget {
             child: Row(
               children: [
                 SizedBox(
-                  width: ScreenUtil().setWidth(80),
+                  width: ScreenUtil().setWidth(90),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Icon(
-                        Icons.error,
-                        color: Colors.orangeAccent,
+                      PopupMenuButton(
+                        padding: EdgeInsets.all(0),
+                        icon: Icon(
+                          Icons.error,
+                          color: color,
+                          size: ScreenUtil().setHeight(30),
+                        ),
+                        itemBuilder: (context) => [
+                          PopupMenuItem(
+                            child: Text(
+                              textEstado,
+                              style: TextStyle(color: color),
+                            ),
+                            value: 1,
+                          )
+                        ],
                       ),
                       Text(
                         'Nro CheckList',
                         style: TextStyle(
-                          color: Colors.grey,
+                          color: (detalle.estadoFinalInspeccionDetalle == '0') ? Colors.black : Colors.grey,
                           fontSize: ScreenUtil().setSp(8),
                         ),
                       ),
-                      Text(detalle.nroCheckList.toString()),
+                      Text(
+                        detalle.nroCheckList.toString(),
+                        style: TextStyle(fontWeight: FontWeight.w500),
+                      ),
                     ],
                   ),
                 ),
                 Expanded(
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Align(
                         alignment: Alignment.centerRight,
                         child: Text(
                           '${obtenerFecha(detalle.fechaInspeccion.toString())} ${detalle.horaInspeccion}',
                           style: TextStyle(
-                            color: Colors.grey,
+                            color: (detalle.estadoFinalInspeccionDetalle == '0') ? Colors.black : Colors.grey,
                             fontSize: ScreenUtil().setSp(10),
                           ),
                         ),
                       ),
-                      Text(detalle.descripcionCategoria.toString()),
-                      Text(detalle.descripcionCategoria.toString()),
+                      SizedBox(
+                        height: ScreenUtil().setHeight(5),
+                      ),
+                      fileData('Clase', detalle.descripcionCategoria.toString(), 10, 12, FontWeight.w600, FontWeight.w400),
+                      fileData('Descripción', detalle.descripcionItem.toString(), 10, 12, FontWeight.w600, FontWeight.w500),
+                      fileData('Observación', detalle.observacionInspeccionDetalle.toString(), 10, 12, FontWeight.w600, FontWeight.w400),
+                      fileData('Mantenimiento', detalle.mantCorrectivos!.length.toString(), 10, 12, FontWeight.w600, FontWeight.w400),
                     ],
                   ),
                 ),
@@ -105,13 +181,13 @@ class ResultadosConsultaDetalle extends StatelessWidget {
     );
   }
 
-  Widget fileData(String titulo, String data, num sizeT, num sizeD) {
+  Widget fileData(String titulo, String data, num sizeT, num sizeD, FontWeight ft, FontWeight fd) {
     return RichText(
       text: TextSpan(
           text: '$titulo: ',
           style: TextStyle(
             color: Colors.black,
-            fontWeight: FontWeight.w400,
+            fontWeight: ft,
             fontSize: ScreenUtil().setSp(sizeT),
           ),
           children: [
@@ -119,7 +195,7 @@ class ResultadosConsultaDetalle extends StatelessWidget {
               text: data,
               style: TextStyle(
                 color: Colors.black,
-                fontWeight: FontWeight.w500,
+                fontWeight: fd,
                 fontSize: ScreenUtil().setSp(sizeD),
               ),
             )

@@ -883,22 +883,22 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
 
                                   switch (estadoItems[index]) {
                                     case 'Atendido':
-                                      _estado = '1';
-                                      break;
-                                    case 'Informe Pendiente de Aprobación':
-                                      _estado = '2';
-                                      break;
-                                    case 'Diagnosticado':
-                                      _estado = '3';
-                                      break;
-                                    case 'En proceso de Atención':
                                       _estado = '4';
                                       break;
-                                    case 'Sin Atender':
+                                    case 'Informe Pendiente de Aprobación':
+                                      _estado = '1';
+                                      break;
+                                    case 'Diagnosticado':
                                       _estado = '5';
                                       break;
+                                    case 'En proceso de Atención':
+                                      _estado = '2';
+                                      break;
+                                    case 'Sin Atender':
+                                      _estado = '0';
+                                      break;
                                     case 'Anulado':
-                                      _estado = '6';
+                                      _estado = '3';
                                       break;
                                     default:
                                       _estado = '';

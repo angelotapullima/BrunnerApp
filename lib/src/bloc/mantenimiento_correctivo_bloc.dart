@@ -99,10 +99,18 @@ class MantenimientoCorrectivoBloc {
     String db = '';
     String mc = '';
 
-    if (estado == '1' || estado == '0') {
-      db = estado;
-    } else if (estado != '') {
-      mc = estado;
+    //Asignado el esta para inspeccion detalle
+    switch (estado) {
+      case '0':
+        db = '1';
+        break;
+      case '3':
+        db = '0';
+        break;
+      default:
+        db = '';
+        mc = estado;
+        break;
     }
 
     final detallesQuery = await _api.detalleInspDB.getDetalleInspeccionFiltro(
@@ -127,35 +135,61 @@ class MantenimientoCorrectivoBloc {
       detalle.horaInspeccion = detallesQuery[i].horaInspeccion;
       detalle.idCategoria = detallesQuery[i].idCategoria;
       detalle.descripcionCategoria = detallesQuery[i].descripcionCategoria;
-      detalle.descripcionCategoria = detallesQuery[i].descripcionCategoria;
-      detalle.descripcionCategoria = detallesQuery[i].descripcionCategoria;
-      detalle.descripcionCategoria = detallesQuery[i].descripcionCategoria;
-      detalle.descripcionCategoria = detallesQuery[i].descripcionCategoria;
-      detalle.descripcionCategoria = detallesQuery[i].descripcionCategoria;
-      detalle.descripcionCategoria = detallesQuery[i].descripcionCategoria;
+      detalle.idItemInspeccion = detallesQuery[i].idItemInspeccion;
+      detalle.descripcionItem = detallesQuery[i].descripcionItem;
+      detalle.idInspeccionVehiculo = detallesQuery[i].idInspeccionVehiculo;
+      detalle.estadoInspeccionDetalle = detallesQuery[i].estadoInspeccionDetalle;
+      detalle.observacionInspeccionDetalle = detallesQuery[i].observacionInspeccionDetalle;
+      detalle.estadoFinalInspeccionDetalle = detallesQuery[i].estadoFinalInspeccionDetalle;
 
-      final mantenimientoDB = await _api.mantCorrectivoDB.getMantenimientosFiltro(detalle.idInspeccionDetalle.toString(), idPersona, mc);
+      final mantenimientoDB = await _api.mantCorrectivoDB.getMantenimientosFiltro(detallesQuery[i].idInspeccionDetalle.toString(), idPersona, mc);
 
-      final List<MantenimientoCorrectivoModel> mant = [];
-      for (var x = 0; x < mantenimientoDB.length; x++) {
-        final mantenimiento = MantenimientoCorrectivoModel();
-        mantenimiento.idMantenimiento = mantenimientoDB[x].idMantenimiento;
-        mantenimiento.idInspeccionDetalle = mantenimientoDB[x].idInspeccionDetalle;
-        mantenimiento.responsable = mantenimientoDB[x].responsable;
-        mantenimiento.idResponsable = mantenimientoDB[x].idResponsable;
-        mantenimiento.estado = mantenimientoDB[x].estado;
-        mantenimiento.diagnostico = mantenimientoDB[x].diagnostico;
-        mantenimiento.fechaDiagnostico = mantenimientoDB[x].fechaDiagnostico;
-        mantenimiento.conclusion = mantenimientoDB[x].conclusion;
-        mantenimiento.dateTimeMantenimiento = mantenimientoDB[x].dateTimeMantenimiento;
-        mantenimiento.estadoFinal = mantenimientoDB[x].estadoFinal;
-        mantenimiento.fechaFinalMantenimiento = mantenimientoDB[x].fechaFinalMantenimiento;
-        mant.add(mantenimiento);
+      if (mantenimientoDB.isEmpty && estado == '0') {
+        detalle.mantCorrectivos = [];
+        result.add(detalle);
+      } else if (estado != '0') {
+        final List<MantenimientoCorrectivoModel> mantConEstados = [];
+        final List<MantenimientoCorrectivoModel> mantSinEstados = [];
+        for (var x = 0; x < mantenimientoDB.length; x++) {
+          final mantenimiento = MantenimientoCorrectivoModel();
+          mantenimiento.idMantenimiento = mantenimientoDB[x].idMantenimiento;
+          mantenimiento.idInspeccionDetalle = mantenimientoDB[x].idInspeccionDetalle;
+          mantenimiento.responsable = mantenimientoDB[x].responsable;
+          mantenimiento.idResponsable = mantenimientoDB[x].idResponsable;
+          mantenimiento.estado = mantenimientoDB[x].estado;
+          mantenimiento.diagnostico = mantenimientoDB[x].diagnostico;
+          mantenimiento.fechaDiagnostico = mantenimientoDB[x].fechaDiagnostico;
+          mantenimiento.conclusion = mantenimientoDB[x].conclusion;
+          mantenimiento.dateTimeMantenimiento = mantenimientoDB[x].dateTimeMantenimiento;
+          mantenimiento.estadoFinal = mantenimientoDB[x].estadoFinal;
+          mantenimiento.fechaFinalMantenimiento = mantenimientoDB[x].fechaFinalMantenimiento;
+          if (mc != '') {
+            print(mantenimiento.estado);
+            mantConEstados.add(mantenimiento);
+          } else {
+            mantSinEstados.add(mantenimiento);
+          }
+        }
+
+        if (estado == '') {
+          detalle.mantCorrectivos = mantSinEstados;
+          result.add(detalle);
+        } else {
+          if (mantConEstados.isNotEmpty) {
+            detalle.mantCorrectivos = mantConEstados;
+            result.add(detalle);
+          }
+          if (mantSinEstados.isNotEmpty) {
+            detalle.mantCorrectivos = mantSinEstados;
+            result.add(detalle);
+          }
+
+          if (db != '') {
+            detalle.mantCorrectivos = mantSinEstados;
+            result.add(detalle);
+          }
+        }
       }
-
-      detalle.mantCorrectivos = mant;
-
-      result.add(detalle);
     }
 
     return result;
