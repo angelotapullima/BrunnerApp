@@ -164,7 +164,6 @@ class MantenimientoCorrectivoBloc {
           mantenimiento.estadoFinal = mantenimientoDB[x].estadoFinal;
           mantenimiento.fechaFinalMantenimiento = mantenimientoDB[x].fechaFinalMantenimiento;
           if (mc != '') {
-            print(mantenimiento.estado);
             mantConEstados.add(mantenimiento);
           } else {
             mantSinEstados.add(mantenimiento);
@@ -190,6 +189,46 @@ class MantenimientoCorrectivoBloc {
           }
         }
       }
+    }
+
+    return result;
+  }
+
+  void getInspeccionesById(String idInspeccionDetalle, String tipoUnidad) async {
+    _detalllesController.sink.add([]);
+    _detalllesController.sink.add(await getDetalleInspeccionId(idInspeccionDetalle));
+    _cargandoController.sink.add(true);
+    await _api.getData(tipoUnidad);
+    _cargandoController.sink.add(false);
+    _detalllesController.sink.add(await getDetalleInspeccionId(idInspeccionDetalle));
+  }
+
+  Future<List<InspeccionVehiculoDetalleModel>> getDetalleInspeccionId(String idInspeccionDetalle) async {
+    final List<InspeccionVehiculoDetalleModel> result = [];
+
+    final detalleDB = await _api.detalleInspDB.getDetalleInspeccionById(idInspeccionDetalle);
+
+    if (detalleDB.isNotEmpty) {
+      final detalle = InspeccionVehiculoDetalleModel();
+      detalle.idInspeccionDetalle = detalleDB[0].idInspeccionDetalle;
+      detalle.tipoUnidad = detalleDB[0].tipoUnidad;
+      detalle.plavaVehiculo = detalleDB[0].plavaVehiculo;
+      detalle.nroCheckList = detalleDB[0].nroCheckList;
+      detalle.fechaInspeccion = detalleDB[0].fechaInspeccion;
+      detalle.horaInspeccion = detalleDB[0].horaInspeccion;
+      detalle.idCategoria = detalleDB[0].idCategoria;
+      detalle.descripcionCategoria = detalleDB[0].descripcionCategoria;
+      detalle.idItemInspeccion = detalleDB[0].idItemInspeccion;
+      detalle.descripcionItem = detalleDB[0].descripcionItem;
+      detalle.idInspeccionVehiculo = detalleDB[0].idInspeccionVehiculo;
+      detalle.estadoInspeccionDetalle = detalleDB[0].estadoInspeccionDetalle;
+      detalle.observacionInspeccionDetalle = detalleDB[0].observacionInspeccionDetalle;
+      detalle.estadoFinalInspeccionDetalle = detalleDB[0].estadoFinalInspeccionDetalle;
+
+      final mantenimientoDB = await _api.mantCorrectivoDB.getMantenimientoByIdInspeccionDetalle(detalleDB[0].idInspeccionDetalle.toString());
+
+      detalle.mantCorrectivos = mantenimientoDB;
+      result.add(detalle);
     }
 
     return result;

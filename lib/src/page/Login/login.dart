@@ -207,16 +207,17 @@ class _LoginState extends State<Login> {
               ),
             ),
             AnimatedBuilder(
-                animation: _controller,
-                builder: (context, snapshot) {
-                  return ShowLoadding(
-                    active: _controller.loadding,
-                    h: double.infinity,
-                    w: double.infinity,
-                    fondo: Colors.black.withOpacity(.3),
-                    colorText: Colors.black,
-                  );
-                }),
+              animation: _controller,
+              builder: (context, snapshot) {
+                return ShowLoadding(
+                  active: _controller.loadding,
+                  h: double.infinity,
+                  w: double.infinity,
+                  fondo: Colors.black.withOpacity(.3),
+                  colorText: Colors.black,
+                );
+              },
+            ),
           ],
         ),
       ),

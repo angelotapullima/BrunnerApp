@@ -89,7 +89,6 @@ class LoginApi {
     } catch (e) {
       print(e);
       if (e is SocketException) {
-        print("Error: ${e.port.toString()}");
         res.code = e.port;
         res.message = 'Asegúrese que el dispositivo cuente con una conexión a Internet';
         return res;

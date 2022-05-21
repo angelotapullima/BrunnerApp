@@ -37,3 +37,12 @@ class ShowLoadding extends StatelessWidget {
         : Container();
   }
 }
+
+class LoadingController extends ChangeNotifier {
+  bool cargando = false;
+
+  void changeCargando(bool c) {
+    cargando = c;
+    notifyListeners();
+  }
+}

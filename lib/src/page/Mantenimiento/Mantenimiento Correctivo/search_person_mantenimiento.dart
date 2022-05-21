@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/personas_model.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/Correctivo/asignar_responsable_mantenimiento.dart';
 import 'package:provider/provider.dart';
 
 class PersonMantenimiento extends StatefulWidget {
-  const PersonMantenimiento({Key? key}) : super(key: key);
+  const PersonMantenimiento({Key? key, required this.idInspeccionDetalle, required this.tipoUnidad}) : super(key: key);
+  final String idInspeccionDetalle;
+  final String tipoUnidad;
 
   @override
   State<PersonMantenimiento> createState() => _PersonMantenimientoState();
@@ -93,11 +96,42 @@ class _PersonMantenimientoState extends State<PersonMantenimiento> {
                           var persona = snapshot.data![index];
                           return InkWell(
                             onTap: () {
-                              Navigator.pop(context);
-                              final provider = Provider.of<PersonaMantenimientoController>(context, listen: false);
-                              String data = '';
-                              data = '${persona.nombrePerson}';
-                              provider.setData(persona.idPerson.toString(), data);
+                              if (widget.idInspeccionDetalle == '') {
+                                Navigator.pop(context);
+                                final provider = Provider.of<PersonaMantenimientoController>(context, listen: false);
+                                String data = '';
+                                data = '${persona.nombrePerson}';
+                                provider.setData(persona.idPerson.toString(), data);
+                              } else {
+                                Navigator.push(
+                                  context,
+                                  PageRouteBuilder(
+                                    opaque: false,
+                                    pageBuilder: (context, animation, secondaryAnimation) {
+                                      return AsignarResponsableMantenimiento(
+                                        idIsnpeccionDetalle: widget.idInspeccionDetalle,
+                                        idPerson: persona.idPerson.toString(),
+                                        person: '${persona.nombrePerson}',
+                                        tipoUnidad: widget.tipoUnidad,
+                                      );
+                                    },
+                                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                      var begin = const Offset(0.0, 1.0);
+                                      var end = Offset.zero;
+                                      var curve = Curves.ease;
+
+                                      var tween = Tween(begin: begin, end: end).chain(
+                                        CurveTween(curve: curve),
+                                      );
+
+                                      return SlideTransition(
+                                        position: animation.drive(tween),
+                                        child: child,
+                                      );
+                                    },
+                                  ),
+                                );
+                              }
                             },
                             child: Padding(
                               padding: EdgeInsets.symmetric(

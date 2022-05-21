@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_detalle_model.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/Correctivo/anular_detalle_inspeccion.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/search_person_mantenimiento.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
 
 class ResultadosConsultaDetalle extends StatelessWidget {
@@ -48,13 +50,18 @@ class ResultadosConsultaDetalle extends StatelessWidget {
         children: [
           (detalle.estadoFinalInspeccionDetalle == '1')
               ? PopupMenuButton(
+                  onSelected: (value) {
+                    if (value == 0) {
+                      anularDetalleInspeccion(context, detalle);
+                    }
+                  },
                   itemBuilder: (context) => (detalle.mantCorrectivos!.isEmpty)
                       ? [
                           PopupMenuItem(
                             child: Row(
                               children: [
                                 Icon(
-                                  Icons.close,
+                                  Icons.cancel,
                                   color: Colors.redAccent,
                                 ),
                                 SizedBox(
@@ -66,7 +73,7 @@ class ResultadosConsultaDetalle extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            value: 1,
+                            value: 0,
                           ),
                         ]
                       : [
@@ -125,9 +132,9 @@ class ResultadosConsultaDetalle extends StatelessWidget {
                             value: 3,
                           )
                         ],
-                  child: contenidoItem(detalle))
+                  child: contenidoItem(context, detalle))
               : InkWell(
-                  child: contenidoItem(detalle),
+                  child: contenidoItem(context, detalle),
                 ),
           Align(
             alignment: Alignment.topLeft,
@@ -155,38 +162,66 @@ class ResultadosConsultaDetalle extends StatelessWidget {
   Widget fileData(String titulo, String data, num sizeT, num sizeD, FontWeight ft, FontWeight fd) {
     return RichText(
       text: TextSpan(
-          text: '$titulo: ',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: ft,
-            fontSize: ScreenUtil().setSp(sizeT),
-          ),
-          children: [
-            TextSpan(
-              text: data,
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: fd,
-                fontSize: ScreenUtil().setSp(sizeD),
-              ),
-            )
-          ]),
+        text: '$titulo: ',
+        style: TextStyle(
+          color: Colors.black,
+          fontWeight: ft,
+          fontSize: ScreenUtil().setSp(sizeT),
+        ),
+        children: [
+          TextSpan(
+            text: data,
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: fd,
+              fontSize: ScreenUtil().setSp(sizeD),
+            ),
+          )
+        ],
+      ),
     );
   }
 
-  Widget optionAddPerson() {
+  Widget optionAddPerson(BuildContext context, InspeccionVehiculoDetalleModel detalle, IconData icon, String text) {
     return PopupMenuButton(
       padding: EdgeInsets.all(0),
-      icon: Icon(
-        Icons.person_add,
-        color: Colors.green,
+      onSelected: (value) {
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) {
+              return PersonMantenimiento(
+                idInspeccionDetalle: detalle.idInspeccionDetalle.toString(),
+                tipoUnidad: detalle.tipoUnidad.toString(),
+              );
+            },
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              var begin = const Offset(0.0, 1.0);
+              var end = Offset.zero;
+              var curve = Curves.ease;
+
+              var tween = Tween(begin: begin, end: end).chain(
+                CurveTween(curve: curve),
+              );
+
+              return SlideTransition(
+                position: animation.drive(tween),
+                child: child,
+              );
+            },
+          ),
+        );
+      },
+      child: Icon(
+        icon,
+        color: Colors.blueGrey,
         size: ScreenUtil().setHeight(30),
       ),
       itemBuilder: (context) => [
         PopupMenuItem(
           child: Text(
-            'Seleccionar responsable',
-            style: TextStyle(color: Colors.black),
+            text,
+            style: TextStyle(color: Colors.blueGrey),
           ),
           value: 1,
         )
@@ -194,7 +229,7 @@ class ResultadosConsultaDetalle extends StatelessWidget {
     );
   }
 
-  Widget contenidoItem(InspeccionVehiculoDetalleModel detalle) {
+  Widget contenidoItem(BuildContext context, InspeccionVehiculoDetalleModel detalle) {
     Color color = Colors.redAccent;
     String textEstado = 'Sin Atender';
     String responsable = '';
@@ -307,9 +342,17 @@ class ResultadosConsultaDetalle extends StatelessWidget {
                     : (responsable == '')
                         ? Align(
                             alignment: Alignment.centerRight,
-                            child: optionAddPerson(),
+                            child: optionAddPerson(context, detalle, Icons.person_add, 'Seleccionar responsable'),
                           )
                         : fileData('Responsable', responsable, 10, 12, FontWeight.w600, FontWeight.w400),
+                (detalle.estadoFinalInspeccionDetalle == '0')
+                    ? Container()
+                    : (responsable != '')
+                        ? Align(
+                            alignment: Alignment.centerRight,
+                            child: optionAddPerson(context, detalle, Icons.person_search, 'Asignar nuevo responsable'),
+                          )
+                        : Container(),
               ],
             ),
           ),

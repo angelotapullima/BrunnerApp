@@ -133,4 +133,52 @@ class MantenimientoCorrectivoApi {
       return 2;
     }
   }
+
+  Future<int> asignarResponsableAInspeccionDetalle(String idDetalle, String idPerson) async {
+    try {
+      String? token = await Preferences.readData('token');
+      String? idUser = await Preferences.readData('id_user');
+
+      final url = Uri.parse('$apiBaseURL/api/MantenimientoCorrectivo/actualizar_responsable');
+
+      final resp = await http.post(
+        url,
+        body: {
+          'app': 'true',
+          'tn': token,
+          'id': idDetalle,
+          'valor': idPerson,
+          'id_user': idUser,
+        },
+      );
+      final decodedData = json.decode(resp.body);
+
+      return decodedData;
+    } catch (e) {
+      return 2;
+    }
+  }
+
+  Future<int> anularInspeccionDetalle(String idDetalle, String observacion) async {
+    try {
+      String? token = await Preferences.readData('token');
+
+      final url = Uri.parse('$apiBaseURL/api/MantenimientoCorrectivo/anular_inspeccion');
+
+      final resp = await http.post(
+        url,
+        body: {
+          'app': 'true',
+          'tn': token,
+          'id': idDetalle,
+          'observacion': observacion,
+        },
+      );
+      final decodedData = json.decode(resp.body);
+
+      return decodedData;
+    } catch (e) {
+      return 2;
+    }
+  }
 }

@@ -391,7 +391,10 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                                       context,
                                       PageRouteBuilder(
                                         pageBuilder: (context, animation, secondaryAnimation) {
-                                          return PersonMantenimiento();
+                                          return PersonMantenimiento(
+                                            idInspeccionDetalle: '',
+                                            tipoUnidad: '',
+                                          );
                                         },
                                         transitionsBuilder: (context, animation, secondaryAnimation, child) {
                                           var begin = const Offset(0.0, 1.0);
@@ -680,7 +683,6 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                             InkWell(
                               onTap: () async {
                                 if (_tipoVeh.isNotEmpty && _tipoVeh != '') {
-                                  print(providerPlaca.placaS.value);
                                   final consultaDetallespBloc = ProviderBloc.mantenimientoCorrectivo(context);
                                   consultaDetallespBloc.getDetalleInsppeccionFiltro(
                                     _tipoVeh,

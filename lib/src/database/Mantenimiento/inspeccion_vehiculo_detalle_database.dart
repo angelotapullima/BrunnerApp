@@ -33,6 +33,20 @@ class InspeccionVehiculoDetalleDatabase {
     }
   }
 
+  Future<List<InspeccionVehiculoDetalleModel>> getDetalleInspeccionById(String idInspeccionDetalle) async {
+    try {
+      final Database db = await dbprovider.getDatabase();
+      List<InspeccionVehiculoDetalleModel> list = [];
+      List<Map> maps = await db.rawQuery("SELECT * FROM InspeccionVehiculoDetalle WHERE idInspeccionDetalle='$idInspeccionDetalle'");
+
+      if (maps.isNotEmpty) list = InspeccionVehiculoDetalleModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      e;
+      return [];
+    }
+  }
+
   Future<List<InspeccionVehiculoDetalleModel>> getDetalleInspeccionFiltro(String tipoUnidad, String fechaInicial, String fechaFinal, String placa,
       String idCategoria, String idItem, String estado, String nroCheck) async {
     try {

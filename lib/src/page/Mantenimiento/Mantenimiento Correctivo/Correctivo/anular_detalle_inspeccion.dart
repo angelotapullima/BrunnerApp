@@ -2,15 +2,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/api/Mantenimiento/inspeccion_api.dart';
+import 'package:new_brunner_app/src/api/Mantenimiento/mantenimiento_correctivo_api.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
-import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_model.dart';
+import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_detalle_model.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
+import 'package:new_brunner_app/src/widget/show_loading.dart';
 
-void anularCheck(BuildContext context, InspeccionVehiculoModel item, int lugar) {
-  final _controller = AnularController();
+void anularDetalleInspeccion(BuildContext context, InspeccionVehiculoDetalleModel item) {
+  final _controller = LoadingController();
   TextEditingController _numeroCheckList = TextEditingController();
   TextEditingController _observacionesController = TextEditingController();
-  _numeroCheckList.text = item.numeroInspeccionVehiculo.toString().trim();
+  _numeroCheckList.text = item.descripcionItem.toString().trim();
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -61,7 +63,7 @@ void anularCheck(BuildContext context, InspeccionVehiculoModel item, int lugar) 
                                 height: ScreenUtil().setHeight(20),
                               ),
                               Text(
-                                'Anular CheckList',
+                                'Anular CheckList Nro ${item.nroCheckList}',
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: ScreenUtil().setSp(20),
@@ -100,7 +102,7 @@ void anularCheck(BuildContext context, InspeccionVehiculoModel item, int lugar) 
                                   hintStyle: const TextStyle(
                                     color: Color(0xff808080),
                                   ),
-                                  labelText: 'N° CheckList',
+                                  labelText: '${item.descripcionCategoria}',
                                 ),
                               ),
                               SizedBox(
@@ -149,15 +151,15 @@ void anularCheck(BuildContext context, InspeccionVehiculoModel item, int lugar) 
                                   _controller.changeCargando(true);
 
                                   if (_observacionesController.text.trim().isNotEmpty) {
-                                    final _api = InspeccionApi();
-                                    final res =
-                                        await _api.anularInspeccion(item.idInspeccionVehiculo.toString(), _observacionesController.text.trim());
+                                    final _api = MantenimientoCorrectivoApi();
 
+                                    final res =
+                                        await _api.anularInspeccionDetalle(item.idInspeccionDetalle.toString(), _observacionesController.text.trim());
                                     if (res == 1) {
-                                      final consultaInspBloc = ProviderBloc.consultaInsp(context);
-                                      consultaInspBloc.getInspeccionesVehiculoQuery();
-                                      showToast2('CheckList Anulado!!!', Colors.black);
-                                      if (lugar == 2) Navigator.pop(context);
+                                      final consultaDetallespBloc = ProviderBloc.mantenimientoCorrectivo(context);
+                                      consultaDetallespBloc.getInspeccionesById(item.idInspeccionDetalle.toString(), item.tipoUnidad.toString());
+                                      showToast2('CheckList Mantenimiento Anulado!!!', Colors.black);
+
                                       Navigator.pop(context);
                                     } else {
                                       showToast2('Ocurrió un error, inténtelo nuevamente', Colors.red);
@@ -221,17 +223,14 @@ void anularCheck(BuildContext context, InspeccionVehiculoModel item, int lugar) 
                     ),
                     AnimatedBuilder(
                       animation: _controller,
-                      builder: (_, s) {
-                        return (_controller.cargando)
-                            ? Container(
-                                width: double.infinity,
-                                height: double.infinity,
-                                color: Colors.black.withOpacity(0.3),
-                                child: const Center(
-                                  child: CupertinoActivityIndicator(),
-                                ),
-                              )
-                            : Container();
+                      builder: (context, snapshot) {
+                        return ShowLoadding(
+                          active: _controller.cargando,
+                          h: double.infinity,
+                          w: double.infinity,
+                          fondo: Colors.black.withOpacity(.3),
+                          colorText: Colors.black,
+                        );
                       },
                     ),
                   ],
@@ -243,13 +242,4 @@ void anularCheck(BuildContext context, InspeccionVehiculoModel item, int lugar) 
       );
     },
   );
-}
-
-class AnularController extends ChangeNotifier {
-  bool cargando = false;
-
-  void changeCargando(bool c) {
-    cargando = c;
-    notifyListeners();
-  }
 }

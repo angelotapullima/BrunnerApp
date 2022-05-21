@@ -38,7 +38,6 @@ class VehiculoBloc {
   }
 
   void searchVehiculosByPlaca(String placa, String tipoUnidad) async {
-    print(tipoUnidad);
     _searchVehiculoPlacaController.sink.add([]);
     if (placa.isNotEmpty) {
       _searchVehiculoPlacaController.sink.add(await _api.vehiculosDB.getVehiculosByPlaca(placa, tipoUnidad));
