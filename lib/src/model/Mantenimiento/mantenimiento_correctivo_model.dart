@@ -7,6 +7,7 @@ class MantenimientoCorrectivoModel {
   String? diagnostico;
   String? fechaDiagnostico;
   String? conclusion;
+  String? recomendacion;
   String? dateTimeMantenimiento;
   String? estadoFinal;
   String? fechaFinalMantenimiento;
@@ -20,6 +21,7 @@ class MantenimientoCorrectivoModel {
     this.diagnostico,
     this.fechaDiagnostico,
     this.conclusion,
+    this.recomendacion,
     this.dateTimeMantenimiento,
     this.estadoFinal,
     this.fechaFinalMantenimiento,
@@ -36,6 +38,7 @@ class MantenimientoCorrectivoModel {
         'diagnostico': diagnostico,
         'fechaDiagnostico': fechaDiagnostico,
         'conclusion': conclusion,
+        'recomendacion': recomendacion,
         'dateTimeMantenimiento': dateTimeMantenimiento,
         'estadoFinal': estadoFinal,
         'fechaFinalMantenimiento': fechaFinalMantenimiento,
@@ -50,6 +53,7 @@ class MantenimientoCorrectivoModel {
         diagnostico: json["diagnostico"],
         fechaDiagnostico: json["fechaDiagnostico"],
         conclusion: json["conclusion"],
+        recomendacion: json["recomendacion"],
         dateTimeMantenimiento: json["dateTimeMantenimiento"],
         estadoFinal: json["estadoFinal"],
         fechaFinalMantenimiento: json["fechaFinalMantenimiento"],

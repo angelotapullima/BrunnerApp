@@ -21,9 +21,13 @@ class MantenimientoCorrectivoBloc {
   final _itemsCatFiltroCOntroller = BehaviorSubject<List<ItemInspeccionModel>>();
   Stream<List<ItemInspeccionModel>> get itemsCatStream => _itemsCatFiltroCOntroller.stream;
 
+  //Detalle Inspecciones Vehiculos
+  final _detalleController = BehaviorSubject<List<InspeccionVehiculoDetalleModel>>();
+  Stream<List<InspeccionVehiculoDetalleModel>> get detallesStream => _detalleController.stream;
+
   //Detalle Inspeccion Vehiculo
-  final _detalllesController = BehaviorSubject<List<InspeccionVehiculoDetalleModel>>();
-  Stream<List<InspeccionVehiculoDetalleModel>> get detallesStream => _detalllesController.stream;
+  final _detalleManttCorrectivoController = BehaviorSubject<List<InspeccionVehiculoDetalleModel>>();
+  Stream<List<InspeccionVehiculoDetalleModel>> get detalleManttCorrectivoStream => _detalleManttCorrectivoController.stream;
 
   //Controlador para motrar que se está cargndo la consulta
   final _cargandoController = BehaviorSubject<bool>();
@@ -33,8 +37,9 @@ class MantenimientoCorrectivoBloc {
     _categoriasFiltroController.close();
     _personasFiltroController.close();
     _itemsCatFiltroCOntroller.close();
-    _detalllesController.close();
+    _detalleController.close();
     _cargandoController.close();
+    _detalleManttCorrectivoController.close();
   }
 
   void getCategorias(String tipoUnidad) async {
@@ -73,14 +78,12 @@ class MantenimientoCorrectivoBloc {
     String fechaIni,
     String fechaFin,
   ) async {
-    _detalllesController.sink.add([]);
-    _detalllesController.sink
-        .add(await getDetallesInspeccion(tipoUnidad, placa, idPersona, idCategoria, idItem, estado, nroCheck, fechaIni, fechaFin));
+    _detalleController.sink.add([]);
+    _detalleController.sink.add(await getDetallesInspeccion(tipoUnidad, placa, idPersona, idCategoria, idItem, estado, nroCheck, fechaIni, fechaFin));
     _cargandoController.sink.add(true);
     await _api.getData(tipoUnidad);
     _cargandoController.sink.add(false);
-    _detalllesController.sink
-        .add(await getDetallesInspeccion(tipoUnidad, placa, idPersona, idCategoria, idItem, estado, nroCheck, fechaIni, fechaFin));
+    _detalleController.sink.add(await getDetallesInspeccion(tipoUnidad, placa, idPersona, idCategoria, idItem, estado, nroCheck, fechaIni, fechaFin));
   }
 
   Future<List<InspeccionVehiculoDetalleModel>> getDetallesInspeccion(
@@ -141,6 +144,7 @@ class MantenimientoCorrectivoBloc {
       detalle.estadoInspeccionDetalle = detallesQuery[i].estadoInspeccionDetalle;
       detalle.observacionInspeccionDetalle = detallesQuery[i].observacionInspeccionDetalle;
       detalle.estadoFinalInspeccionDetalle = detallesQuery[i].estadoFinalInspeccionDetalle;
+      detalle.observacionFinalInspeccionDetalle = detallesQuery[i].observacionFinalInspeccionDetalle;
 
       final mantenimientoDB = await _api.mantCorrectivoDB.getMantenimientosFiltro(detallesQuery[i].idInspeccionDetalle.toString(), idPersona, mc);
 
@@ -160,6 +164,7 @@ class MantenimientoCorrectivoBloc {
           mantenimiento.diagnostico = mantenimientoDB[x].diagnostico;
           mantenimiento.fechaDiagnostico = mantenimientoDB[x].fechaDiagnostico;
           mantenimiento.conclusion = mantenimientoDB[x].conclusion;
+          mantenimiento.recomendacion = mantenimientoDB[x].recomendacion;
           mantenimiento.dateTimeMantenimiento = mantenimientoDB[x].dateTimeMantenimiento;
           mantenimiento.estadoFinal = mantenimientoDB[x].estadoFinal;
           mantenimiento.fechaFinalMantenimiento = mantenimientoDB[x].fechaFinalMantenimiento;
@@ -195,12 +200,19 @@ class MantenimientoCorrectivoBloc {
   }
 
   void getInspeccionesById(String idInspeccionDetalle, String tipoUnidad) async {
-    _detalllesController.sink.add([]);
-    _detalllesController.sink.add(await getDetalleInspeccionId(idInspeccionDetalle));
+    _detalleController.sink.add([]);
+    _detalleController.sink.add(await getDetalleInspeccionId(idInspeccionDetalle));
     _cargandoController.sink.add(true);
     await _api.getData(tipoUnidad);
     _cargandoController.sink.add(false);
-    _detalllesController.sink.add(await getDetalleInspeccionId(idInspeccionDetalle));
+    _detalleController.sink.add(await getDetalleInspeccionId(idInspeccionDetalle));
+  }
+
+  void getDetalleInspeccionManttCorrectivoById(String idInspeccionDetalle, String tipoUnidad) async {
+    _detalleManttCorrectivoController.sink.add([]);
+    _detalleManttCorrectivoController.sink.add(await getDetalleInspeccionId(idInspeccionDetalle));
+    await _api.getData(tipoUnidad);
+    _detalleManttCorrectivoController.sink.add(await getDetalleInspeccionId(idInspeccionDetalle));
   }
 
   Future<List<InspeccionVehiculoDetalleModel>> getDetalleInspeccionId(String idInspeccionDetalle) async {
@@ -224,6 +236,7 @@ class MantenimientoCorrectivoBloc {
       detalle.estadoInspeccionDetalle = detalleDB[0].estadoInspeccionDetalle;
       detalle.observacionInspeccionDetalle = detalleDB[0].observacionInspeccionDetalle;
       detalle.estadoFinalInspeccionDetalle = detalleDB[0].estadoFinalInspeccionDetalle;
+      detalle.observacionFinalInspeccionDetalle = detalleDB[0].observacionFinalInspeccionDetalle;
 
       final mantenimientoDB = await _api.mantCorrectivoDB.getMantenimientoByIdInspeccionDetalle(detalleDB[0].idInspeccionDetalle.toString());
 

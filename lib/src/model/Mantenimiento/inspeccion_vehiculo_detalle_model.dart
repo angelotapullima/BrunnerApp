@@ -15,6 +15,7 @@ class InspeccionVehiculoDetalleModel {
   String? estadoInspeccionDetalle;
   String? observacionInspeccionDetalle;
   String? estadoFinalInspeccionDetalle;
+  String? observacionFinalInspeccionDetalle;
   //No en DB
   List<MantenimientoCorrectivoModel>? mantCorrectivos;
 
@@ -33,6 +34,8 @@ class InspeccionVehiculoDetalleModel {
     this.estadoInspeccionDetalle,
     this.observacionInspeccionDetalle,
     this.estadoFinalInspeccionDetalle,
+    this.observacionFinalInspeccionDetalle,
+    //No en DB
     this.mantCorrectivos,
   });
 
@@ -54,6 +57,7 @@ class InspeccionVehiculoDetalleModel {
         'estadoInspeccionDetalle': estadoInspeccionDetalle,
         'observacionInspeccionDetalle': observacionInspeccionDetalle,
         'estadoFinalInspeccionDetalle': estadoFinalInspeccionDetalle,
+        'observacionFinalInspeccionDetalle': observacionFinalInspeccionDetalle,
       };
 
   factory InspeccionVehiculoDetalleModel.fromJson(Map<String, dynamic> json) => InspeccionVehiculoDetalleModel(
@@ -71,5 +75,6 @@ class InspeccionVehiculoDetalleModel {
         estadoInspeccionDetalle: json["estadoInspeccionDetalle"],
         observacionInspeccionDetalle: json["observacionInspeccionDetalle"],
         estadoFinalInspeccionDetalle: json["estadoFinalInspeccionDetalle"],
+        observacionFinalInspeccionDetalle: json["observacionFinalInspeccionDetalle"],
       );
 }

@@ -92,6 +92,7 @@ class MantenimientoCorrectivoApi {
         detalle.estadoInspeccionDetalle = data["inspeccion_vehiculo_detalle_estado"];
         detalle.observacionInspeccionDetalle = data["inspeccion_vehiculo_detalle_observacion"];
         detalle.estadoFinalInspeccionDetalle = data["inspeccion_vehiculo_detalle_estadofinal"];
+        detalle.observacionFinalInspeccionDetalle = data["inspeccion_vehiculo_detalle_observacionFinal"];
         await detalleInspDB.insertarDetalleInspeccion(detalle);
 
         for (var x = 0; x < data["mantenimiento_correctivo"].length; x++) {
@@ -106,6 +107,7 @@ class MantenimientoCorrectivoApi {
           mantenimiento.diagnostico = dato["mantenimiento_correctivo_diagnostico"];
           mantenimiento.fechaDiagnostico = dato["mantenimiento_correctivo_diagnostico_fecha"];
           mantenimiento.conclusion = dato["mantenimiento_correctivo_conclusion"];
+          mantenimiento.recomendacion = dato["mantenimiento_correctivo_recomendacion"];
           mantenimiento.dateTimeMantenimiento = dato["mantenimiento_correctivo_datetime"];
           mantenimiento.estadoFinal = dato["mantenimiento_correctivo_estado_final"];
           mantenimiento.fechaFinalMantenimiento = dato["mantenimiento_correctivo_fechafinal"];

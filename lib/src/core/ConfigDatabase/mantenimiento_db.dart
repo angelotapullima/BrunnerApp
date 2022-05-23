@@ -65,6 +65,7 @@ class MantenimientoDB {
       ' idInspeccionVehiculo TEXT,'
       ' estadoInspeccionDetalle TEXT,'
       ' observacionInspeccionDetalle TEXT,'
+      ' observacionFinalInspeccionDetalle TEXT,'
       ' estadoFinalInspeccionDetalle TEXT)';
 
   static const String mantenimientoCorrectivoTableSql = 'CREATE TABLE MantenimientoCorrectivo('
@@ -76,6 +77,7 @@ class MantenimientoDB {
       ' diagnostico TEXT,'
       ' fechaDiagnostico TEXT,'
       ' conclusion TEXT,'
+      ' recomendacion TEXT,'
       ' dateTimeMantenimiento TEXT,'
       ' estadoFinal TEXT,'
       ' fechaFinalMantenimiento TEXT)';

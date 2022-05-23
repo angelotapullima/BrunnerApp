@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_detalle_model.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/Correctivo/Acciones%20Mantenimiento/agregar_acciones_responsable.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/Correctivo/Acciones%20Mantenimiento/editar_detalle_mantenimiento.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/Correctivo/Acciones%20Mantenimiento/mantenimiento_anulado.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/Correctivo/Acciones%20Mantenimiento/visualizar_detalles.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/Correctivo/anular_detalle_inspeccion.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/search_person_mantenimiento.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
@@ -51,8 +55,47 @@ class ResultadosConsultaDetalle extends StatelessWidget {
           (detalle.estadoFinalInspeccionDetalle == '1')
               ? PopupMenuButton(
                   onSelected: (value) {
-                    if (value == 0) {
-                      anularDetalleInspeccion(context, detalle);
+                    // if (value == 0) {
+                    //   anularDetalleInspeccion(context, detalle);
+                    // }
+
+                    switch (value) {
+                      case 0:
+                        anularDetalleInspeccion(context, detalle);
+                        break;
+                      case 1:
+                        Navigator.push(
+                          context,
+                          PageRouteBuilder(
+                            pageBuilder: (context, animation, secondaryAnimation) {
+                              return VisualizarDetalles(
+                                detalle: detalle,
+                              );
+                            },
+                          ),
+                        );
+                        break;
+                      case 2:
+                        Navigator.push(
+                          context,
+                          PageRouteBuilder(
+                            pageBuilder: (context, animation, secondaryAnimation) {
+                              return const AddAccionesResponsable();
+                            },
+                          ),
+                        );
+                        break;
+                      case 3:
+                        Navigator.push(
+                          context,
+                          PageRouteBuilder(
+                            pageBuilder: (context, animation, secondaryAnimation) {
+                              return const EditarDetallesMantenimiento();
+                            },
+                          ),
+                        );
+                        break;
+                      default:
                     }
                   },
                   itemBuilder: (context) => (detalle.mantCorrectivos!.isEmpty)
@@ -134,6 +177,9 @@ class ResultadosConsultaDetalle extends StatelessWidget {
                         ],
                   child: contenidoItem(context, detalle))
               : InkWell(
+                  onTap: () {
+                    detalleInspeccionAnulado(context, detalle);
+                  },
                   child: contenidoItem(context, detalle),
                 ),
           Align(
@@ -152,29 +198,6 @@ class ResultadosConsultaDetalle extends StatelessWidget {
                   ),
                 ),
               ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget fileData(String titulo, String data, num sizeT, num sizeD, FontWeight ft, FontWeight fd) {
-    return RichText(
-      text: TextSpan(
-        text: '$titulo: ',
-        style: TextStyle(
-          color: Colors.black,
-          fontWeight: ft,
-          fontSize: ScreenUtil().setSp(sizeT),
-        ),
-        children: [
-          TextSpan(
-            text: data,
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: fd,
-              fontSize: ScreenUtil().setSp(sizeD),
             ),
           )
         ],
@@ -334,9 +357,9 @@ class ResultadosConsultaDetalle extends StatelessWidget {
                 SizedBox(
                   height: ScreenUtil().setHeight(5),
                 ),
-                fileData('Clase', detalle.descripcionCategoria.toString(), 10, 12, FontWeight.w600, FontWeight.w400),
-                fileData('Descripción', detalle.descripcionItem.toString(), 10, 12, FontWeight.w600, FontWeight.w500),
-                fileData('Observación', detalle.observacionInspeccionDetalle ?? '', 10, 12, FontWeight.w600, FontWeight.w400),
+                fileData('Clase', detalle.descripcionCategoria.toString(), 10, 12, FontWeight.w600, FontWeight.w400, TextAlign.start),
+                fileData('Descripción', detalle.descripcionItem.toString(), 10, 12, FontWeight.w600, FontWeight.w500, TextAlign.start),
+                fileData('Observación', detalle.observacionInspeccionDetalle ?? '', 10, 12, FontWeight.w600, FontWeight.w400, TextAlign.start),
                 (detalle.estadoFinalInspeccionDetalle == '0')
                     ? Container()
                     : (responsable == '')
@@ -344,7 +367,7 @@ class ResultadosConsultaDetalle extends StatelessWidget {
                             alignment: Alignment.centerRight,
                             child: optionAddPerson(context, detalle, Icons.person_add, 'Seleccionar responsable'),
                           )
-                        : fileData('Responsable', responsable, 10, 12, FontWeight.w600, FontWeight.w400),
+                        : fileData('Responsable', responsable, 10, 12, FontWeight.w600, FontWeight.w400, TextAlign.start),
                 (detalle.estadoFinalInspeccionDetalle == '0')
                     ? Container()
                     : (responsable != '')
