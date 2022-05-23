@@ -142,7 +142,7 @@ class VisualizarDetalles extends StatelessWidget {
     }
     return (showList.isNotEmpty)
         ? ExpansionTile(
-            backgroundColor: Colors.white,
+            //backgroundColor: Colors.white,
             onExpansionChanged: (valor) {},
             maintainState: true,
             title: Text(
@@ -155,15 +155,43 @@ class VisualizarDetalles extends StatelessWidget {
             ),
             children: showList.map((item) => detalleOption(item, tipoOption)).toList(),
           )
-        : Container();
+        : Row(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: ScreenUtil().setWidth(16),
+                  vertical: ScreenUtil().setHeight(16),
+                ),
+                child: Text(
+                  (tipoOption == 1)
+                      ? 'Sin Diagnósticos disponibles'
+                      : (tipoOption == 2)
+                          ? 'Sin Acciones Correctivas'
+                          : 'Sin Recomendaciones',
+                  style: TextStyle(
+                    color: Colors.blueGrey,
+                    fontSize: ScreenUtil().setSp(14),
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+            ],
+          );
   }
 
   Widget detalleOption(MantenimientoCorrectivoModel data, int tipo) {
     return Container(
+      margin: EdgeInsets.all(8),
       child: Stack(children: [
         Container(
           margin: EdgeInsets.only(top: ScreenUtil().setHeight(10)),
-          padding: EdgeInsets.all(8),
+          width: double.infinity,
+          padding: EdgeInsets.only(
+            top: ScreenUtil().setHeight(20),
+            left: ScreenUtil().setWidth(8),
+            right: ScreenUtil().setWidth(8),
+            bottom: ScreenUtil().setHeight(8),
+          ),
           decoration: BoxDecoration(
             color: (detalle.estadoFinalInspeccionDetalle == '0') ? Colors.redAccent.withOpacity(0.5) : Colors.white,
             borderRadius: BorderRadius.circular(10),
@@ -177,7 +205,49 @@ class VisualizarDetalles extends StatelessWidget {
             ],
           ),
           child: Column(
-            children: [Text(data.responsable.toString())],
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    Icons.person,
+                    color: Colors.blueGrey,
+                    size: ScreenUtil().setHeight(18),
+                  ),
+                  SizedBox(
+                    width: ScreenUtil().setWidth(8),
+                  ),
+                  Text(
+                    data.responsable.toString(),
+                    style: TextStyle(fontSize: ScreenUtil().setSp(12), fontWeight: FontWeight.w500),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: ScreenUtil().setHeight(10),
+              ),
+              Row(
+                children: [
+                  Icon(
+                    Icons.info,
+                    color: Colors.blueGrey,
+                    size: ScreenUtil().setHeight(20),
+                  ),
+                  SizedBox(
+                    width: ScreenUtil().setWidth(8),
+                  ),
+                  Expanded(
+                    child: Text(
+                      (tipo == 1)
+                          ? data.diagnostico.toString()
+                          : (tipo == 2)
+                              ? data.conclusion.toString()
+                              : data.recomendacion.toString(),
+                      style: TextStyle(fontSize: ScreenUtil().setSp(12)),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
         Align(
@@ -185,14 +255,14 @@ class VisualizarDetalles extends StatelessWidget {
           child: Container(
             width: ScreenUtil().setWidth(150),
             padding: EdgeInsets.all(4),
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(50), border: Border.all(color: Colors.blueGrey)),
+            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(50), border: Border.all(color: Colors.blueGrey)),
             child: Center(
               child: Text(
                 obtenerFechaHora(data.dateTimeMantenimiento.toString()),
                 style: TextStyle(
                   color: Colors.blueGrey,
                   fontWeight: FontWeight.w600,
-                  fontSize: ScreenUtil().setSp(12),
+                  fontSize: ScreenUtil().setSp(10),
                 ),
               ),
             ),

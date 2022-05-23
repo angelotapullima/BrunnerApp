@@ -80,7 +80,9 @@ class ResultadosConsultaDetalle extends StatelessWidget {
                           context,
                           PageRouteBuilder(
                             pageBuilder: (context, animation, secondaryAnimation) {
-                              return const AddAccionesResponsable();
+                              return AddAccionesResponsable(
+                                detalle: detalle,
+                              );
                             },
                           ),
                         );
