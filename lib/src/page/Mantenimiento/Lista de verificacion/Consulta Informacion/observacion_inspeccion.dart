@@ -22,7 +22,7 @@ class ObservacionInspeccion extends StatelessWidget {
             // );
 
             return SizedBox(
-              height: ScreenUtil().setHeight(130) * snapshot.data!.length,
+              height: ScreenUtil().setHeight(160) * snapshot.data!.length,
               child: ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: snapshot.data!.length,

@@ -151,7 +151,7 @@ class ResultadosConsulta extends StatelessWidget {
       ),
       child: Row(
         children: [
-          SizedBox(
+          Container(
             width: ScreenUtil().setWidth(100),
             child: Stack(
               children: [
@@ -217,22 +217,23 @@ class ResultadosConsulta extends StatelessWidget {
                     ),
                     child: RichText(
                       text: TextSpan(
-                          text: (inspeccion.tipoUnidad == '1') ? 'Vehiculo ' : 'Maquinaria ',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w400,
-                            fontSize: ScreenUtil().setSp(11),
+                        text: (inspeccion.tipoUnidad == '1') ? 'Vehiculo ' : 'Maquinaria ',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w400,
+                          fontSize: ScreenUtil().setSp(11),
+                        ),
+                        children: [
+                          TextSpan(
+                            text: inspeccion.placaVehiculo ?? '',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                              fontSize: ScreenUtil().setSp(11),
+                            ),
                           ),
-                          children: [
-                            TextSpan(
-                              text: inspeccion.placaVehiculo ?? '',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                                fontSize: ScreenUtil().setSp(11),
-                              ),
-                            )
-                          ]),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -264,20 +265,23 @@ class ResultadosConsulta extends StatelessWidget {
             width: ScreenUtil().setWidth(8),
           ),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                fileData('N° CheckList', inspeccion.numeroInspeccionVehiculo.toString()),
-                fileData2('Fecha', '${obtenerFecha(inspeccion.fechaInspeccionVehiculo.toString())} ${inspeccion.horaInspeccionVehiculo}'),
-                Text(
-                  inspeccion.razonSocialVehiculo.toString(),
-                  style: TextStyle(
-                    fontSize: ScreenUtil().setSp(12),
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: ScreenUtil().setHeight(8)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  fileData('N° CheckList', inspeccion.numeroInspeccionVehiculo.toString()),
+                  fileData2('Fecha', '${obtenerFecha(inspeccion.fechaInspeccionVehiculo.toString())} ${inspeccion.horaInspeccionVehiculo}'),
+                  Text(
+                    inspeccion.razonSocialVehiculo.toString(),
+                    style: TextStyle(
+                      fontSize: ScreenUtil().setSp(12),
+                    ),
                   ),
-                ),
-                fileData2('Chofer', inspeccion.nombreChofer.toString()),
-                fileData2('Registrado por', inspeccion.nombreUsuario.toString()),
-              ],
+                  fileData2('Chofer', inspeccion.nombreChofer.toString()),
+                  fileData2('Registrado por', inspeccion.nombreUsuario.toString()),
+                ],
+              ),
             ),
           ),
           SizedBox(
