@@ -332,6 +332,7 @@ class ResultadosConsultaDetalle extends StatelessWidget {
                       final dato = InspeccionVehiculoModel();
                       dato.idInspeccionVehiculo = detalle.idInspeccionVehiculo;
                       dato.tipoUnidad = detalle.tipoUnidad;
+                      dato.estadoFinal = '2';
                       Navigator.push(
                         context,
                         PageRouteBuilder(

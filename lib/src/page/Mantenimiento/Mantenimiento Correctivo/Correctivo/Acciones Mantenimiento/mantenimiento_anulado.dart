@@ -11,7 +11,7 @@ void detalleInspeccionAnulado(BuildContext context, InspeccionVehiculoDetalleMod
   TextEditingController _observacionItemController = TextEditingController();
   _placaVehiculo.text = item.plavaVehiculo.toString().trim();
   _observacionFinalController.text = item.observacionFinalInspeccionDetalle.toString().trim();
-  _observacionItemController.text = item.observacionInspeccionDetalle.toString().trim();
+  _observacionItemController.text = item.observacionInspeccionDetalle ?? 'Sin observación';
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,

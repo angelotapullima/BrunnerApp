@@ -164,7 +164,7 @@ class _InspeccionDetalleState extends State<InspeccionDetalle> {
                           tipoUnidad: dato.tipoUnidad.toString(),
                         ),
                         _buttonPDF(dato.idInspeccionVehiculo.toString()),
-                        (dato.estadoFinal == '1') ? _buttonDelete(context, dato) : Container(),
+                        (dato.estadoFinal == '1' && widget.inspeccion.estadoFinal == '1') ? _buttonDelete(context, dato) : Container(),
                         SizedBox(height: ScreenUtil().setHeight(20)),
                       ],
                     ),

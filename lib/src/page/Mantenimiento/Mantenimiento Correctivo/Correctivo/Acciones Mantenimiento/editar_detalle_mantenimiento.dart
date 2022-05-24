@@ -18,15 +18,6 @@ class EditarDetallesMantenimiento extends StatelessWidget {
         ),
         elevation: 0,
         centerTitle: true,
-        actions: [
-          // IconButton(
-          //   autofocus: true,
-          //   onPressed: () {
-          //     filtroSearch();
-          //   },
-          //   icon: const Icon(Icons.search),
-          // ),
-        ],
       ),
     );
   }
