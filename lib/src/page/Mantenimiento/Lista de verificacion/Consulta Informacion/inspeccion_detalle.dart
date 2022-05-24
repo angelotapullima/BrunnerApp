@@ -61,7 +61,7 @@ class _InspeccionDetalleState extends State<InspeccionDetalle> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text(
-                                '${obtenerFecha(widget.inspeccion.fechaInspeccionVehiculo.toString())} ${widget.inspeccion.horaInspeccionVehiculo}',
+                                '${obtenerFecha(dato.fechaInspeccionVehiculo.toString())} ${dato.horaInspeccionVehiculo}',
                                 style: TextStyle(
                                   fontSize: ScreenUtil().setSp(11),
                                 ),

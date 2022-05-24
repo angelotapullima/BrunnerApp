@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_detalle_model.dart';
+import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_model.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Consulta%20Informacion/inspeccion_detalle.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/Correctivo/Acciones%20Mantenimiento/agregar_acciones_responsable.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/Correctivo/Acciones%20Mantenimiento/editar_detalle_mantenimiento.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/Correctivo/Acciones%20Mantenimiento/mantenimiento_anulado.dart';
@@ -55,10 +57,6 @@ class ResultadosConsultaDetalle extends StatelessWidget {
           (detalle.estadoFinalInspeccionDetalle == '1')
               ? PopupMenuButton(
                   onSelected: (value) {
-                    // if (value == 0) {
-                    //   anularDetalleInspeccion(context, detalle);
-                    // }
-
                     switch (value) {
                       case 0:
                         anularDetalleInspeccion(context, detalle);
@@ -327,16 +325,58 @@ class ResultadosConsultaDetalle extends StatelessWidget {
                     )
                   ],
                 ),
-                Text(
-                  'Nro CheckList',
-                  style: TextStyle(
-                    color: (detalle.estadoFinalInspeccionDetalle == '0') ? Colors.black : Colors.grey,
-                    fontSize: ScreenUtil().setSp(8),
+                PopupMenuButton(
+                  padding: EdgeInsets.all(0),
+                  onSelected: (value) {
+                    if (value == 1) {
+                      final dato = InspeccionVehiculoModel();
+                      dato.idInspeccionVehiculo = detalle.idInspeccionVehiculo;
+                      dato.tipoUnidad = detalle.tipoUnidad;
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (context, animation, secondaryAnimation) {
+                            return InspeccionDetalle(
+                              inspeccion: dato,
+                            );
+                          },
+                        ),
+                      );
+                    }
+                  },
+                  child: Column(
+                    children: [
+                      Text(
+                        'Nro CheckList',
+                        style: TextStyle(
+                          color: (detalle.estadoFinalInspeccionDetalle == '0') ? Colors.black : Colors.grey,
+                          fontSize: ScreenUtil().setSp(8),
+                        ),
+                      ),
+                      Text(
+                        detalle.nroCheckList.toString(),
+                        style: TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                    ],
                   ),
-                ),
-                Text(
-                  detalle.nroCheckList.toString(),
-                  style: TextStyle(fontWeight: FontWeight.w500),
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.remove_red_eye,
+                            color: color,
+                          ),
+                          SizedBox(width: ScreenUtil().setWidth(10)),
+                          Text(
+                            'Visualizar Check List',
+                            style: TextStyle(color: color),
+                          ),
+                        ],
+                      ),
+                      value: 1,
+                    )
+                  ],
                 ),
               ],
             ),
