@@ -181,8 +181,9 @@ void editarAccionResponsable(BuildContext context, MantenimientoCorrectivoModel 
                                     if (res == 1) {
                                       final detalleBloc = ProviderBloc.mantenimientoCorrectivo(context);
                                       detalleBloc.getDetalleInspeccionManttCorrectivoById(item.idInspeccionDetalle.toString(), tipoUnidad);
+                                      final consultaDetallespBloc = ProviderBloc.mantenimientoCorrectivo(context);
+                                      consultaDetallespBloc.getInspeccionesById(item.idInspeccionDetalle.toString(), tipoUnidad);
                                       showToast2('$text editado correctamente', Colors.green);
-
                                       Navigator.pop(context);
                                     } else {
                                       showToast2('Ocurrió un error, inténtelo nuevamente', Colors.red);
