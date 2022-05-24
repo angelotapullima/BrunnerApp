@@ -90,7 +90,9 @@ class ResultadosConsultaDetalle extends StatelessWidget {
                           context,
                           PageRouteBuilder(
                             pageBuilder: (context, animation, secondaryAnimation) {
-                              return const EditarDetallesMantenimiento();
+                              return EditarDetallesMantenimiento(
+                                detalle: detalle,
+                              );
                             },
                           ),
                         );
