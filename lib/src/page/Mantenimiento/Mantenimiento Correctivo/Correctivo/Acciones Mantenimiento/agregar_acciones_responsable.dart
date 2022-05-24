@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:new_brunner_app/src/api/Mantenimiento/mantenimiento_correctivo_api.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_detalle_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/mantenimiento_correctivo_model.dart';
@@ -20,7 +21,7 @@ class _AddAccionesResponsableState extends State<AddAccionesResponsable> {
     'Diagnóstico',
     'Acciones Correctivas',
     'Recomendaciones',
-    'Anular',
+    //'Anular',
   ];
   final _accionController = TextEditingController();
   final _descripccionAccionController = TextEditingController();
@@ -50,177 +51,223 @@ class _AddAccionesResponsableState extends State<AddAccionesResponsable> {
           if (snapshot.hasData) {
             if (snapshot.data!.isNotEmpty) {
               var dato = snapshot.data![0];
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: ScreenUtil().setWidth(16),
-                        vertical: ScreenUtil().setHeight(8),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          fileData('Check List', 'N° ${dato.nroCheckList}', 15, 15, FontWeight.w400, FontWeight.w500, TextAlign.start),
-                          Text(
-                            '${obtenerFecha(dato.fechaInspeccion.toString())} ${dato.horaInspeccion}',
-                            style: TextStyle(
-                              fontSize: ScreenUtil().setSp(11),
-                              color: Colors.grey,
+              return Stack(
+                children: [
+                  SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: ScreenUtil().setWidth(16),
+                            vertical: ScreenUtil().setHeight(8),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              fileData('Check List', 'N° ${dato.nroCheckList}', 15, 15, FontWeight.w400, FontWeight.w500, TextAlign.start),
+                              Text(
+                                '${obtenerFecha(dato.fechaInspeccion.toString())} ${dato.horaInspeccion}',
+                                style: TextStyle(
+                                  fontSize: ScreenUtil().setSp(11),
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        placa(
+                          dato.plavaVehiculo.toString(),
+                          Icons.bus_alert,
+                          (dato.estadoInspeccionDetalle == '2')
+                              ? Colors.orangeAccent
+                              : (dato.estadoInspeccionDetalle == '3')
+                                  ? Colors.redAccent
+                                  : const Color(0XFF09AD92),
+                        ),
+                        const Divider(),
+                        Text(
+                          '${dato.descripcionCategoria}',
+                          style: TextStyle(fontWeight: FontWeight.w500, fontSize: ScreenUtil().setSp(14)),
+                        ),
+                        SizedBox(height: ScreenUtil().setHeight(8)),
+                        fileData('Descripción', '${dato.descripcionItem}', 14, 15, FontWeight.w400, FontWeight.w500, TextAlign.center),
+                        SizedBox(height: ScreenUtil().setHeight(8)),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: ScreenUtil().setWidth(16),
+                          ),
+                          child: fileData(
+                              'Observación', '${dato.observacionInspeccionDetalle}', 14, 15, FontWeight.w500, FontWeight.w400, TextAlign.center),
+                        ),
+                        const Divider(),
+                        SizedBox(height: ScreenUtil().setHeight(8)),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Responsable: ',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: ScreenUtil().setSp(14),
+                                color: Colors.blueGrey,
+                              ),
+                            ),
+                            SizedBox(
+                              width: ScreenUtil().setWidth(8),
+                            ),
+                            Text(
+                              dato.mantCorrectivos![0].responsable.toString(),
+                              style: TextStyle(fontSize: ScreenUtil().setSp(13), fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        ),
+                        const Divider(),
+                        SizedBox(height: ScreenUtil().setHeight(8)),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16)),
+                          child: TextField(
+                            controller: _accionController,
+                            readOnly: true,
+                            onTap: () {
+                              _seleccionarAccion(context, dato.mantCorrectivos![0]);
+                            },
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: Color(0xff808080),
+                              fontWeight: FontWeight.w600,
+                            ),
+                            decoration: InputDecoration(
+                              fillColor: const Color(0xffeeeeee),
+                              labelStyle: const TextStyle(
+                                color: Colors.blueGrey,
+                              ),
+                              suffixIcon: Icon(Icons.keyboard_arrow_down),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                                borderSide: const BorderSide(
+                                  color: Colors.blueGrey,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                                borderSide: const BorderSide(
+                                  color: Colors.blueGrey,
+                                ),
+                              ),
+                              hintStyle: const TextStyle(
+                                color: Color(0xff808080),
+                              ),
+                              hintText: 'Seleccionar',
+                              labelText: 'Acción a realizar',
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                    placa(
-                      dato.plavaVehiculo.toString(),
-                      Icons.bus_alert,
-                      (dato.estadoInspeccionDetalle == '2')
-                          ? Colors.orangeAccent
-                          : (dato.estadoInspeccionDetalle == '3')
-                              ? Colors.redAccent
-                              : const Color(0XFF09AD92),
-                    ),
-                    const Divider(),
-                    Text(
-                      '${dato.descripcionCategoria}',
-                      style: TextStyle(fontWeight: FontWeight.w500, fontSize: ScreenUtil().setSp(14)),
-                    ),
-                    SizedBox(height: ScreenUtil().setHeight(8)),
-                    fileData('Descripción', '${dato.descripcionItem}', 14, 15, FontWeight.w400, FontWeight.w500, TextAlign.center),
-                    SizedBox(height: ScreenUtil().setHeight(8)),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: ScreenUtil().setWidth(16),
-                      ),
-                      child:
-                          fileData('Observación', '${dato.observacionInspeccionDetalle}', 14, 15, FontWeight.w500, FontWeight.w400, TextAlign.center),
-                    ),
-                    const Divider(),
-                    SizedBox(height: ScreenUtil().setHeight(8)),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+                        ),
+                        SizedBox(height: ScreenUtil().setHeight(16)),
+                        AnimatedBuilder(
+                            animation: _controller,
+                            builder: (_, s) {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16)),
+                                child: TextField(
+                                  controller: _descripccionAccionController,
+                                  readOnly: !_controller.activeEdit,
+                                  maxLines: null,
+                                  textAlign: TextAlign.justify,
+                                  style: const TextStyle(
+                                    color: Color(0xff808080),
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  decoration: InputDecoration(
+                                    filled: !_controller.activeEdit,
+                                    fillColor: (_controller.activeEdit) ? Colors.white : const Color(0xffeeeeee),
+                                    labelStyle: const TextStyle(
+                                      color: Colors.blueGrey,
+                                    ),
+                                    suffixIcon: IconButton(
+                                        onPressed: () async {
+                                          if (_controller.activeEdit) {
+                                            if (_accion != '') {
+                                              if (_descripccionAccionController.text.isNotEmpty) {
+                                                FocusScope.of(context).requestFocus(FocusNode());
+                                                _controller.changeCargando(true);
+                                                final _api = MantenimientoCorrectivoApi();
+                                                final res = await _api.actualizarAcciones(dato.mantCorrectivos![0].idMantenimiento.toString(),
+                                                    _descripccionAccionController.text.toString().trim(), _accion);
+
+                                                if (res == 1) {
+                                                  _controller.changeAcccion(false);
+                                                  final detalleBloc = ProviderBloc.mantenimientoCorrectivo(context);
+                                                  detalleBloc.getDetalleResponsableInspeccionManttCorrectivoById(
+                                                      widget.detalle.idInspeccionDetalle.toString(), widget.detalle.tipoUnidad.toString());
+                                                  _accionController.clear();
+                                                  _descripccionAccionController.clear();
+                                                  showToast2('Acción guardado correctamente', Colors.green);
+                                                } else {
+                                                  showToast2('Ocurrió un error, Inténtelo nuevamente', Colors.redAccent);
+                                                }
+
+                                                _controller.changeCargando(false);
+                                              } else {
+                                                showToast2('Debe ingresar un detalle para continuar', Colors.redAccent);
+                                              }
+                                            } else {
+                                              showToast2('Debe seleccionar una Acción a realizar', Colors.redAccent);
+                                            }
+                                          } else {
+                                            _controller.changeAcccion(true);
+                                          }
+                                        },
+                                        icon: Icon((_controller.activeEdit) ? Icons.check : Icons.edit)),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      borderSide: const BorderSide(
+                                        color: Colors.blueGrey,
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      borderSide: const BorderSide(
+                                        color: Colors.blueGrey,
+                                      ),
+                                    ),
+                                    hintStyle: const TextStyle(
+                                      color: Color(0xff808080),
+                                    ),
+                                    labelText: 'Detalle',
+                                  ),
+                                ),
+                              );
+                            }),
+                        const Divider(),
+                        SizedBox(height: ScreenUtil().setHeight(8)),
                         Text(
-                          'Responsable: ',
+                          'HISTORIAL',
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: ScreenUtil().setSp(14),
                             color: Colors.blueGrey,
                           ),
                         ),
-                        SizedBox(
-                          width: ScreenUtil().setWidth(8),
-                        ),
-                        Text(
-                          dato.mantCorrectivos![0].responsable.toString(),
-                          style: TextStyle(fontSize: ScreenUtil().setSp(13), fontWeight: FontWeight.w500),
-                        ),
+                        SizedBox(height: ScreenUtil().setHeight(8)),
+                        options(context, 'Diagnóstico', dato.mantCorrectivos!, 1),
+                        options(context, 'Acciones Correctivas', dato.mantCorrectivos!, 2),
+                        options(context, 'Recomendaciones', dato.mantCorrectivos!, 3),
                       ],
                     ),
-                    const Divider(),
-                    SizedBox(height: ScreenUtil().setHeight(8)),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16)),
-                      child: TextField(
-                        controller: _accionController,
-                        readOnly: true,
-                        onTap: () {
-                          _seleccionarAccion(context, dato.mantCorrectivos![0]);
-                        },
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: Color(0xff808080),
-                          fontWeight: FontWeight.w600,
-                        ),
-                        decoration: InputDecoration(
-                          fillColor: const Color(0xffeeeeee),
-                          labelStyle: const TextStyle(
-                            color: Colors.blueGrey,
-                          ),
-                          suffixIcon: Icon(Icons.keyboard_arrow_down),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                            borderSide: const BorderSide(
-                              color: Colors.blueGrey,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                            borderSide: const BorderSide(
-                              color: Colors.blueGrey,
-                            ),
-                          ),
-                          hintStyle: const TextStyle(
-                            color: Color(0xff808080),
-                          ),
-                          hintText: 'Seleccionar',
-                          labelText: 'Acción a realizar',
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: ScreenUtil().setHeight(16)),
-                    AnimatedBuilder(
-                        animation: _controller,
-                        builder: (_, s) {
-                          return Padding(
-                            padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16)),
-                            child: TextField(
-                              controller: _descripccionAccionController,
-                              readOnly: !_controller.activeEdit,
-                              maxLines: null,
-                              textAlign: TextAlign.justify,
-                              style: const TextStyle(
-                                color: Color(0xff808080),
-                                fontWeight: FontWeight.w400,
-                              ),
-                              decoration: InputDecoration(
-                                filled: !_controller.activeEdit,
-                                fillColor: (_controller.activeEdit) ? Colors.white : const Color(0xffeeeeee),
-                                labelStyle: const TextStyle(
-                                  color: Colors.blueGrey,
-                                ),
-                                suffixIcon: IconButton(
-                                    onPressed: () {
-                                      _controller.changeAcccion(!_controller.activeEdit);
-                                    },
-                                    icon: Icon((_controller.activeEdit) ? Icons.check : Icons.edit)),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Colors.blueGrey,
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Colors.blueGrey,
-                                  ),
-                                ),
-                                hintStyle: const TextStyle(
-                                  color: Color(0xff808080),
-                                ),
-                                labelText: 'Detalle',
-                              ),
-                            ),
-                          );
-                        }),
-                    const Divider(),
-                    SizedBox(height: ScreenUtil().setHeight(8)),
-                    Text(
-                      'HISTORIAL',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: ScreenUtil().setSp(14),
-                        color: Colors.blueGrey,
-                      ),
-                    ),
-                    SizedBox(height: ScreenUtil().setHeight(8)),
-                    options(context, 'Diagnóstico', dato.mantCorrectivos!, 1),
-                    options(context, 'Acciones Correctivas', dato.mantCorrectivos!, 2),
-                    options(context, 'Recomendaciones', dato.mantCorrectivos!, 3),
-                  ],
-                ),
+                  ),
+                  AnimatedBuilder(
+                    animation: _controller,
+                    builder: (_, t) {
+                      return ShowLoadding(
+                        active: _controller.cargando,
+                        h: double.infinity,
+                        w: double.infinity,
+                        fondo: Colors.black.withOpacity(.3),
+                        colorText: Colors.black,
+                      );
+                    },
+                  ),
+                ],
               );
             } else {
               return Center(
@@ -448,6 +495,7 @@ class _AddAccionesResponsableState extends State<AddAccionesResponsable> {
                               return InkWell(
                                 onTap: () {
                                   _accionController.text = acciones[index];
+                                  _controller.changeAcccion(false);
 
                                   switch (acciones[index]) {
                                     case 'Diagnóstico':
@@ -462,10 +510,10 @@ class _AddAccionesResponsableState extends State<AddAccionesResponsable> {
                                       _accion = '3';
                                       _descripccionAccionController.text = data.recomendacion ?? '';
                                       break;
-                                    case 'Anular':
-                                      _accion = '4';
-                                      _descripccionAccionController.clear();
-                                      break;
+                                    // case 'Anular':
+                                    //   _accion = '4';
+                                    //   _descripccionAccionController.clear();
+                                    //break;
                                     default:
                                       _accion = '';
                                       break;
@@ -498,9 +546,15 @@ class _AddAccionesResponsableState extends State<AddAccionesResponsable> {
 
 class AccionesController extends ChangeNotifier {
   bool activeEdit = false;
+  bool cargando = false;
 
   void changeAcccion(bool a) {
     activeEdit = a;
+    notifyListeners();
+  }
+
+  void changeCargando(bool c) {
+    cargando = c;
     notifyListeners();
   }
 }

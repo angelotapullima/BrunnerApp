@@ -183,4 +183,42 @@ class MantenimientoCorrectivoApi {
       return 2;
     }
   }
+
+  Future<int> actualizarAcciones(String id, String valor, String accion) async {
+    try {
+      String api = '';
+      switch (accion) {
+        case '1':
+          api = 'actualizar_diagnostico';
+          break;
+        case '2':
+          api = 'actualizar_conclusion';
+          break;
+        case '3':
+          api = 'actualizar_recomendacion';
+
+          break;
+        default:
+      }
+
+      String? token = await Preferences.readData('token');
+
+      final url = Uri.parse('$apiBaseURL/api/MantenimientoCorrectivo/$api');
+
+      final resp = await http.post(
+        url,
+        body: {
+          'app': 'true',
+          'tn': token,
+          'id': id,
+          'valor': valor,
+        },
+      );
+      final decodedData = json.decode(resp.body);
+
+      return decodedData["result"]["code"];
+    } catch (e) {
+      return 1;
+    }
+  }
 }
