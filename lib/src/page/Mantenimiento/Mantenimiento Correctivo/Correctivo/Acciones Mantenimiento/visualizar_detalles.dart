@@ -93,6 +93,7 @@ class VisualizarDetalles extends StatelessWidget {
                     options(context, 'Diagnóstico', dato.mantCorrectivos!, 1),
                     options(context, 'Acciones Correctivas', dato.mantCorrectivos!, 2),
                     options(context, 'Recomendaciones', dato.mantCorrectivos!, 3),
+                    SizedBox(height: ScreenUtil().setHeight(50)),
                   ],
                 ),
               );

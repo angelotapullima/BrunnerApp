@@ -95,9 +95,6 @@ class EditarDetallesMantenimiento extends StatelessWidget {
                       children: dato.mantCorrectivos!.map((item) => responsables(context, item)).toList(),
                     ),
                     SizedBox(height: ScreenUtil().setHeight(50)),
-                    // options(context, 'Diagnóstico', dato.mantCorrectivos!, 1),
-                    // options(context, 'Acciones Correctivas', dato.mantCorrectivos!, 2),
-                    // options(context, 'Recomendaciones', dato.mantCorrectivos!, 3),
                   ],
                 ),
               );

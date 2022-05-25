@@ -199,6 +199,9 @@ class _AddAccionesResponsableState extends State<AddAccionesResponsable> {
                                                   final detalleBloc = ProviderBloc.mantenimientoCorrectivo(context);
                                                   detalleBloc.getDetalleResponsableInspeccionManttCorrectivoById(
                                                       widget.detalle.idInspeccionDetalle.toString(), widget.detalle.tipoUnidad.toString());
+
+                                                  detalleBloc.getInspeccionesById(
+                                                      widget.detalle.idInspeccionDetalle.toString(), widget.detalle.tipoUnidad.toString());
                                                   _accionController.clear();
                                                   _descripccionAccionController.clear();
                                                   showToast2('Acción guardado correctamente', Colors.green);
@@ -252,6 +255,7 @@ class _AddAccionesResponsableState extends State<AddAccionesResponsable> {
                         options(context, 'Diagnóstico', dato.mantCorrectivos!, 1),
                         options(context, 'Acciones Correctivas', dato.mantCorrectivos!, 2),
                         options(context, 'Recomendaciones', dato.mantCorrectivos!, 3),
+                        SizedBox(height: ScreenUtil().setHeight(50)),
                       ],
                     ),
                   ),
