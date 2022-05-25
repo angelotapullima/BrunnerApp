@@ -16,6 +16,7 @@ class VisualizarDetalles extends StatelessWidget {
     detalleBloc.getDetalleInspeccionManttCorrectivoById(detalle.idInspeccionDetalle.toString(), detalle.tipoUnidad.toString());
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0XFF3498DB),
         title: Text(
           'Historial Mantenimiento Correctivo',
           style: TextStyle(

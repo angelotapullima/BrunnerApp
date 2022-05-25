@@ -17,6 +17,7 @@ class EditarDetallesMantenimiento extends StatelessWidget {
     detalleBloc.getDetalleInspeccionManttCorrectivoById(detalle.idInspeccionDetalle.toString(), detalle.tipoUnidad.toString());
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0XFF3498DB),
         title: Text(
           'Mantenimiento Correctivo',
           style: TextStyle(

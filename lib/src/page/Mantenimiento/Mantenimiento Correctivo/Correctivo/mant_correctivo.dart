@@ -89,6 +89,7 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
       },
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Color(0XFF3498DB),
           title: Text(
             'Mantenimiento Correctivo',
             style: TextStyle(
