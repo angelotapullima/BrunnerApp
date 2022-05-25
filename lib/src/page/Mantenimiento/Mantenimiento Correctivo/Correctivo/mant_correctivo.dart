@@ -698,7 +698,7 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                                   );
                                   Navigator.pop(context);
                                 } else {
-                                  showToast2('Debe seleecionar por lo menos una unidad', Colors.redAccent);
+                                  showToast2('Debe seleccionar por lo menos una unidad', Colors.redAccent);
                                 }
                               },
                               child: Container(

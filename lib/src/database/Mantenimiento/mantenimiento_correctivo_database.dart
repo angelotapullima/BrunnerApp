@@ -33,6 +33,35 @@ class MantenimientoCorrectivoDatabase {
     }
   }
 
+  Future<List<MantenimientoCorrectivoModel>> getMantenimientosOrdenHabByIdInspeccionDetalle(String idInspeccionDetalle) async {
+    try {
+      final Database db = await dbprovider.getDatabase();
+      List<MantenimientoCorrectivoModel> list = [];
+      List<Map> maps = await db
+          .rawQuery("SELECT * FROM MantenimientoCorrectivo WHERE idInspeccionDetalle='$idInspeccionDetalle' AND (estado=='5' OR estado=='2') ");
+
+      if (maps.isNotEmpty) list = MantenimientoCorrectivoModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      e;
+      return [];
+    }
+  }
+
+  Future<List<MantenimientoCorrectivoModel>> getMantenimientosInformePendienteByIdInspeccionDetalle(String idInspeccionDetalle) async {
+    try {
+      final Database db = await dbprovider.getDatabase();
+      List<MantenimientoCorrectivoModel> list = [];
+      List<Map> maps = await db.rawQuery("SELECT * FROM MantenimientoCorrectivo WHERE idInspeccionDetalle='$idInspeccionDetalle' AND estado=='1' ");
+
+      if (maps.isNotEmpty) list = MantenimientoCorrectivoModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      e;
+      return [];
+    }
+  }
+
   Future<List<MantenimientoCorrectivoModel>> getMantenimientosFiltro(String idInspeccionDetalle, String idPersona, String estado) async {
     try {
       String query = "SELECT * FROM MantenimientoCorrectivo WHERE idInspeccionDetalle='$idInspeccionDetalle'";

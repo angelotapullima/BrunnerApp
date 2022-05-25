@@ -59,6 +59,8 @@ class MantenimientoCorrectivo extends StatelessWidget {
           SizedBox(height: ScreenUtil().setWidth(30)),
           InkWell(
             onTap: () {
+              final providerPlaca = Provider.of<VehiculosController>(context, listen: false);
+              providerPlaca.setData('', '');
               Navigator.push(
                 context,
                 PageRouteBuilder(
