@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
-import 'package:new_brunner_app/src/model/Mantenimiento/choferes_model.dart';
-import 'package:new_brunner_app/src/page/Mantenimiento/check_list.dart';
+import 'package:new_brunner_app/src/model/Mantenimiento/personas_model.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Check%20List/check_list.dart';
 import 'package:provider/provider.dart';
 
 class ChoferesSearch extends StatefulWidget {
-  const ChoferesSearch({Key? key}) : super(key: key);
+  const ChoferesSearch({Key? key, required this.page}) : super(key: key);
+  final String page;
 
   @override
   State<ChoferesSearch> createState() => _ChoferesSearchState();
@@ -18,7 +19,7 @@ class _ChoferesSearchState extends State<ChoferesSearch> {
   @override
   Widget build(BuildContext context) {
     final searchBloc = ProviderBloc.checklist(context);
-    searchBloc.searchVehiculos('');
+    searchBloc.searchChoferes('');
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -37,28 +38,26 @@ class _ChoferesSearchState extends State<ChoferesSearch> {
                 border: Border.all(color: Colors.green),
                 borderRadius: BorderRadius.circular(15),
               ),
-              child: Expanded(
-                child: TextField(
-                  controller: searchController,
-                  onChanged: (query) {
-                    searchBloc.searchVehiculos(query.trim());
-                  },
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontSize: ScreenUtil().setSp(16),
-                    fontWeight: FontWeight.w400,
-                  ),
-                  decoration: InputDecoration(
-                    suffixIcon: const Icon(Icons.search),
-                    label: Text(
-                      'Nombre y apellido',
-                      style: TextStyle(
-                        fontSize: ScreenUtil().setSp(12),
-                        fontWeight: FontWeight.w400,
-                      ),
+              child: TextField(
+                controller: searchController,
+                onChanged: (query) {
+                  searchBloc.searchChoferes(query.trim());
+                },
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: ScreenUtil().setSp(16),
+                  fontWeight: FontWeight.w400,
+                ),
+                decoration: InputDecoration(
+                  suffixIcon: const Icon(Icons.search),
+                  label: Text(
+                    'Nombre y apellido',
+                    style: TextStyle(
+                      fontSize: ScreenUtil().setSp(12),
+                      fontWeight: FontWeight.w400,
                     ),
-                    border: InputBorder.none,
                   ),
+                  border: InputBorder.none,
                 ),
               ),
             ),
@@ -66,7 +65,7 @@ class _ChoferesSearchState extends State<ChoferesSearch> {
               height: ScreenUtil().setHeight(10),
             ),
             Expanded(
-              child: StreamBuilder<List<ChoferesModel>>(
+              child: StreamBuilder<List<PersonasModel>>(
                 stream: searchBloc.choferesStream,
                 builder: (context, snapshot) {
                   if (snapshot.hasData && snapshot.data!.isNotEmpty) {
@@ -98,14 +97,20 @@ class _ChoferesSearchState extends State<ChoferesSearch> {
                             onTap: () {
                               Navigator.pop(context);
                               final provider = Provider.of<ConductorController>(context, listen: false);
-                              provider.setData(chofer.idChofer.toString(), '${chofer.dniChofer}  |  ${chofer.nombreChofer}');
+                              String data = '';
+                              if (widget.page == 'Check') {
+                                data = '${chofer.dniPerson}  |  ${chofer.nombrePerson}';
+                              } else {
+                                data = '${chofer.nombrePerson}';
+                              }
+                              provider.setData(chofer.idPerson.toString(), data);
                             },
                             child: Padding(
                               padding: EdgeInsets.symmetric(
                                 horizontal: ScreenUtil().setWidth(16),
                                 vertical: ScreenUtil().setHeight(8),
                               ),
-                              child: Text('${chofer.dniChofer}  |  ${chofer.nombreChofer}'),
+                              child: Text('${chofer.dniPerson}  |  ${chofer.nombrePerson}'),
                             ),
                           );
                         });

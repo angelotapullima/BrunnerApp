@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:new_brunner_app/src/bloc/checklist_bloc.dart';
+import 'package:new_brunner_app/src/bloc/consulta_inspeccion_bloc.dart';
 import 'package:new_brunner_app/src/bloc/data_user_bloc.dart';
+import 'package:new_brunner_app/src/bloc/mantenimiento_correctivo_bloc.dart';
 import 'package:new_brunner_app/src/bloc/modulos_bloc.dart';
+import 'package:new_brunner_app/src/bloc/orden_habilitacion_bloc.dart';
 import 'package:new_brunner_app/src/bloc/vehiculo_bloc.dart';
 
 class ProviderBloc extends InheritedWidget {
@@ -11,6 +14,11 @@ class ProviderBloc extends InheritedWidget {
   //Mantenimiento
   final vehiculosBloc = VehiculoBloc();
   final checklistBloc = CheckListBloc();
+  final consultaInspBloc = ConsultaInspeccionBloc();
+  //Mantenimiento Correctivo
+  final mantenimientoCorrectivoBloc = MantenimientoCorrectivoBloc();
+  //Orden Habilitacion
+  final ordenHabilitacionBloc = OrdenHabilitacionCorrectivaBloc();
 
   ProviderBloc({Key? key, required Widget child}) : super(key: key, child: child);
 
@@ -31,5 +39,17 @@ class ProviderBloc extends InheritedWidget {
 
   static CheckListBloc checklist(BuildContext context) {
     return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.checklistBloc;
+  }
+
+  static ConsultaInspeccionBloc consultaInsp(BuildContext context) {
+    return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.consultaInspBloc;
+  }
+
+  static MantenimientoCorrectivoBloc mantenimientoCorrectivo(BuildContext context) {
+    return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.mantenimientoCorrectivoBloc;
+  }
+
+  static OrdenHabilitacionCorrectivaBloc ordenHab(BuildContext context) {
+    return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.ordenHabilitacionBloc;
   }
 }

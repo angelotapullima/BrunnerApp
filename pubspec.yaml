@@ -19,6 +19,7 @@ version: 1.0.0+1
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
+  
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -29,6 +30,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations: # Add this line
+    sdk: flutter 
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -45,11 +48,24 @@ dependencies:
   path_provider: ^2.0.8
   fluttertoast: ^8.0.9
   flutter_svg: ^1.0.3
+  intl: ^0.17.0
+  dio: ^4.0.6
+  open_file: ^3.2.1
+  file_picker: ^4.5.1
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.9.2
+
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/img/icon_brunner.png"
+  adaptive_icon_background: "assets/img/icon_brunner.png"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

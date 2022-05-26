@@ -1,4 +1,5 @@
-import 'package:new_brunner_app/src/model/Mantenimiento/item_inspeccion_model.dart';
+import 'package:new_brunner_app/src/model/Mantenimiento/check_item_inspeccion_model.dart';
+import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_item_model.dart';
 
 class CategoriaInspeccionModel {
   String? idCatInspeccion;
@@ -6,14 +7,16 @@ class CategoriaInspeccionModel {
   String? descripcionCatInspeccion;
   String? estadoCatInspeccion;
   //No en db
-  List<ItemInspeccionModel>? itemsInspeccion;
+  List<CheckItemInspeccionModel>? checkItemInspeccion;
+  List<InspeccionVehiculoItemModel>? checkInspeccionVehiculoItem;
 
   CategoriaInspeccionModel({
     this.idCatInspeccion,
     this.tipoUnidad,
     this.descripcionCatInspeccion,
     this.estadoCatInspeccion,
-    this.itemsInspeccion,
+    this.checkItemInspeccion,
+    this.checkInspeccionVehiculoItem,
   });
 
   static List<CategoriaInspeccionModel> fromJsonList(List<dynamic> json) => json.map((i) => CategoriaInspeccionModel.fromJson(i)).toList();

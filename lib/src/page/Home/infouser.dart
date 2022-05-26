@@ -26,7 +26,7 @@ class InfoUser extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(100),
                     child: Image.asset(
-                      'assets/img/logo.png',
+                      'assets/img/icon_brunner.png',
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -62,7 +62,7 @@ class InfoUser extends StatelessWidget {
                       ),
                       child: Center(
                         child: Image.asset(
-                          'assets/img/logo.png',
+                          'assets/img/icon_brunner.png',
                           fit: BoxFit.cover,
                         ),
                       ),
