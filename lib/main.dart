@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/core/router.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Check%20List/check_list.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/Orden%20Habilitacion/mantenimientos.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/search_person_mantenimiento.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/search_vehiculos.dart';
 import 'package:provider/provider.dart';
@@ -30,7 +31,10 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<PersonaMantenimientoController>(
           create: (_) => PersonaMantenimientoController(),
-        )
+        ),
+        ChangeNotifierProvider<InformesController>(
+          create: (_) => InformesController(),
+        ),
       ],
       child: ProviderBloc(
         child: ScreenUtilInit(

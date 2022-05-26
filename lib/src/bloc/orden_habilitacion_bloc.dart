@@ -70,14 +70,18 @@ class OrdenHabilitacionCorrectivaBloc {
 
       if (tipo == 1) {
         final mantenimientoDB =
-            await _api.mantCorrectivoDB.getMantenimientosOrdenHabByIdInspeccionDetalle(detalleDB[i].idInspeccionDetalle.toString());
-        detalle.mantCorrectivos = mantenimientoDB;
-        result1.add(detalle);
-      } else {
-        final mantenimientoDB =
             await _api.mantCorrectivoDB.getMantenimientosInformePendienteByIdInspeccionDetalle(detalleDB[i].idInspeccionDetalle.toString());
         detalle.mantCorrectivos = mantenimientoDB;
-        result2.add(detalle);
+        if (detalle.mantCorrectivos!.isNotEmpty) {
+          result1.add(detalle);
+        }
+      } else if (tipo == 2) {
+        final mantenimientoDB =
+            await _api.mantCorrectivoDB.getMantenimientosOrdenHabByIdInspeccionDetalle(detalleDB[i].idInspeccionDetalle.toString());
+        detalle.mantCorrectivos = mantenimientoDB;
+        if (detalle.mantCorrectivos!.isNotEmpty) {
+          result2.add(detalle);
+        }
       }
     }
 
