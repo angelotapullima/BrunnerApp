@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:new_brunner_app/src/api/Mantenimiento/mantenimiento_correctivo_api.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/categoria_inspeccion_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_detalle_model.dart';
@@ -9,8 +10,10 @@ import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctiv
 import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/Orden%20Habilitacion/mantenimientos.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/Orden%20Habilitacion/new_observaciones_model.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/Orden%20Habilitacion/widgets.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/search_vehiculos.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
 import 'package:new_brunner_app/src/widget/show_loading.dart';
+import 'package:provider/provider.dart';
 
 class DetallesOrdenHabilitacion extends StatefulWidget {
   const DetallesOrdenHabilitacion({Key? key, required this.detalle}) : super(key: key);
@@ -223,8 +226,15 @@ class _DetallesOrdenHabilitacionState extends State<DetallesOrdenHabilitacion> {
             height: ScreenUtil().setHeight(20),
           ),
           InkWell(
-            onTap: () {
+            onTap: () async {
               if (_controller.informes.isNotEmpty) {
+                final provider = Provider.of<VehiculosController>(context, listen: false);
+                final _api = MantenimientoCorrectivoApi();
+                final res = _api.habilitarObservaciones(provider.idS.value, _controller.informes, _controller.observaciones);
+                if (res == 1) {
+                } else {
+                  showToast2('Ocurrió un error, inténtelo nuevamente', Colors.red);
+                }
               } else {
                 showToast2('Debe seleccionar por lo menos una observación corregida', Colors.red);
               }
