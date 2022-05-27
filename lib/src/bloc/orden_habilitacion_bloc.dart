@@ -27,6 +27,12 @@ class OrdenHabilitacionCorrectivaBloc {
     _enProcesoController.close();
   }
 
+  void clear() {
+    _detalleController.sink.add([]);
+    _infPendController.sink.add([]);
+    _enProcesoController.sink.add([]);
+  }
+
   void getInspeccionesById(String placaVehiculo, String tipoUnidad) async {
     _detalleController.sink.add([]);
     _detalleController.sink.add(await _api.detalleInspDB.getDetalleInspeccionByPlacaVehiculo(placaVehiculo));

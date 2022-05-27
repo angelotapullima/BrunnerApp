@@ -61,6 +61,8 @@ class MantenimientoCorrectivo extends StatelessWidget {
             onTap: () {
               final providerPlaca = Provider.of<VehiculosController>(context, listen: false);
               providerPlaca.setData('', '');
+              final consultaDetallespBloc = ProviderBloc.ordenHab(context);
+              consultaDetallespBloc.clear();
               Navigator.push(
                 context,
                 PageRouteBuilder(
