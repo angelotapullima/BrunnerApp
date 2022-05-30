@@ -190,18 +190,18 @@ class _LoginState extends State<Login> {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: ScreenUtil().setHeight(16),
-                    ),
-                    Text(
-                      '¿Olvidó la contraseña?',
-                      style: TextStyle(
-                        color: Colors.green,
-                        fontWeight: FontWeight.w500,
-                        fontSize: ScreenUtil().setSp(12),
-                        fontStyle: FontStyle.normal,
-                      ),
-                    ),
+                    // SizedBox(
+                    //   height: ScreenUtil().setHeight(16),
+                    // ),
+                    // Text(
+                    //   '¿Olvidó la contraseña?',
+                    //   style: TextStyle(
+                    //     color: Colors.green,
+                    //     fontWeight: FontWeight.w500,
+                    //     fontSize: ScreenUtil().setSp(12),
+                    //     fontStyle: FontStyle.normal,
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
