@@ -5,6 +5,7 @@ import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_detalle_model.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/Orden%20Habilitacion/detalles_orden_habilitacion.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/search_vehiculos.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/scan_qr_vehiculo_placa.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
 import 'package:provider/provider.dart';
 
@@ -380,6 +381,60 @@ class _OrdenHabilitacionCorrectivaState extends State<OrdenHabilitacionCorrectiv
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: ScreenUtil().setHeight(10),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  PageRouteBuilder(
+                                    pageBuilder: (context, animation, secondaryAnimation) {
+                                      return ScanQRVehiculoPlaca(
+                                        modulo: 'OHC',
+                                      );
+                                    },
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                width: double.infinity,
+                                margin: const EdgeInsets.all(8),
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Colors.green,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      spreadRadius: 3,
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 3), // changes position of shadow
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.qr_code_scanner_outlined,
+                                      color: Colors.white,
+                                    ),
+                                    SizedBox(
+                                      width: ScreenUtil().setWidth(10),
+                                    ),
+                                    Text(
+                                      'Escanear QR',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: ScreenUtil().setSp(15),
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
