@@ -49,6 +49,7 @@ class Mantenimientos extends StatelessWidget {
                             pageBuilder: (context, animation, secondaryAnimation) {
                               return AddAccionesResponsable(
                                 detalle: detalle,
+                                page: 'ORDEN',
                               );
                             },
                           ),

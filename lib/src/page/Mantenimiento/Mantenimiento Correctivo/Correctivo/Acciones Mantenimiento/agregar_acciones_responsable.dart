@@ -8,8 +8,9 @@ import 'package:new_brunner_app/src/util/utils.dart';
 import 'package:new_brunner_app/src/widget/show_loading.dart';
 
 class AddAccionesResponsable extends StatefulWidget {
-  const AddAccionesResponsable({Key? key, required this.detalle}) : super(key: key);
+  const AddAccionesResponsable({Key? key, required this.detalle, required this.page}) : super(key: key);
   final InspeccionVehiculoDetalleModel detalle;
+  final String page;
 
   @override
   State<AddAccionesResponsable> createState() => _AddAccionesResponsableState();
@@ -196,7 +197,6 @@ class _AddAccionesResponsableState extends State<AddAccionesResponsable> {
                                                     _descripccionAccionController.text.toString().trim(), _accion);
 
                                                 if (res == 1) {
-                                                  _controller.changeAcccion(false);
                                                   final detalleBloc = ProviderBloc.mantenimientoCorrectivo(context);
                                                   detalleBloc.getDetalleResponsableInspeccionManttCorrectivoById(
                                                       widget.detalle.idInspeccionDetalle.toString(), widget.detalle.tipoUnidad.toString());
@@ -205,6 +205,15 @@ class _AddAccionesResponsableState extends State<AddAccionesResponsable> {
                                                       widget.detalle.idInspeccionDetalle.toString(), widget.detalle.tipoUnidad.toString());
                                                   _accionController.clear();
                                                   _descripccionAccionController.clear();
+                                                  _controller.changeAcccion(false);
+
+                                                  //Orden Actualizar
+                                                  final ordenHabilitacionBloc = ProviderBloc.ordenHab(context);
+                                                  ordenHabilitacionBloc.getInformesPendientesAprobacion(
+                                                      widget.detalle.plavaVehiculo.toString(), widget.detalle.tipoUnidad.toString());
+                                                  ordenHabilitacionBloc.getPendientesAtencion(
+                                                      widget.detalle.plavaVehiculo.toString(), widget.detalle.tipoUnidad.toString());
+
                                                   showToast2('Acción guardado correctamente', Colors.green);
                                                 } else {
                                                   showToast2('Ocurrió un error, Inténtelo nuevamente', Colors.redAccent);

@@ -80,6 +80,7 @@ class ResultadosConsultaDetalle extends StatelessWidget {
                             pageBuilder: (context, animation, secondaryAnimation) {
                               return AddAccionesResponsable(
                                 detalle: detalle,
+                                page: 'CORRECTIVA',
                               );
                             },
                           ),

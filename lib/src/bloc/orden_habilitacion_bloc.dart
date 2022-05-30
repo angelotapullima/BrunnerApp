@@ -42,11 +42,15 @@ class OrdenHabilitacionCorrectivaBloc {
     _detalleController.sink.add(await _api.detalleInspDB.getDetalleInspeccionByPlacaVehiculo(placaVehiculo));
   }
 
-  void getInformesPendientesAprobacion(String plavaVehiculo) async {
+  void getInformesPendientesAprobacion(String plavaVehiculo, String tipoUnidad) async {
+    _infPendController.sink.add(await getDetalleInspeccionPlacaVehiculo(plavaVehiculo, 1));
+    await _api.getData(tipoUnidad);
     _infPendController.sink.add(await getDetalleInspeccionPlacaVehiculo(plavaVehiculo, 1));
   }
 
-  void getPendientesAtencion(String plavaVehiculo) async {
+  void getPendientesAtencion(String plavaVehiculo, String tipoUnidad) async {
+    _enProcesoController.sink.add(await getDetalleInspeccionPlacaVehiculo(plavaVehiculo, 2));
+    await _api.getData(tipoUnidad);
     _enProcesoController.sink.add(await getDetalleInspeccionPlacaVehiculo(plavaVehiculo, 2));
   }
 

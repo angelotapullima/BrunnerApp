@@ -171,6 +171,7 @@ class ControllerDetalle extends ChangeNotifier {
   int total = 0;
   List<InspeccionVehiculoDetalleModel> informes = [];
   List<NuevasObservacionesModel> observaciones = [];
+  bool cargando = false;
 
   void changeTotal(int t) async {
     total = 0;
@@ -207,6 +208,16 @@ class ControllerDetalle extends ChangeNotifier {
 
   void removeObservacion(String observacion) {
     observaciones.removeWhere((item) => item.observacion == observacion);
+    notifyListeners();
+  }
+
+  void removeAll() {
+    informes.clear();
+    observaciones.clear();
+  }
+
+  void changeCargando(bool b) {
+    cargando = b;
     notifyListeners();
   }
 }

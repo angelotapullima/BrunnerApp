@@ -28,250 +28,280 @@ class _DetallesOrdenHabilitacionState extends State<DetallesOrdenHabilitacion> {
   @override
   Widget build(BuildContext context) {
     final ordenHabilitacionBloc = ProviderBloc.ordenHab(context);
-    ordenHabilitacionBloc.getInformesPendientesAprobacion(widget.detalle[0].plavaVehiculo.toString());
-    ordenHabilitacionBloc.getPendientesAtencion(widget.detalle[0].plavaVehiculo.toString());
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: ScreenUtil().setHeight(20),
-          ),
-          AnimatedBuilder(
-            animation: _controller,
-            builder: (_, t) {
-              return Padding(
-                padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16)),
-                child: RichText(
-                  text: TextSpan(
-                    text: 'Tiene ${_controller.totalInforme} observacion(es) corregidas pendientes de habilitar ',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.w500,
-                      fontSize: ScreenUtil().setSp(15),
-                    ),
-                    children: [
-                      TextSpan(
-                        text: ', de un total de ${_controller.total}',
+    ordenHabilitacionBloc.getInformesPendientesAprobacion(widget.detalle[0].plavaVehiculo.toString(), widget.detalle[0].tipoUnidad.toString());
+    ordenHabilitacionBloc.getPendientesAtencion(widget.detalle[0].plavaVehiculo.toString(), widget.detalle[0].tipoUnidad.toString());
+    return Stack(
+      children: [
+        SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: ScreenUtil().setHeight(20),
+              ),
+              AnimatedBuilder(
+                animation: _controller,
+                builder: (_, t) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16)),
+                    child: RichText(
+                      text: TextSpan(
+                        text: 'Tiene ${_controller.totalInforme} observacion(es) corregida(s) pendientes de habilitar ',
                         style: TextStyle(
-                          color: Colors.blueGrey,
-                          fontWeight: FontWeight.w600,
+                          color: Colors.red,
+                          fontWeight: FontWeight.w500,
                           fontSize: ScreenUtil().setSp(15),
                         ),
-                      )
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
-          SizedBox(
-            height: ScreenUtil().setHeight(20),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16)),
-            child: Text(
-              'Pendientes de aprobación:',
-              style: TextStyle(
-                color: Colors.blueGrey,
-                fontWeight: FontWeight.w600,
-                fontSize: ScreenUtil().setSp(18),
-              ),
-            ),
-          ),
-          SizedBox(
-            height: ScreenUtil().setHeight(10),
-          ),
-          StreamBuilder<List<InspeccionVehiculoDetalleModel>>(
-            stream: ordenHabilitacionBloc.infoPenStream,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                if (snapshot.data!.isNotEmpty) {
-                  _controller.changeInformeTotal(snapshot.data!.length);
-                  return InkWell(
-                    onTap: () {
-                      _seleccionarInformePendienteAprobacion(context, snapshot.data!);
-                    },
-                    child: Container(
-                      width: double.infinity,
-                      margin: const EdgeInsets.all(8),
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.blueGrey),
-                        color: Colors.white,
-                      ),
-                      child: Row(
                         children: [
-                          Expanded(
-                            child: Text(
-                              'Seleccionar',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Colors.blueGrey,
-                                fontSize: ScreenUtil().setSp(16),
-                                fontWeight: FontWeight.w600,
-                              ),
+                          TextSpan(
+                            text: ', de un total de ${_controller.total}',
+                            style: TextStyle(
+                              color: Colors.blueGrey,
+                              fontWeight: FontWeight.w600,
+                              fontSize: ScreenUtil().setSp(15),
                             ),
-                          ),
-                          Icon(
-                            Icons.keyboard_arrow_down,
-                            color: Colors.blueGrey,
-                          ),
+                          )
                         ],
                       ),
                     ),
                   );
-                } else {
-                  return Container();
-                }
-              } else {
-                return Center(
-                  child: CupertinoActivityIndicator(),
-                );
-              }
-            },
-          ),
-          SizedBox(
-            height: ScreenUtil().setHeight(10),
-          ),
-          AnimatedBuilder(
-            animation: _controller,
-            builder: (_, s) {
-              return Column(
-                children: _controller.informes.map((item) => _detalleInformePendienteAprobacion(context, item, 'VER')).toList(),
-              );
-            },
-          ),
-          SizedBox(
-            height: ScreenUtil().setHeight(20),
-          ),
-          StreamBuilder<List<InspeccionVehiculoDetalleModel>>(
-            stream: ordenHabilitacionBloc.enProcesoStream,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                if (snapshot.data!.isNotEmpty) {
-                  _controller.changeTotal(snapshot.data!.length);
-                  return ExpansionTile(
-                    maintainState: true,
-                    title: Text(
-                      'En proceso de atención (${snapshot.data!.length}):',
-                      style: TextStyle(
-                        color: Colors.blueGrey,
-                        fontWeight: FontWeight.w600,
-                        fontSize: ScreenUtil().setSp(18),
-                      ),
-                    ),
-                    children: [
-                      Mantenimientos(
-                        detalles: snapshot.data!,
-                        action: 'TODO',
-                      ),
-                    ],
-                  );
-                } else {
-                  return Container();
-                }
-              } else {
-                return Center(
-                  child: CupertinoActivityIndicator(),
-                );
-              }
-            },
-          ),
-          SizedBox(
-            height: ScreenUtil().setHeight(10),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-              left: ScreenUtil().setWidth(16),
-              right: ScreenUtil().setWidth(4),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Nuevas observaciones:',
+                },
+              ),
+              SizedBox(
+                height: ScreenUtil().setHeight(20),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16)),
+                child: Text(
+                  'Pendientes de aprobación:',
                   style: TextStyle(
                     color: Colors.blueGrey,
                     fontWeight: FontWeight.w600,
                     fontSize: ScreenUtil().setSp(18),
                   ),
                 ),
-                IconButton(
-                  onPressed: () {
-                    _addObservacion(context, widget.detalle[0].tipoUnidad.toString());
-                  },
-                  icon: Icon(
-                    Icons.add_circle,
+              ),
+              SizedBox(
+                height: ScreenUtil().setHeight(10),
+              ),
+              StreamBuilder<List<InspeccionVehiculoDetalleModel>>(
+                stream: ordenHabilitacionBloc.infoPenStream,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    _controller.changeInformeTotal(snapshot.data!.length);
+                    if (snapshot.data!.isNotEmpty) {
+                      return InkWell(
+                        onTap: () {
+                          _seleccionarInformePendienteAprobacion(context, snapshot.data!);
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          margin: const EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: Colors.blueGrey),
+                            color: Colors.white,
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  'Seleccionar',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.blueGrey,
+                                    fontSize: ScreenUtil().setSp(16),
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                              Icon(
+                                Icons.keyboard_arrow_down,
+                                color: Colors.blueGrey,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    } else {
+                      return Container();
+                    }
+                  } else {
+                    return Center(
+                      child: CupertinoActivityIndicator(),
+                    );
+                  }
+                },
+              ),
+              SizedBox(
+                height: ScreenUtil().setHeight(10),
+              ),
+              AnimatedBuilder(
+                animation: _controller,
+                builder: (_, s) {
+                  return Column(
+                    children: _controller.informes.map((item) => _detalleInformePendienteAprobacion(context, item, 'VER')).toList(),
+                  );
+                },
+              ),
+              SizedBox(
+                height: ScreenUtil().setHeight(20),
+              ),
+              StreamBuilder<List<InspeccionVehiculoDetalleModel>>(
+                stream: ordenHabilitacionBloc.enProcesoStream,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    _controller.changeTotal(snapshot.data!.length);
+                    if (snapshot.data!.isNotEmpty) {
+                      return ExpansionTile(
+                        maintainState: true,
+                        title: Text(
+                          'En proceso de atención (${snapshot.data!.length}):',
+                          style: TextStyle(
+                            color: Colors.blueGrey,
+                            fontWeight: FontWeight.w600,
+                            fontSize: ScreenUtil().setSp(18),
+                          ),
+                        ),
+                        children: [
+                          Mantenimientos(
+                            detalles: snapshot.data!,
+                            action: 'TODO',
+                          ),
+                        ],
+                      );
+                    } else {
+                      return Container();
+                    }
+                  } else {
+                    return Center(
+                      child: CupertinoActivityIndicator(),
+                    );
+                  }
+                },
+              ),
+              SizedBox(
+                height: ScreenUtil().setHeight(10),
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                  left: ScreenUtil().setWidth(16),
+                  right: ScreenUtil().setWidth(4),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Nuevas observaciones:',
+                      style: TextStyle(
+                        color: Colors.blueGrey,
+                        fontWeight: FontWeight.w600,
+                        fontSize: ScreenUtil().setSp(18),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        _addObservacion(context, widget.detalle[0].tipoUnidad.toString());
+                      },
+                      icon: Icon(
+                        Icons.add_circle,
+                        color: Colors.green,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: ScreenUtil().setHeight(10),
+              ),
+              AnimatedBuilder(
+                animation: _controller,
+                builder: (_, s) {
+                  return Column(
+                    children: _controller.observaciones.map((item) => _detalleObservacion(context, item)).toList(),
+                  );
+                },
+              ),
+              Divider(),
+              SizedBox(
+                height: ScreenUtil().setHeight(20),
+              ),
+              InkWell(
+                onTap: () async {
+                  _controller.changeCargando(true);
+                  if (_controller.informes.isNotEmpty) {
+                    final provider = Provider.of<VehiculosController>(context, listen: false);
+                    final _api = MantenimientoCorrectivoApi();
+                    final res = await _api.habilitarObservaciones(provider.idS.value, _controller.informes, _controller.observaciones);
+
+                    if (res == 1) {
+                      _controller.removeAll();
+
+                      final ordenHabilitacionBloc = ProviderBloc.ordenHab(context);
+                      ordenHabilitacionBloc.getInformesPendientesAprobacion(
+                          widget.detalle[0].plavaVehiculo.toString(), widget.detalle[0].tipoUnidad.toString());
+                      ordenHabilitacionBloc.getPendientesAtencion(
+                          widget.detalle[0].plavaVehiculo.toString(), widget.detalle[0].tipoUnidad.toString());
+                      // final consultaDetallespBloc = ProviderBloc.ordenHab(context);
+                      // consultaDetallespBloc.getInspeccionesById(widget.detalle[0].plavaVehiculo.toString(), widget.detalle[0].tipoUnidad.toString());
+                      Future.delayed(Duration(seconds: 1));
+                      showToast2('Acción realizada correctamente', Colors.green);
+                    } else {
+                      showToast2('Ocurrió un error, inténtelo nuevamente', Colors.red);
+                    }
+                  } else {
+                    showToast2('Debe seleccionar por lo menos una observación corregida', Colors.red);
+                  }
+                  _controller.changeCargando(false);
+                },
+                child: Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
                     color: Colors.green,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        spreadRadius: 3,
+                        blurRadius: 8,
+                        offset: const Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: ScreenUtil().setHeight(10),
-          ),
-          AnimatedBuilder(
-            animation: _controller,
-            builder: (_, s) {
-              return Column(
-                children: _controller.observaciones.map((item) => _detalleObservacion(context, item)).toList(),
-              );
-            },
-          ),
-          Divider(),
-          SizedBox(
-            height: ScreenUtil().setHeight(20),
-          ),
-          InkWell(
-            onTap: () async {
-              if (_controller.informes.isNotEmpty) {
-                final provider = Provider.of<VehiculosController>(context, listen: false);
-                final _api = MantenimientoCorrectivoApi();
-                final res = _api.habilitarObservaciones(provider.idS.value, _controller.informes, _controller.observaciones);
-                if (res == 1) {
-                } else {
-                  showToast2('Ocurrió un error, inténtelo nuevamente', Colors.red);
-                }
-              } else {
-                showToast2('Debe seleccionar por lo menos una observación corregida', Colors.red);
-              }
-            },
-            child: Container(
-              width: double.infinity,
-              margin: const EdgeInsets.all(8),
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Colors.green,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    spreadRadius: 3,
-                    blurRadius: 8,
-                    offset: const Offset(0, 3), // changes position of shadow
-                  ),
-                ],
-              ),
-              child: Center(
-                child: Text(
-                  'Habilitar con Observaciones',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: ScreenUtil().setSp(18),
-                    fontWeight: FontWeight.w600,
+                  child: Center(
+                    child: Text(
+                      'Habilitar con Observaciones',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: ScreenUtil().setSp(18),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
+              SizedBox(
+                height: ScreenUtil().setHeight(50),
+              ),
+            ],
           ),
-          SizedBox(
-            height: ScreenUtil().setHeight(50),
-          ),
-        ],
-      ),
+        ),
+        AnimatedBuilder(
+          animation: _controller,
+          builder: (context, snapshot) {
+            return ShowLoadding(
+              active: _controller.cargando,
+              h: double.infinity,
+              w: double.infinity,
+              fondo: Colors.black.withOpacity(.3),
+              colorText: Colors.black,
+            );
+          },
+        ),
+      ],
     );
   }
 
@@ -941,7 +971,7 @@ class _DetallesOrdenHabilitacionState extends State<DetallesOrdenHabilitacion> {
                                     ),
                                     child: Center(
                                       child: Text(
-                                        'Guardar',
+                                        'Agregar',
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: ScreenUtil().setSp(20),
@@ -975,7 +1005,7 @@ class _DetallesOrdenHabilitacionState extends State<DetallesOrdenHabilitacion> {
                         ),
                       ),
                       AnimatedBuilder(
-                        animation: _controller,
+                        animation: _controllerL,
                         builder: (context, snapshot) {
                           return ShowLoadding(
                             active: _controllerL.cargando,
