@@ -42,6 +42,10 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Este aplicativo necesita acceso a la Cámara para poder escanear códigos QR</string>
 	<false/>
 </dict>
 </plist>
