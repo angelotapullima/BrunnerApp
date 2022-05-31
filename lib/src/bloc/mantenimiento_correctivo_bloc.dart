@@ -42,6 +42,10 @@ class MantenimientoCorrectivoBloc {
     _detalleManttCorrectivoController.close();
   }
 
+  void clearData() {
+    _detalleController.sink.add([]);
+  }
+
   void getCategorias(String tipoUnidad) async {
     if (tipoUnidad.isNotEmpty) {
       _categoriasFiltroController.sink.add(await _api.catInspeccionDB.getCatInspeccionByTipoUnidad(tipoUnidad));

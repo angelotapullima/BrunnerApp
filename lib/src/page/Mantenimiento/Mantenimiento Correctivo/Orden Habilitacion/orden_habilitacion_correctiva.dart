@@ -4,10 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_detalle_model.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/Orden%20Habilitacion/detalles_orden_habilitacion.dart';
-import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/search_vehiculos.dart';
+import 'package:new_brunner_app/src/page/search_vehiculos.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/scan_qr_vehiculo_placa.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
-import 'package:provider/provider.dart';
 
 class OrdenHabilitacionCorrectiva extends StatefulWidget {
   const OrdenHabilitacionCorrectiva({Key? key}) : super(key: key);
@@ -168,7 +167,6 @@ class _OrdenHabilitacionCorrectivaState extends State<OrdenHabilitacionCorrectiv
   }
 
   void filtroSearch() {
-    final providerPlaca = Provider.of<VehiculosController>(context, listen: false);
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -267,77 +265,70 @@ class _OrdenHabilitacionCorrectivaState extends State<OrdenHabilitacionCorrectiv
                             SizedBox(
                               height: ScreenUtil().setHeight(10),
                             ),
-                            ValueListenableBuilder(
-                              valueListenable: providerPlaca.placaS,
-                              builder: (BuildContext context, String data, Widget? child) {
-                                if (data != '') {
-                                  _placaUnidad.text = data;
-                                } else {
-                                  _placaUnidad.clear();
+                            TextField(
+                              readOnly: true,
+                              controller: _placaUnidad,
+                              maxLines: null,
+                              style: const TextStyle(
+                                color: Color(0xff808080),
+                              ),
+                              onTap: () {
+                                FocusScope.of(context).unfocus();
+                                if (_tipoVeh != '') {
+                                  Navigator.push(
+                                    context,
+                                    PageRouteBuilder(
+                                      pageBuilder: (context, animation, secondaryAnimation) {
+                                        return VehiculosSearch(
+                                          tipoUnidad: _tipoVeh,
+                                          onChanged: (vehiculo) {
+                                            _placaUnidad.text = vehiculo.placaVehiculo ?? '';
+                                          },
+                                        );
+                                      },
+                                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                        var begin = const Offset(0.0, 1.0);
+                                        var end = Offset.zero;
+                                        var curve = Curves.ease;
+
+                                        var tween = Tween(begin: begin, end: end).chain(
+                                          CurveTween(curve: curve),
+                                        );
+
+                                        return SlideTransition(
+                                          position: animation.drive(tween),
+                                          child: child,
+                                        );
+                                      },
+                                    ),
+                                  );
                                 }
-                                return TextField(
-                                  readOnly: true,
-                                  controller: _placaUnidad,
-                                  maxLines: null,
-                                  style: const TextStyle(
-                                    color: Color(0xff808080),
-                                  ),
-                                  onTap: () {
-                                    FocusScope.of(context).unfocus();
-                                    if (_tipoVeh != '') {
-                                      Navigator.push(
-                                        context,
-                                        PageRouteBuilder(
-                                          pageBuilder: (context, animation, secondaryAnimation) {
-                                            return VehiculosSearch(
-                                              tipoUnidad: _tipoVeh,
-                                            );
-                                          },
-                                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                            var begin = const Offset(0.0, 1.0);
-                                            var end = Offset.zero;
-                                            var curve = Curves.ease;
-
-                                            var tween = Tween(begin: begin, end: end).chain(
-                                              CurveTween(curve: curve),
-                                            );
-
-                                            return SlideTransition(
-                                              position: animation.drive(tween),
-                                              child: child,
-                                            );
-                                          },
-                                        ),
-                                      );
-                                    }
-                                  },
-                                  decoration: InputDecoration(
-                                    suffixIcon: const Icon(
-                                      Icons.keyboard_arrow_down,
-                                      color: Colors.green,
-                                    ),
-                                    filled: true,
-                                    fillColor: const Color(0xffeeeeee),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      borderSide: const BorderSide(
-                                        color: Color(0xffeeeeee),
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      borderSide: const BorderSide(
-                                        color: Color(0xffeeeeee),
-                                      ),
-                                    ),
-                                    hintStyle: const TextStyle(
-                                      color: Color(0xff808080),
-                                    ),
-                                    hintText: 'Seleccionar',
-                                    labelText: 'Placa de la unidad',
-                                  ),
-                                );
                               },
+                              decoration: InputDecoration(
+                                suffixIcon: const Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: Colors.green,
+                                ),
+                                filled: true,
+                                fillColor: const Color(0xffeeeeee),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderSide: const BorderSide(
+                                    color: Color(0xffeeeeee),
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderSide: const BorderSide(
+                                    color: Color(0xffeeeeee),
+                                  ),
+                                ),
+                                hintStyle: const TextStyle(
+                                  color: Color(0xff808080),
+                                ),
+                                hintText: 'Seleccionar',
+                                labelText: 'Placa de la unidad',
+                              ),
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(10),
@@ -509,9 +500,7 @@ class _OrdenHabilitacionCorrectivaState extends State<OrdenHabilitacionCorrectiv
                                   } else {
                                     _tipoVeh = '';
                                   }
-                                  final provider = Provider.of<VehiculosController>(context, listen: false);
-
-                                  provider.setData('', '');
+                                  _placaUnidad.clear();
 
                                   Navigator.pop(context);
                                 },

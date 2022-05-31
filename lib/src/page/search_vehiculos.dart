@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/vehiculo_model.dart';
-import 'package:provider/provider.dart';
 
 class VehiculosSearch extends StatefulWidget {
-  const VehiculosSearch({Key? key, required this.tipoUnidad}) : super(key: key);
+  const VehiculosSearch({Key? key, required this.tipoUnidad, required this.onChanged}) : super(key: key);
   final String tipoUnidad;
+  final ValueChanged<VehiculoModel>? onChanged;
 
   @override
   State<VehiculosSearch> createState() => _VehiculosSearchState();
@@ -95,10 +95,8 @@ class _VehiculosSearchState extends State<VehiculosSearch> {
                           return InkWell(
                             onTap: () {
                               Navigator.pop(context);
-                              final provider = Provider.of<VehiculosController>(context, listen: false);
-                              String data = '';
-                              data = '${vehiculo.placaVehiculo}';
-                              provider.setData(vehiculo.idVehiculo.toString(), data);
+
+                              widget.onChanged!(vehiculo);
                             },
                             child: Padding(
                               padding: EdgeInsets.symmetric(
@@ -143,18 +141,5 @@ class _VehiculosSearchState extends State<VehiculosSearch> {
             )
           ]),
     );
-  }
-}
-
-class VehiculosController extends ChangeNotifier {
-  ValueNotifier<String> id = ValueNotifier('');
-  ValueNotifier<String> placa = ValueNotifier('');
-
-  ValueNotifier<String> get idS => id;
-  ValueNotifier<String> get placaS => placa;
-
-  void setData(String idC, String placaN) {
-    id.value = idC;
-    placa.value = placaN;
   }
 }

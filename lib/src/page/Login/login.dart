@@ -154,6 +154,7 @@ class _LoginState extends State<Login> {
                         textColor: Colors.white,
                         elevation: 0,
                         onPressed: () async {
+                          FocusScope.of(context).requestFocus(FocusNode());
                           final user = _usuarioController.text.trim();
                           final pass = _passwdController.text.trim();
                           if (user.isNotEmpty) {

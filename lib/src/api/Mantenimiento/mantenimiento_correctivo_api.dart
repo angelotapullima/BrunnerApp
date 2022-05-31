@@ -80,6 +80,7 @@ class MantenimientoCorrectivoApi {
         final detalle = InspeccionVehiculoDetalleModel();
         detalle.idInspeccionDetalle = data["id_inspeccion_vehiculo_detalle"];
         detalle.tipoUnidad = data["tipo_unidad"];
+        detalle.idVehiculo = data["id_vehiculo"];
         detalle.plavaVehiculo = data["vehiculo_placa"];
         detalle.nroCheckList = data["numero_checklist"];
         var fechix = data["inspeccion_vehiculo_fecha"].split(' ');

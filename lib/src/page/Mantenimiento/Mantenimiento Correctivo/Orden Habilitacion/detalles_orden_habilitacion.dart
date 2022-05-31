@@ -10,10 +10,8 @@ import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctiv
 import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/Orden%20Habilitacion/mantenimientos.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/Orden%20Habilitacion/new_observaciones_model.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/Orden%20Habilitacion/widgets.dart';
-import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/search_vehiculos.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
 import 'package:new_brunner_app/src/widget/show_loading.dart';
-import 'package:provider/provider.dart';
 
 class DetallesOrdenHabilitacion extends StatefulWidget {
   const DetallesOrdenHabilitacion({Key? key, required this.detalle}) : super(key: key);
@@ -231,9 +229,9 @@ class _DetallesOrdenHabilitacionState extends State<DetallesOrdenHabilitacion> {
                 onTap: () async {
                   _controller.changeCargando(true);
                   if (_controller.informes.isNotEmpty) {
-                    final provider = Provider.of<VehiculosController>(context, listen: false);
                     final _api = MantenimientoCorrectivoApi();
-                    final res = await _api.habilitarObservaciones(provider.idS.value, _controller.informes, _controller.observaciones);
+                    final res =
+                        await _api.habilitarObservaciones(widget.detalle[0].idVehiculo.toString(), _controller.informes, _controller.observaciones);
 
                     if (res == 1) {
                       _controller.removeAll();

@@ -107,15 +107,16 @@ class _ScanQRVehiculoPlacaState extends State<ScanQRVehiculoPlaca> {
     });
     controller.scannedDataStream.listen(
       (barcode) async {
+        controller.pauseCamera();
         final _db = VehiculoDatabase();
         final _vehiculo = await _db.getQRVehiculoByPlaca('${barcode.code}');
 
         if (_vehiculo.isNotEmpty) {
           _controller.changeValorQr(0);
           if (_controller.valor.value == 0) {
-            Navigator.pop(context);
             switch (widget.modulo) {
               case 'CHECK':
+                Navigator.pop(context);
                 Navigator.push(
                   context,
                   PageRouteBuilder(
@@ -132,6 +133,7 @@ class _ScanQRVehiculoPlacaState extends State<ScanQRVehiculoPlaca> {
                 final consultaDetallespBloc = ProviderBloc.ordenHab(context);
                 consultaDetallespBloc.getInspeccionesById(_vehiculo[0].placaVehiculo.toString(), _vehiculo[0].tipoUnidad.toString());
                 Navigator.pop(context);
+                Navigator.pop(context);
                 break;
               default:
                 showToast2('Inténtelo nuevamente', Colors.black);
@@ -140,8 +142,6 @@ class _ScanQRVehiculoPlacaState extends State<ScanQRVehiculoPlaca> {
             _controller.changeValorQr(1);
           }
         } else {
-          controller.pauseCamera();
-
           showToast2('Vehículo no encontrado', Colors.red);
           _controller.changeValorQr(1);
           controller.resumeCamera();

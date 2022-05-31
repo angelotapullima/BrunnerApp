@@ -54,6 +54,7 @@ class MantenimientoDB {
   static const String inspeccionVehiculoDetalleTableSql = 'CREATE TABLE InspeccionVehiculoDetalle('
       ' idInspeccionDetalle TEXT PRIMARY KEY,'
       ' tipoUnidad TEXT,'
+      ' idVehiculo TEXT,'
       ' plavaVehiculo TEXT,'
       ' nroCheckList TEXT,'
       ' fechaInspeccion TEXT,'
