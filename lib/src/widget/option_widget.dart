@@ -51,12 +51,15 @@ class OptionWidget extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: ScreenUtil().setWidth(10)),
-                  Text(
-                    descripcion,
-                    style: TextStyle(
-                      fontSize: ScreenUtil().setSp(12),
-                      fontWeight: FontWeight.w400,
-                      color: Colors.white,
+                  Padding(
+                    padding: EdgeInsets.only(right: ScreenUtil().setWidth(8)),
+                    child: Text(
+                      descripcion,
+                      style: TextStyle(
+                        fontSize: ScreenUtil().setSp(12),
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                   const Spacer(),
