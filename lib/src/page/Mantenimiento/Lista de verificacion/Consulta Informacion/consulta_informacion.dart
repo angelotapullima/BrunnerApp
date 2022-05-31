@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_model.dart';
-import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Check%20List/check_list.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Consulta%20Informacion/resultados_consulta.dart';
-import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/choferes_search.dart';
+import 'package:new_brunner_app/src/page/personas_search.dart';
 import 'package:provider/provider.dart';
 
 class ConsultaInformacion extends StatefulWidget {
@@ -24,6 +23,7 @@ class _ConsultaInformacionState extends State<ConsultaInformacion> {
   final _tipo = TextEditingController();
 
   String _estado = '';
+  String _idResponsable = '';
   List<String> spinnerItems = ['Todos', 'Unidades habilitadas', 'Unidades habilitadas con restricciones', 'Unidades inhabilitadas'];
   int count = 0;
 
@@ -170,7 +170,6 @@ class _ConsultaInformacionState extends State<ConsultaInformacion> {
   }
 
   void filtroSearch() {
-    final provider = Provider.of<ConductorController>(context, listen: false);
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -258,72 +257,69 @@ class _ConsultaInformacionState extends State<ConsultaInformacion> {
                             SizedBox(
                               height: ScreenUtil().setHeight(20),
                             ),
-                            ValueListenableBuilder(
-                              valueListenable: provider.conductorS,
-                              builder: (BuildContext context, String data, Widget? child) {
-                                if (data != 'Seleccionar') {
-                                  _operario.text = data;
-                                }
-                                return TextField(
-                                  readOnly: true,
-                                  controller: _operario,
-                                  maxLines: null,
-                                  style: const TextStyle(
-                                    color: Color(0xff808080),
-                                  ),
-                                  onTap: () {
-                                    FocusScope.of(context).unfocus();
-                                    Navigator.push(
-                                      context,
-                                      PageRouteBuilder(
-                                        pageBuilder: (context, animation, secondaryAnimation) {
-                                          return const ChoferesSearch(
-                                            page: 'Consulta',
-                                          );
+                            TextField(
+                              readOnly: true,
+                              controller: _operario,
+                              maxLines: null,
+                              style: const TextStyle(
+                                color: Color(0xff808080),
+                              ),
+                              onTap: () {
+                                FocusScope.of(context).unfocus();
+                                Navigator.push(
+                                  context,
+                                  PageRouteBuilder(
+                                    pageBuilder: (context, animation, secondaryAnimation) {
+                                      return PersonasSearch(
+                                        cargo: 'PERSONAS',
+                                        onChanged: (person) {
+                                          _operario.text = person.nombrePerson ?? '';
+                                          _idResponsable = person.idPerson.toString();
                                         },
-                                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                          var begin = const Offset(0.0, 1.0);
-                                          var end = Offset.zero;
-                                          var curve = Curves.ease;
+                                        idInspeccionDetalle: '',
+                                      );
+                                    },
+                                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                      var begin = const Offset(0.0, 1.0);
+                                      var end = Offset.zero;
+                                      var curve = Curves.ease;
 
-                                          var tween = Tween(begin: begin, end: end).chain(
-                                            CurveTween(curve: curve),
-                                          );
+                                      var tween = Tween(begin: begin, end: end).chain(
+                                        CurveTween(curve: curve),
+                                      );
 
-                                          return SlideTransition(
-                                            position: animation.drive(tween),
-                                            child: child,
-                                          );
-                                        },
-                                      ),
-                                    );
-                                  },
-                                  decoration: InputDecoration(
-                                    suffixIcon: const Icon(
-                                      Icons.person_outline,
-                                      color: Colors.green,
-                                    ),
-                                    filled: true,
-                                    fillColor: const Color(0xffeeeeee),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      borderSide: const BorderSide(
-                                        color: Color(0xffeeeeee),
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      borderSide: const BorderSide(
-                                        color: Color(0xffeeeeee),
-                                      ),
-                                    ),
-                                    hintStyle: const TextStyle(
-                                      color: Color(0xff808080),
-                                    ),
-                                    labelText: 'Nombre del operario',
+                                      return SlideTransition(
+                                        position: animation.drive(tween),
+                                        child: child,
+                                      );
+                                    },
                                   ),
                                 );
                               },
+                              decoration: InputDecoration(
+                                suffixIcon: const Icon(
+                                  Icons.person_outline,
+                                  color: Colors.green,
+                                ),
+                                filled: true,
+                                fillColor: const Color(0xffeeeeee),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderSide: const BorderSide(
+                                    color: Color(0xffeeeeee),
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderSide: const BorderSide(
+                                    color: Color(0xffeeeeee),
+                                  ),
+                                ),
+                                hintStyle: const TextStyle(
+                                  color: Color(0xff808080),
+                                ),
+                                labelText: 'Nombre del operario',
+                              ),
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(20),
@@ -483,9 +479,9 @@ class _ConsultaInformacionState extends State<ConsultaInformacion> {
                             InkWell(
                               onTap: () async {
                                 final consultaInspBloc = ProviderBloc.consultaInsp(context);
-                                final provider = Provider.of<ConductorController>(context, listen: false);
+
                                 consultaInspBloc.getInspeccionesVehiculo(_fechaInicio.text.trim(), _fechaFin.text.trim(), _placaUnidad.text.trim(),
-                                    provider.idS.value.trim(), _estado.trim(), _nroCheck.text.trim());
+                                    _idResponsable, _estado.trim(), _nroCheck.text.trim());
                                 Navigator.pop(context);
                               },
                               child: Container(

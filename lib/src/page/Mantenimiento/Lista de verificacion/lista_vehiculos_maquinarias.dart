@@ -209,8 +209,6 @@ class _ListaVehiculosMaquinariasState extends State<ListaVehiculosMaquinarias> {
     }
     return InkWell(
       onTap: () {
-        final provider = Provider.of<ConductorController>(context, listen: false);
-        provider.setData('', 'Seleccionar');
         Navigator.push(
           context,
           PageRouteBuilder(

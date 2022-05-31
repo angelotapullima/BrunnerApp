@@ -117,8 +117,6 @@ class _ScanQRVehiculoPlacaState extends State<ScanQRVehiculoPlaca> {
             Navigator.pop(context);
             switch (widget.modulo) {
               case 'CHECK':
-                final provider = Provider.of<ConductorController>(context, listen: false);
-                provider.setData('', 'Seleccionar');
                 Navigator.push(
                   context,
                   PageRouteBuilder(

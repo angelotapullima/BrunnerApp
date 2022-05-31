@@ -5,11 +5,15 @@ import 'package:new_brunner_app/src/bloc/data_user_bloc.dart';
 import 'package:new_brunner_app/src/bloc/mantenimiento_correctivo_bloc.dart';
 import 'package:new_brunner_app/src/bloc/modulos_bloc.dart';
 import 'package:new_brunner_app/src/bloc/orden_habilitacion_bloc.dart';
+import 'package:new_brunner_app/src/bloc/personas_bloc.dart';
 import 'package:new_brunner_app/src/bloc/vehiculo_bloc.dart';
 
 class ProviderBloc extends InheritedWidget {
   final userBloc = DataUserBloc();
   final modulosBloc = ModulosBloc();
+
+  //Personas
+  final personasBloc = PersonasBloc();
 
   //Mantenimiento
   final vehiculosBloc = VehiculoBloc();
@@ -51,5 +55,9 @@ class ProviderBloc extends InheritedWidget {
 
   static OrdenHabilitacionCorrectivaBloc ordenHab(BuildContext context) {
     return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.ordenHabilitacionBloc;
+  }
+
+  static PersonasBloc personas(BuildContext context) {
+    return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.personasBloc;
   }
 }

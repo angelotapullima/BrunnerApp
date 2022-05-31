@@ -6,8 +6,8 @@ import 'package:new_brunner_app/src/model/Mantenimiento/categoria_inspeccion_mod
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_detalle_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/item_inspeccion_model.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/Correctivo/resultados_consulta_detalle.dart';
-import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/search_person_mantenimiento.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/search_vehiculos.dart';
+import 'package:new_brunner_app/src/page/personas_search.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
 import 'package:provider/provider.dart';
 
@@ -30,6 +30,7 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
   final _itemCatController = TextEditingController();
 
   String _estado = '';
+  String _idPersona = '';
   List<String> estadoItems = [
     'Todos',
     'Atendido',
@@ -196,7 +197,6 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
   }
 
   void filtroSearch() {
-    final providerPerson = Provider.of<PersonaMantenimientoController>(context, listen: false);
     final providerPlaca = Provider.of<VehiculosController>(context, listen: false);
     showModalBottomSheet(
       context: context,
@@ -371,76 +371,70 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                             SizedBox(
                               height: ScreenUtil().setHeight(10),
                             ),
-                            ValueListenableBuilder(
-                              valueListenable: providerPerson.personaS,
-                              builder: (BuildContext context, String data, Widget? child) {
-                                if (data != 'Seleccionar responsable') {
-                                  _responsable.text = data;
-                                } else {
-                                  _responsable.text = '';
-                                }
-                                return TextField(
-                                  readOnly: true,
-                                  controller: _responsable,
-                                  maxLines: null,
-                                  style: const TextStyle(
-                                    color: Color(0xff808080),
-                                  ),
-                                  onTap: () {
-                                    FocusScope.of(context).unfocus();
-                                    Navigator.push(
-                                      context,
-                                      PageRouteBuilder(
-                                        pageBuilder: (context, animation, secondaryAnimation) {
-                                          return PersonMantenimiento(
-                                            idInspeccionDetalle: '',
-                                            tipoUnidad: '',
-                                          );
+                            TextField(
+                              readOnly: true,
+                              controller: _responsable,
+                              maxLines: null,
+                              style: const TextStyle(
+                                color: Color(0xff808080),
+                              ),
+                              onTap: () {
+                                FocusScope.of(context).unfocus();
+                                Navigator.push(
+                                  context,
+                                  PageRouteBuilder(
+                                    pageBuilder: (context, animation, secondaryAnimation) {
+                                      return PersonasSearch(
+                                        cargo: 'MANTENIMIENTO',
+                                        onChanged: (person) {
+                                          _responsable.text = person.nombrePerson ?? '';
+                                          _idPersona = person.idPerson.toString();
                                         },
-                                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                          var begin = const Offset(0.0, 1.0);
-                                          var end = Offset.zero;
-                                          var curve = Curves.ease;
+                                        idInspeccionDetalle: '',
+                                      );
+                                    },
+                                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                      var begin = const Offset(0.0, 1.0);
+                                      var end = Offset.zero;
+                                      var curve = Curves.ease;
 
-                                          var tween = Tween(begin: begin, end: end).chain(
-                                            CurveTween(curve: curve),
-                                          );
+                                      var tween = Tween(begin: begin, end: end).chain(
+                                        CurveTween(curve: curve),
+                                      );
 
-                                          return SlideTransition(
-                                            position: animation.drive(tween),
-                                            child: child,
-                                          );
-                                        },
-                                      ),
-                                    );
-                                  },
-                                  decoration: InputDecoration(
-                                    suffixIcon: const Icon(
-                                      Icons.keyboard_arrow_down,
-                                      color: Colors.green,
-                                    ),
-                                    filled: true,
-                                    fillColor: const Color(0xffeeeeee),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      borderSide: const BorderSide(
-                                        color: Color(0xffeeeeee),
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      borderSide: const BorderSide(
-                                        color: Color(0xffeeeeee),
-                                      ),
-                                    ),
-                                    hintStyle: const TextStyle(
-                                      color: Color(0xff808080),
-                                    ),
-                                    hintText: 'Seleccionar responsable',
-                                    labelText: 'Responsable',
+                                      return SlideTransition(
+                                        position: animation.drive(tween),
+                                        child: child,
+                                      );
+                                    },
                                   ),
                                 );
                               },
+                              decoration: InputDecoration(
+                                suffixIcon: const Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: Colors.green,
+                                ),
+                                filled: true,
+                                fillColor: const Color(0xffeeeeee),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderSide: const BorderSide(
+                                    color: Color(0xffeeeeee),
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderSide: const BorderSide(
+                                    color: Color(0xffeeeeee),
+                                  ),
+                                ),
+                                hintStyle: const TextStyle(
+                                  color: Color(0xff808080),
+                                ),
+                                hintText: 'Seleccionar responsable',
+                                labelText: 'Responsable',
+                              ),
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(10),
@@ -688,7 +682,7 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                                   consultaDetallespBloc.getDetalleInsppeccionFiltro(
                                     _tipoVeh,
                                     providerPlaca.placaS.value,
-                                    providerPerson.idS.value,
+                                    _idPersona,
                                     idCategoria.trim(),
                                     idItemCategoria.trim(),
                                     _estado.trim(),

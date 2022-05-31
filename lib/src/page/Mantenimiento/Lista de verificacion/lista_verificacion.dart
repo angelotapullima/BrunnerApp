@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/page/Home/menu_widget.dart';
-import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Check%20List/check_list.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Consulta%20Informacion/consulta_informacion.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/lista_vehiculos_maquinarias.dart';
 import 'package:new_brunner_app/src/widget/option_widget.dart';
-import 'package:provider/provider.dart';
 
 class ListaVerificacion extends StatelessWidget {
   const ListaVerificacion({Key? key}) : super(key: key);
@@ -58,8 +56,6 @@ class ListaVerificacion extends StatelessWidget {
             onTap: () {
               final searchVehiculoBloc = ProviderBloc.vehiculo(context);
               searchVehiculoBloc.cargarVehiculos();
-              final provider = Provider.of<ConductorController>(context, listen: false);
-              provider.setData('', 'Seleccionar');
               Navigator.push(
                 context,
                 PageRouteBuilder(
