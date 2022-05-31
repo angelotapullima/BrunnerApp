@@ -30,7 +30,7 @@ class _ScanQRVehiculoPlacaState extends State<ScanQRVehiculoPlaca> {
 
   @override
   void dispose() {
-    controller?.dispose();
+    controller!.dispose();
     super.dispose();
   }
 
@@ -108,15 +108,11 @@ class _ScanQRVehiculoPlacaState extends State<ScanQRVehiculoPlaca> {
     });
     controller.scannedDataStream.listen(
       (barcode) async {
-        setState(() {
-          this.barcodeData = barcode;
-        });
-
-        //if (_controller.valor.value == 0) {}
         final _db = VehiculoDatabase();
-        final _vehiculo = await _db.getQRVehiculoByPlaca('${barcodeData!.code}');
+        final _vehiculo = await _db.getQRVehiculoByPlaca('${barcode.code}');
 
         if (_vehiculo.isNotEmpty) {
+          _controller.changeValorQr(0);
           if (_controller.valor.value == 0) {
             Navigator.pop(context);
             switch (widget.modulo) {
@@ -147,8 +143,11 @@ class _ScanQRVehiculoPlacaState extends State<ScanQRVehiculoPlaca> {
             _controller.changeValorQr(1);
           }
         } else {
+          controller.pauseCamera();
+
           showToast2('Vehículo no encontrado', Colors.red);
-          _controller.changeValorQr(0);
+          _controller.changeValorQr(1);
+          controller.resumeCamera();
         }
       },
     );
