@@ -7,7 +7,6 @@ import 'package:new_brunner_app/src/core/routes_constanst.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/vehiculo_model.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Check%20List/check_list.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/scan_qr_vehiculo_placa.dart';
-import 'package:provider/provider.dart';
 
 class ListaVehiculosMaquinarias extends StatefulWidget {
   const ListaVehiculosMaquinarias({Key? key}) : super(key: key);

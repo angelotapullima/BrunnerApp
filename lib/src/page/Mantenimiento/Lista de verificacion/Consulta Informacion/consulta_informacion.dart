@@ -5,7 +5,6 @@ import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_model.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Consulta%20Informacion/resultados_consulta.dart';
 import 'package:new_brunner_app/src/page/personas_search.dart';
-import 'package:provider/provider.dart';
 
 class ConsultaInformacion extends StatefulWidget {
   const ConsultaInformacion({Key? key}) : super(key: key);

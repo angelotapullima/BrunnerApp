@@ -6,7 +6,6 @@ import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/database/Mantenimiento/vehiculo_database.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Check%20List/check_list.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
-import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class ScanQRVehiculoPlaca extends StatefulWidget {
