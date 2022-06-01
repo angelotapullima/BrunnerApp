@@ -31,6 +31,17 @@ obtenerFechaHora(String date) {
   return fech.format(fecha);
 }
 
+selectdate(BuildContext context, TextEditingController date) async {
+  DateTime? picked = await showDatePicker(
+    context: context,
+    firstDate: DateTime(DateTime.now().month - 1),
+    initialDate: DateTime.now(),
+    lastDate: DateTime(DateTime.now().year + 2),
+  );
+
+  date.text = "${picked!.year.toString().padLeft(2, '0')}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
+}
+
 Widget fileData(String titulo, String data, num sizeT, num sizeD, FontWeight ft, FontWeight fd, TextAlign aling) {
   return RichText(
     textAlign: aling,

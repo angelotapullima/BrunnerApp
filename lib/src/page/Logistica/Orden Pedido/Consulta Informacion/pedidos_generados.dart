@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:new_brunner_app/src/util/utils.dart';
+import 'package:new_brunner_app/src/widget/text_field.dart';
 
 class PedidosGenerados extends StatefulWidget {
   const PedidosGenerados({Key? key}) : super(key: key);
@@ -11,6 +13,7 @@ class PedidosGenerados extends StatefulWidget {
 class _PedidosGeneradosState extends State<PedidosGenerados> {
   final _empresaController = TextEditingController();
   final _proveedorController = TextEditingController();
+  final _numeroOPController = TextEditingController();
   final _estadoController = TextEditingController();
   final _rendicionesController = TextEditingController();
   final _fechaInicioController = TextEditingController();
@@ -121,59 +124,42 @@ class _PedidosGeneradosState extends State<PedidosGenerados> {
                             SizedBox(
                               height: ScreenUtil().setHeight(20),
                             ),
-                            textfieldSelect(
+                            TextFieldSelect(
                               label: 'Empresa Contratante',
                               hingText: 'Seleccionar empresa',
                               controller: _empresaController,
                               icon: Icons.keyboard_arrow_down,
+                              readOnly: true,
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(10),
                             ),
-                            textfieldSelect(
+                            TextFieldSelect(
                               label: 'Proveedor',
                               hingText: 'Seleccionar proveedor',
                               controller: _proveedorController,
                               icon: Icons.keyboard_arrow_down,
+                              readOnly: true,
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(10),
                             ),
-                            TextField(
-                              //controller: _tipoVehiculo,
-                              maxLines: null,
-                              style: const TextStyle(
-                                color: Color(0xff808080),
-                              ),
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: const Color(0xffeeeeee),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                hintStyle: const TextStyle(
-                                  color: Color(0xff808080),
-                                ),
-                                labelText: 'Número de OP',
-                              ),
+                            TextFieldSelect(
+                              label: 'Número de OP',
+                              hingText: '',
+                              controller: _numeroOPController,
+                              icon: Icons.numbers,
+                              readOnly: false,
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(10),
                             ),
-                            textfieldSelect(
+                            TextFieldSelect(
                               label: 'Estado',
                               hingText: 'Seleccionar estado',
                               controller: _estadoController,
                               icon: Icons.keyboard_arrow_down,
+                              readOnly: true,
                               ontap: () {
                                 FocusScope.of(context).unfocus();
                                 _selectData(
@@ -187,11 +173,12 @@ class _PedidosGeneradosState extends State<PedidosGenerados> {
                             SizedBox(
                               height: ScreenUtil().setHeight(10),
                             ),
-                            textfieldSelect(
+                            TextFieldSelect(
                               label: 'Rendiciones',
                               hingText: 'Seleccionar',
                               controller: _rendicionesController,
                               icon: Icons.keyboard_arrow_down,
+                              readOnly: true,
                               ontap: () {
                                 FocusScope.of(context).unfocus();
                                 _selectData(context: context, lista: _rendicionesItems, initSize: 0.3, tipo: 'RENDICION');
@@ -200,27 +187,29 @@ class _PedidosGeneradosState extends State<PedidosGenerados> {
                             SizedBox(
                               height: ScreenUtil().setHeight(10),
                             ),
-                            textfieldSelect(
+                            TextFieldSelect(
                               label: 'Fecha de Inicio',
                               hingText: 'Seleccionar',
                               controller: _fechaInicioController,
-                              icon: Icons.calendar_today,
+                              icon: Icons.calendar_month_outlined,
+                              readOnly: true,
                               ontap: () {
                                 FocusScope.of(context).unfocus();
-                                _selectdate(context, _fechaInicioController);
+                                selectdate(context, _fechaInicioController);
                               },
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(10),
                             ),
-                            textfieldSelect(
+                            TextFieldSelect(
                               label: 'Fecha de Término',
                               hingText: 'Seleccionar',
                               controller: _fechaFinController,
-                              icon: Icons.calendar_today,
+                              icon: Icons.calendar_month_outlined,
+                              readOnly: true,
                               ontap: () {
                                 FocusScope.of(context).unfocus();
-                                _selectdate(context, _fechaFinController);
+                                selectdate(context, _fechaFinController);
                               },
                             ),
                             SizedBox(
@@ -271,55 +260,6 @@ class _PedidosGeneradosState extends State<PedidosGenerados> {
         );
       },
     );
-  }
-
-  Widget textfieldSelect(
-      {required String label, required String hingText, Function()? ontap, required TextEditingController controller, required IconData icon}) {
-    return TextField(
-      readOnly: true,
-      controller: controller,
-      maxLines: null,
-      style: const TextStyle(
-        color: Color(0xff808080),
-      ),
-      onTap: ontap,
-      decoration: InputDecoration(
-        suffixIcon: Icon(
-          icon,
-          color: Colors.green,
-        ),
-        filled: true,
-        fillColor: const Color(0xffeeeeee),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20.0),
-          borderSide: const BorderSide(
-            color: Color(0xffeeeeee),
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20.0),
-          borderSide: const BorderSide(
-            color: Color(0xffeeeeee),
-          ),
-        ),
-        hintStyle: const TextStyle(
-          color: Color(0xff808080),
-        ),
-        hintText: hingText,
-        labelText: label,
-      ),
-    );
-  }
-
-  _selectdate(BuildContext context, TextEditingController date) async {
-    DateTime? picked = await showDatePicker(
-      context: context,
-      firstDate: DateTime(DateTime.now().month - 1),
-      initialDate: DateTime.now(),
-      lastDate: DateTime(DateTime.now().year + 2),
-    );
-
-    date.text = "${picked!.year.toString().padLeft(2, '0')}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
   }
 
   void _selectData({required BuildContext context, required List<String> lista, required double initSize, required String tipo}) {

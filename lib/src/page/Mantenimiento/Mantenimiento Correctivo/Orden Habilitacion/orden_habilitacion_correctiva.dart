@@ -7,6 +7,7 @@ import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctiv
 import 'package:new_brunner_app/src/page/search_vehiculos.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/scan_qr_vehiculo_placa.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
+import 'package:new_brunner_app/src/widget/text_field.dart';
 
 class OrdenHabilitacionCorrectiva extends StatefulWidget {
   const OrdenHabilitacionCorrectiva({Key? key}) : super(key: key);
@@ -225,54 +226,27 @@ class _OrdenHabilitacionCorrectivaState extends State<OrdenHabilitacionCorrectiv
                             SizedBox(
                               height: ScreenUtil().setHeight(20),
                             ),
-                            TextField(
+                            TextFieldSelect(
+                              label: 'Tipo de Unidad',
+                              hingText: 'Seleccionar',
                               controller: _tipoVehiculo,
-                              maxLines: null,
+                              icon: Icons.keyboard_arrow_down_outlined,
                               readOnly: true,
-                              style: const TextStyle(
-                                color: Color(0xff808080),
-                              ),
-                              onTap: () {
+                              ontap: () {
                                 FocusScope.of(context).unfocus();
                                 _seleccionarTipoUnidad(context);
                               },
-                              decoration: InputDecoration(
-                                suffixIcon: const Icon(
-                                  Icons.keyboard_arrow_down,
-                                  color: Colors.green,
-                                ),
-                                filled: true,
-                                fillColor: const Color(0xffeeeeee),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                hintText: 'Tipo de Unidad',
-                                hintStyle: const TextStyle(
-                                  color: Color(0xff808080),
-                                ),
-                                labelText: 'Tipo de Unidad',
-                              ),
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(10),
                             ),
-                            TextField(
-                              readOnly: true,
+                            TextFieldSelect(
+                              label: 'Placa de la unidad',
+                              hingText: 'Seleccionar',
                               controller: _placaUnidad,
-                              maxLines: null,
-                              style: const TextStyle(
-                                color: Color(0xff808080),
-                              ),
-                              onTap: () {
+                              icon: Icons.keyboard_arrow_down_outlined,
+                              readOnly: true,
+                              ontap: () {
                                 FocusScope.of(context).unfocus();
                                 if (_tipoVeh != '') {
                                   Navigator.push(
@@ -304,31 +278,6 @@ class _OrdenHabilitacionCorrectivaState extends State<OrdenHabilitacionCorrectiv
                                   );
                                 }
                               },
-                              decoration: InputDecoration(
-                                suffixIcon: const Icon(
-                                  Icons.keyboard_arrow_down,
-                                  color: Colors.green,
-                                ),
-                                filled: true,
-                                fillColor: const Color(0xffeeeeee),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                hintStyle: const TextStyle(
-                                  color: Color(0xff808080),
-                                ),
-                                hintText: 'Seleccionar',
-                                labelText: 'Placa de la unidad',
-                              ),
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(10),

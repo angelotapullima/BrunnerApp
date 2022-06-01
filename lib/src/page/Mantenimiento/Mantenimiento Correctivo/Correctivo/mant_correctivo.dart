@@ -9,6 +9,7 @@ import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctiv
 import 'package:new_brunner_app/src/page/search_vehiculos.dart';
 import 'package:new_brunner_app/src/page/personas_search.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
+import 'package:new_brunner_app/src/widget/text_field.dart';
 
 class MantCorrectivo extends StatefulWidget {
   const MantCorrectivo({Key? key}) : super(key: key);
@@ -250,54 +251,27 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                             SizedBox(
                               height: ScreenUtil().setHeight(20),
                             ),
-                            TextField(
+                            TextFieldSelect(
+                              label: 'Unidad',
+                              hingText: 'Seleccionar unidad',
                               controller: _tipoVehiculo,
-                              maxLines: null,
+                              icon: Icons.keyboard_arrow_down,
                               readOnly: true,
-                              style: const TextStyle(
-                                color: Color(0xff808080),
-                              ),
-                              onTap: () {
+                              ontap: () {
                                 FocusScope.of(context).unfocus();
                                 _seleccionarTipoUnidad(context);
                               },
-                              decoration: InputDecoration(
-                                suffixIcon: const Icon(
-                                  Icons.keyboard_arrow_down,
-                                  color: Colors.green,
-                                ),
-                                filled: true,
-                                fillColor: const Color(0xffeeeeee),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                hintText: 'Unidad',
-                                hintStyle: const TextStyle(
-                                  color: Color(0xff808080),
-                                ),
-                                labelText: 'Unidad',
-                              ),
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(10),
                             ),
-                            TextField(
-                              readOnly: true,
+                            TextFieldSelect(
+                              label: 'Placa de la unidad',
+                              hingText: 'Seleccionar',
                               controller: _placaUnidad,
-                              maxLines: null,
-                              style: const TextStyle(
-                                color: Color(0xff808080),
-                              ),
-                              onTap: () {
+                              icon: Icons.keyboard_arrow_down,
+                              readOnly: true,
+                              ontap: () {
                                 FocusScope.of(context).unfocus();
                                 if (_tipoVeh != '') {
                                   Navigator.push(
@@ -329,43 +303,17 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                                   );
                                 }
                               },
-                              decoration: InputDecoration(
-                                suffixIcon: const Icon(
-                                  Icons.keyboard_arrow_down,
-                                  color: Colors.green,
-                                ),
-                                filled: true,
-                                fillColor: const Color(0xffeeeeee),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                hintStyle: const TextStyle(
-                                  color: Color(0xff808080),
-                                ),
-                                hintText: 'Seleccionar',
-                                labelText: 'Placa de la unidad',
-                              ),
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(10),
                             ),
-                            TextField(
-                              readOnly: true,
+                            TextFieldSelect(
+                              label: 'Responsable',
+                              hingText: 'Seleccionar responsable',
                               controller: _responsable,
-                              maxLines: null,
-                              style: const TextStyle(
-                                color: Color(0xff808080),
-                              ),
-                              onTap: () {
+                              icon: Icons.keyboard_arrow_down,
+                              readOnly: true,
+                              ontap: () {
                                 FocusScope.of(context).unfocus();
                                 Navigator.push(
                                   context,
@@ -397,267 +345,90 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                                   ),
                                 );
                               },
-                              decoration: InputDecoration(
-                                suffixIcon: const Icon(
-                                  Icons.keyboard_arrow_down,
-                                  color: Colors.green,
-                                ),
-                                filled: true,
-                                fillColor: const Color(0xffeeeeee),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                hintStyle: const TextStyle(
-                                  color: Color(0xff808080),
-                                ),
-                                hintText: 'Seleccionar responsable',
-                                labelText: 'Responsable',
-                              ),
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(10),
                             ),
-                            TextField(
+                            TextFieldSelect(
+                              label: 'Clase',
+                              hingText: 'Seleccionar',
                               controller: _categoriaController,
-                              style: const TextStyle(
-                                color: Color(0xff808080),
-                              ),
+                              icon: Icons.keyboard_arrow_down,
                               readOnly: true,
-                              maxLines: null,
-                              onTap: () {
+                              ontap: () {
                                 FocusScope.of(context).unfocus();
                                 if (_tipoVeh != '') {
                                   _seleccionarCategorias(context);
                                 }
                               },
-                              decoration: InputDecoration(
-                                suffixIcon: const Icon(
-                                  Icons.keyboard_arrow_down,
-                                  color: Colors.green,
-                                ),
-                                filled: true,
-                                fillColor: const Color(0xffeeeeee),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                hintStyle: const TextStyle(
-                                  color: Color(0xff808080),
-                                ),
-                                hintText: 'Seleccionar',
-                                labelText: 'Clase',
-                              ),
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(10),
                             ),
-                            TextField(
+                            TextFieldSelect(
+                              label: 'Descripción',
+                              hingText: 'Seleccionar',
                               controller: _itemCatController,
-                              style: const TextStyle(
-                                color: Color(0xff808080),
-                              ),
+                              icon: Icons.keyboard_arrow_down,
                               readOnly: true,
-                              maxLines: null,
-                              onTap: () {
+                              ontap: () {
                                 FocusScope.of(context).unfocus();
                                 if (idCategoria != '') {
                                   _seleccionarItems(context);
                                 }
                               },
-                              decoration: InputDecoration(
-                                suffixIcon: const Icon(
-                                  Icons.keyboard_arrow_down,
-                                  color: Colors.green,
-                                ),
-                                filled: true,
-                                fillColor: const Color(0xffeeeeee),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                hintStyle: const TextStyle(
-                                  color: Color(0xff808080),
-                                ),
-                                hintText: 'Seleccionar',
-                                labelText: 'Descripción',
-                              ),
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(10),
                             ),
-                            TextField(
+                            TextFieldSelect(
+                              label: 'Estado',
+                              hingText: 'Seleccionar estado',
                               controller: _estadoController,
-                              maxLines: null,
+                              icon: Icons.keyboard_arrow_down,
                               readOnly: true,
-                              style: const TextStyle(
-                                color: Color(0xff808080),
-                              ),
-                              onTap: () {
+                              ontap: () {
                                 FocusScope.of(context).unfocus();
                                 _seleccionarEstadoInspeccion(context);
                               },
-                              decoration: InputDecoration(
-                                suffixIcon: const Icon(
-                                  Icons.keyboard_arrow_down,
-                                  color: Colors.green,
-                                ),
-                                filled: true,
-                                fillColor: const Color(0xffeeeeee),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                hintText: 'Estado',
-                                hintStyle: const TextStyle(
-                                  color: Color(0xff808080),
-                                ),
-                                labelText: 'Estado',
-                              ),
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(10),
                             ),
-                            TextField(
+                            TextFieldSelect(
+                              label: 'N° de Check List',
+                              hingText: 'Digitar N°',
                               controller: _nroCheck,
-                              style: const TextStyle(
-                                color: Color(0xff808080),
-                              ),
-                              decoration: InputDecoration(
-                                suffixIcon: const Icon(
-                                  Icons.numbers,
-                                  color: Colors.green,
-                                ),
-                                filled: true,
-                                fillColor: const Color(0xffeeeeee),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                hintStyle: const TextStyle(
-                                  color: Color(0xff808080),
-                                ),
-                                hintText: 'Digitar N°',
-                                labelText: 'N° de Check List',
-                              ),
+                              icon: Icons.numbers,
+                              readOnly: false,
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(10),
                             ),
-                            TextField(
+                            TextFieldSelect(
+                              label: 'Fecha de Inicio',
+                              hingText: 'Seleccionar',
                               controller: _fechaInicio,
+                              icon: Icons.calendar_month_outlined,
                               readOnly: true,
-                              style: const TextStyle(
-                                color: Color(0xff808080),
-                              ),
-                              onTap: () {
+                              ontap: () {
                                 FocusScope.of(context).unfocus();
-                                _selectdate(context, _fechaInicio);
+                                selectdate(context, _fechaInicio);
                               },
-                              decoration: InputDecoration(
-                                suffixIcon: const Icon(
-                                  Icons.calendar_month_outlined,
-                                  color: Colors.green,
-                                ),
-                                filled: true,
-                                fillColor: const Color(0xffeeeeee),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                hintText: 'Fecha inicio',
-                                hintStyle: const TextStyle(
-                                  color: Color(0xff808080),
-                                ),
-                                labelText: 'Fecha inicio',
-                              ),
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(10),
                             ),
-                            TextField(
+                            TextFieldSelect(
+                              label: 'Fecha de Término',
+                              hingText: 'Seleccionar',
                               controller: _fechaFin,
+                              icon: Icons.calendar_month_outlined,
                               readOnly: true,
-                              style: const TextStyle(
-                                color: Color(0xff808080),
-                              ),
-                              onTap: () {
+                              ontap: () {
                                 FocusScope.of(context).unfocus();
-                                _selectdate(context, _fechaFin);
+                                selectdate(context, _fechaFin);
                               },
-                              decoration: InputDecoration(
-                                suffixIcon: const Icon(
-                                  Icons.calendar_month_outlined,
-                                  color: Colors.green,
-                                ),
-                                filled: true,
-                                fillColor: const Color(0xffeeeeee),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                hintText: 'Fecha fin',
-                                hintStyle: const TextStyle(
-                                  color: Color(0xff808080),
-                                ),
-                                labelText: 'Fecha término',
-                              ),
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(10),
@@ -1099,16 +870,5 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
         );
       },
     );
-  }
-
-  _selectdate(BuildContext context, TextEditingController date) async {
-    DateTime? picked = await showDatePicker(
-      context: context,
-      firstDate: DateTime(DateTime.now().month - 1),
-      initialDate: DateTime.now(),
-      lastDate: DateTime(DateTime.now().year + 2),
-    );
-
-    date.text = "${picked!.year.toString().padLeft(2, '0')}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
   }
 }
