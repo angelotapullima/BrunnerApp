@@ -17,17 +17,20 @@ class ObservacionInspeccion extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data!.isNotEmpty) {
-            // return Column(
-            //   children: snapshot.data!.map((item) => crearObservacionInspeccion(context, item, 1)).toList(),
-            // );
-
-            return SizedBox(
-              height: ScreenUtil().setHeight(160) * snapshot.data!.length,
-              child: ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (_, index) => crearObservacionInspeccion(context, snapshot.data![index], index + 1)),
+            return Column(
+              children: snapshot.data!.asMap().entries.map((item) {
+                int idx = item.key;
+                return crearObservacionInspeccion(context, item.value, idx + 1);
+              }).toList(),
             );
+
+            // return SizedBox(
+            //   height: ScreenUtil().setHeight(160) * snapshot.data!.length,
+            //   child: ListView.builder(
+            //       physics: const NeverScrollableScrollPhysics(),
+            //       itemCount: snapshot.data!.length,
+            //       itemBuilder: (_, index) => crearObservacionInspeccion(context, snapshot.data![index], index + 1)),
+            // );
           } else {
             return SizedBox(
               height: ScreenUtil().setHeight(20),
