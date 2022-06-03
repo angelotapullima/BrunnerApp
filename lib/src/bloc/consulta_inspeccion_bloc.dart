@@ -23,15 +23,20 @@ class ConsultaInspeccionBloc {
   final _observacionesCheckItemController = BehaviorSubject<List<InspeccionVehiculoItemModel>>();
   Stream<List<InspeccionVehiculoItemModel>> get observacionesCkeckStream => _observacionesCheckItemController.stream;
 
-  //Controlador para motrar que se está cargndo la consulta
+  //Controlador para motrar que se está cargando la consulta
   final _cargandoController = BehaviorSubject<bool>();
   Stream<bool> get cargandoStream => _cargandoController.stream;
+
+  //Controlador para motrar que se está cargando la consulta
+  final _cargando2Controller = BehaviorSubject<bool>();
+  Stream<bool> get cargando2Stream => _cargando2Controller.stream;
 
   dispose() {
     _inpeccionesController.close();
     _cargandoController.close();
     _cartegoriasInspeccionController.close();
     _inspecionDetalleController.close();
+    _cargando2Controller.close();
   }
 
   void getInspeccionesVehiculo(String fechaInicial, String fechaFinal, String placaMarca, String operario, String estado, String nroCheck) async {
@@ -56,7 +61,9 @@ class ConsultaInspeccionBloc {
     _inspecionDetalleController.sink.add([]);
     _observacionesCheckItemController.sink.add([]);
     _inspecionDetalleController.sink.add(await _api.inspeccionDB.getInspeccionByIdInspeccion(idInspeccionVehiculo));
+    _cargando2Controller.sink.add(true);
     await _api.getDetalleInspeccion(idInspeccionVehiculo);
+    _cargando2Controller.sink.add(false);
     // Obtener detalle inspeccion
     _inspecionDetalleController.sink.add(await _api.inspeccionDB.getInspeccionByIdInspeccion(idInspeccionVehiculo));
     //Obtener Categorias e Items

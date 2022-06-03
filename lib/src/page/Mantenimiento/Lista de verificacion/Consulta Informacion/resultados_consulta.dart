@@ -183,7 +183,7 @@ class ResultadosConsulta extends StatelessWidget {
                         ),
                         child: Center(
                           child: Image.asset(
-                            'assets/img/logo.png',
+                            'assets/img/icon_brunner.png',
                             fit: BoxFit.cover,
                           ),
                         ),
