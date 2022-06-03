@@ -7,6 +7,7 @@ import 'package:new_brunner_app/src/core/routes_constanst.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/vehiculo_model.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Check%20List/check_list.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/scan_qr_vehiculo_placa.dart';
+import 'package:new_brunner_app/src/util/utils.dart';
 
 class ListaVehiculosMaquinarias extends StatefulWidget {
   const ListaVehiculosMaquinarias({Key? key}) : super(key: key);
@@ -240,11 +241,12 @@ class _ListaVehiculosMaquinariasState extends State<ListaVehiculosMaquinarias> {
           children: [
             SizedBox(
               width: ScreenUtil().setWidth(100),
+              height: ScreenUtil().setHeight(120),
               child: Stack(
                 children: [
                   Container(
                     width: ScreenUtil().setWidth(100),
-                    height: ScreenUtil().setHeight(100),
+                    height: ScreenUtil().setHeight(120),
                     decoration: BoxDecoration(
                       color: colorEstado,
                       borderRadius: BorderRadius.circular(10),
@@ -252,7 +254,7 @@ class _ListaVehiculosMaquinariasState extends State<ListaVehiculosMaquinarias> {
                   ),
                   SizedBox(
                     width: ScreenUtil().setWidth(100),
-                    height: ScreenUtil().setHeight(100),
+                    height: ScreenUtil().setHeight(120),
                     child: ClipRRect(
                       borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(90),
@@ -356,16 +358,16 @@ class _ListaVehiculosMaquinariasState extends State<ListaVehiculosMaquinarias> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    fileData('Placa', vehiculo.placaVehiculo.toString()),
+                    fileData('Placa', vehiculo.placaVehiculo.toString(), 12, 12, FontWeight.w400, FontWeight.w500, TextAlign.left),
                     Text(
                       vehiculo.razonSocialVehiculo.toString(),
                       style: TextStyle(
                         fontSize: ScreenUtil().setSp(12),
                       ),
                     ),
-                    fileData2('RUC', vehiculo.rucVehiculo.toString()),
-                    fileData2('Marca', vehiculo.marcaVehiculo.toString()),
-                    fileData2('Modelo', vehiculo.modeloVehiculo.toString()),
+                    fileData('RUC', vehiculo.rucVehiculo.toString(), 11, 12, FontWeight.w500, FontWeight.w400, TextAlign.left),
+                    fileData('Marca', vehiculo.marcaVehiculo.toString(), 11, 12, FontWeight.w500, FontWeight.w400, TextAlign.left),
+                    fileData('Modelo', vehiculo.modeloVehiculo.toString(), 11, 12, FontWeight.w500, FontWeight.w400, TextAlign.left),
                   ],
                 ),
               ),
@@ -383,50 +385,6 @@ class _ListaVehiculosMaquinariasState extends State<ListaVehiculosMaquinarias> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget fileData(String titulo, String data) {
-    return RichText(
-      text: TextSpan(
-          text: '$titulo: ',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w400,
-            fontSize: ScreenUtil().setSp(12),
-          ),
-          children: [
-            TextSpan(
-              text: data,
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w500,
-                fontSize: ScreenUtil().setSp(12),
-              ),
-            )
-          ]),
-    );
-  }
-
-  Widget fileData2(String titulo, String data) {
-    return RichText(
-      text: TextSpan(
-          text: '$titulo: ',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w500,
-            fontSize: ScreenUtil().setSp(11),
-          ),
-          children: [
-            TextSpan(
-              text: data,
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w400,
-                fontSize: ScreenUtil().setSp(12),
-              ),
-            )
-          ]),
     );
   }
 }
