@@ -230,7 +230,11 @@ class _OrdenHabilitacionCorrectivaState extends State<OrdenHabilitacionCorrectiv
                               label: 'Tipo de Unidad',
                               hingText: 'Seleccionar',
                               controller: _tipoVehiculo,
-                              icon: Icons.keyboard_arrow_down_outlined,
+                              widget: Icon(
+                                Icons.keyboard_arrow_down_outlined,
+                                color: Colors.green,
+                              ),
+                              icon: true,
                               readOnly: true,
                               ontap: () {
                                 FocusScope.of(context).unfocus();
@@ -244,7 +248,11 @@ class _OrdenHabilitacionCorrectivaState extends State<OrdenHabilitacionCorrectiv
                               label: 'Placa de la unidad',
                               hingText: 'Seleccionar',
                               controller: _placaUnidad,
-                              icon: Icons.keyboard_arrow_down_outlined,
+                              widget: Icon(
+                                Icons.keyboard_arrow_down_outlined,
+                                color: Colors.green,
+                              ),
+                              icon: true,
                               readOnly: true,
                               ontap: () {
                                 FocusScope.of(context).unfocus();

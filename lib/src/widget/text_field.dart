@@ -2,14 +2,24 @@ import 'package:flutter/material.dart';
 
 class TextFieldSelect extends StatelessWidget {
   const TextFieldSelect(
-      {Key? key, required this.label, required this.hingText, required this.controller, required this.icon, required this.readOnly, this.ontap})
+      {Key? key,
+      required this.label,
+      required this.hingText,
+      required this.controller,
+      this.widget,
+      required this.readOnly,
+      this.ontap,
+      this.icon,
+      this.autofocus = false})
       : super(key: key);
   final String label;
   final String hingText;
   final Function()? ontap;
   final TextEditingController controller;
-  final IconData icon;
+  final Widget? widget;
   final bool readOnly;
+  final bool? icon;
+  final bool autofocus;
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +30,11 @@ class TextFieldSelect extends StatelessWidget {
       style: const TextStyle(
         color: Color(0xff808080),
       ),
+      autofocus: autofocus,
       onTap: ontap,
       decoration: InputDecoration(
-        suffixIcon: Icon(
-          icon,
-          color: Colors.green,
-        ),
+        suffix: (icon == true) ? null : widget,
+        suffixIcon: (icon == true) ? widget : null,
         filled: true,
         fillColor: const Color(0xffeeeeee),
         enabledBorder: OutlineInputBorder(

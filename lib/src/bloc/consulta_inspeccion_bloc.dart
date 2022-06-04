@@ -41,7 +41,6 @@ class ConsultaInspeccionBloc {
 
   void getInspeccionesVehiculo(String fechaInicial, String fechaFinal, String placaMarca, String operario, String estado, String nroCheck) async {
     _inpeccionesController.sink.add([]);
-    //_inpeccionesController.sink.add(await _api.inspeccionDB.getInspeccionFiltro(fechaInicial, fechaFinal, placaMarca, operario, estado, nroCheck));
     _cargandoController.sink.add(true);
     await _api.getInspeccionesVehiculos(fechaInicial, fechaFinal);
     _cargandoController.sink.add(false);

@@ -8,6 +8,7 @@ import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion
 import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Consulta%20Informacion/check_categorias_inspeccion.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Consulta%20Informacion/observacion_inspeccion.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
+import 'package:new_brunner_app/src/widget/text_field.dart';
 
 class InspeccionDetalle extends StatefulWidget {
   const InspeccionDetalle({Key? key, required this.inspeccion}) : super(key: key);
@@ -254,39 +255,14 @@ class _InspeccionDetalleState extends State<InspeccionDetalle> {
           SizedBox(
             height: ScreenUtil().setHeight(10),
           ),
-          TextField(
+          TextFieldSelect(
+            label: '',
+            hingText: '0.00',
             controller: _hidrolinaController,
-            keyboardType: TextInputType.number,
             readOnly: true,
-            style: const TextStyle(
-              color: Color(0xff808080),
-            ),
-            decoration: InputDecoration(
-              suffix: const Text(
-                'Galones',
-                style: TextStyle(color: Colors.blueGrey),
-              ),
-              filled: true,
-              fillColor: const Color(0xffeeeeee),
-              labelStyle: const TextStyle(
-                color: Color(0xff808080),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20.0),
-                borderSide: const BorderSide(
-                  color: Color(0xffeeeeee),
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20.0),
-                borderSide: const BorderSide(
-                  color: Color(0xffeeeeee),
-                ),
-              ),
-              hintText: '0.00',
-              hintStyle: const TextStyle(
-                color: Color(0xff808080),
-              ),
+            widget: Text(
+              'Galones',
+              style: TextStyle(color: Colors.blueGrey),
             ),
           ),
           SizedBox(
@@ -303,40 +279,14 @@ class _InspeccionDetalleState extends State<InspeccionDetalle> {
           SizedBox(
             height: ScreenUtil().setHeight(10),
           ),
-          TextField(
+          TextFieldSelect(
+            label: '',
+            hingText: '0.00',
             controller: _kilometrajeController,
-            keyboardType: TextInputType.number,
             readOnly: true,
-            textInputAction: TextInputAction.done,
-            style: const TextStyle(
-              color: Color(0xff808080),
-            ),
-            decoration: InputDecoration(
-              suffix: Text(
-                (widget.inspeccion.tipoUnidad == '1') ? 'KM' : 'Horas',
-                style: const TextStyle(color: Colors.blueGrey),
-              ),
-              filled: true,
-              fillColor: const Color(0xffeeeeee),
-              labelStyle: const TextStyle(
-                color: Color(0xff808080),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20.0),
-                borderSide: const BorderSide(
-                  color: Color(0xffeeeeee),
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20.0),
-                borderSide: const BorderSide(
-                  color: Color(0xffeeeeee),
-                ),
-              ),
-              hintText: '0.00',
-              hintStyle: const TextStyle(
-                color: Color(0xff808080),
-              ),
+            widget: Text(
+              (widget.inspeccion.tipoUnidad == '1') ? 'KM' : 'Horas',
+              style: const TextStyle(color: Colors.blueGrey),
             ),
           ),
           SizedBox(

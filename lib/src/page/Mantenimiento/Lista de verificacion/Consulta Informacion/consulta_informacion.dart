@@ -233,7 +233,11 @@ class _ConsultaInformacionState extends State<ConsultaInformacion> {
                               label: 'Placa de la Unidad o Marca',
                               hingText: '',
                               controller: _placaUnidad,
-                              icon: Icons.bus_alert,
+                              widget: Icon(
+                                Icons.bus_alert,
+                                color: Colors.green,
+                              ),
+                              icon: true,
                               readOnly: false,
                             ),
                             SizedBox(
@@ -243,7 +247,11 @@ class _ConsultaInformacionState extends State<ConsultaInformacion> {
                               label: 'Nombre del Operario',
                               hingText: 'Seleccionar operario',
                               controller: _operario,
-                              icon: Icons.keyboard_arrow_down,
+                              widget: Icon(
+                                Icons.keyboard_arrow_down,
+                                color: Colors.green,
+                              ),
+                              icon: true,
                               readOnly: true,
                               ontap: () {
                                 FocusScope.of(context).unfocus();
@@ -285,7 +293,11 @@ class _ConsultaInformacionState extends State<ConsultaInformacion> {
                               label: 'Estado de la Unidad',
                               hingText: 'Seleccionar estado',
                               controller: _tipo,
-                              icon: Icons.keyboard_arrow_down,
+                              widget: Icon(
+                                Icons.keyboard_arrow_down,
+                                color: Colors.green,
+                              ),
+                              icon: true,
                               readOnly: true,
                               ontap: () {
                                 FocusScope.of(context).unfocus();
@@ -299,7 +311,11 @@ class _ConsultaInformacionState extends State<ConsultaInformacion> {
                               label: 'N° de Check List',
                               hingText: 'Digitar N°',
                               controller: _nroCheck,
-                              icon: Icons.numbers,
+                              widget: Icon(
+                                Icons.numbers,
+                                color: Colors.green,
+                              ),
+                              icon: true,
                               readOnly: false,
                             ),
                             SizedBox(
@@ -309,8 +325,12 @@ class _ConsultaInformacionState extends State<ConsultaInformacion> {
                               label: 'Fecha de Inicio',
                               hingText: 'Fecha de Inicio',
                               controller: _fechaInicio,
-                              icon: Icons.calendar_month_outlined,
+                              widget: Icon(
+                                Icons.calendar_month_outlined,
+                                color: Colors.green,
+                              ),
                               readOnly: true,
+                              icon: true,
                               ontap: () {
                                 FocusScope.of(context).unfocus();
                                 selectdate(context, _fechaInicio);
@@ -323,8 +343,12 @@ class _ConsultaInformacionState extends State<ConsultaInformacion> {
                               label: 'Fecha Fin',
                               hingText: 'Fecha Fin',
                               controller: _fechaFin,
-                              icon: Icons.calendar_month_outlined,
+                              widget: Icon(
+                                Icons.calendar_month_outlined,
+                                color: Colors.green,
+                              ),
                               readOnly: true,
+                              icon: true,
                               ontap: () {
                                 FocusScope.of(context).unfocus();
                                 selectdate(context, _fechaFin);

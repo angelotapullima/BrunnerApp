@@ -5,6 +5,7 @@ import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/categoria_inspeccion_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/check_item_inspeccion_model.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
+import 'package:new_brunner_app/src/widget/text_field.dart';
 
 class CategoriasInspeccion extends StatefulWidget {
   const CategoriasInspeccion({Key? key, required this.tipoUnidad, required this.idVehiculo}) : super(key: key);
@@ -214,74 +215,21 @@ class _CategoriasInspeccionState extends State<CategoriasInspeccion> {
                                 SizedBox(
                                   height: ScreenUtil().setHeight(20),
                                 ),
-                                TextField(
+                                TextFieldSelect(
+                                  label: 'Item [${item.conteoCheckItemInsp.toString().trim()}]',
+                                  hingText: '',
                                   controller: _itemNameController,
                                   readOnly: true,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    color: Color(0xff808080),
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                  decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: const Color(0xffeeeeee),
-                                    labelStyle: const TextStyle(
-                                      color: Color(0xff808080),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      borderSide: const BorderSide(
-                                        color: Color(0xffeeeeee),
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      borderSide: const BorderSide(
-                                        color: Color(0xffeeeeee),
-                                      ),
-                                    ),
-                                    hintStyle: const TextStyle(
-                                      color: Color(0xff808080),
-                                    ),
-                                    labelText: 'Item [${item.conteoCheckItemInsp.toString().trim()}]',
-                                  ),
                                 ),
                                 SizedBox(
                                   height: ScreenUtil().setHeight(16),
                                 ),
-                                TextField(
+                                TextFieldSelect(
+                                  label: 'Observación',
+                                  hingText: 'Agregar observación',
                                   controller: _observacionesController,
+                                  readOnly: false,
                                   autofocus: true,
-                                  keyboardType: TextInputType.multiline,
-                                  maxLines: null,
-                                  textInputAction: TextInputAction.done,
-                                  style: const TextStyle(
-                                    color: Color(0xff808080),
-                                  ),
-                                  decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: const Color(0xffeeeeee),
-                                    labelStyle: const TextStyle(
-                                      color: Color(0xff808080),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      borderSide: const BorderSide(
-                                        color: Color(0xffeeeeee),
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      borderSide: const BorderSide(
-                                        color: Color(0xffeeeeee),
-                                      ),
-                                    ),
-                                    hintText: 'Agregar observación',
-                                    hintStyle: const TextStyle(
-                                      color: Color(0xff808080),
-                                    ),
-                                    labelText: 'Observación',
-                                  ),
                                 ),
                                 SizedBox(
                                   height: ScreenUtil().setHeight(20),

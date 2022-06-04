@@ -9,6 +9,7 @@ import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion
 import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Check%20List/observaciones_inspeccion.dart';
 import 'package:new_brunner_app/src/page/personas_search.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
+import 'package:new_brunner_app/src/widget/text_field.dart';
 
 class CheckList extends StatefulWidget {
   const CheckList({Key? key, required this.vehiculo}) : super(key: key);
@@ -323,38 +324,14 @@ class _CheckListState extends State<CheckList> {
           SizedBox(
             height: ScreenUtil().setHeight(10),
           ),
-          TextField(
+          TextFieldSelect(
+            label: '',
+            hingText: '0.00',
             controller: _hidrolinaController,
-            keyboardType: TextInputType.number,
-            style: const TextStyle(
-              color: Color(0xff808080),
-            ),
-            decoration: InputDecoration(
-              suffix: const Text(
-                'Galones',
-                style: TextStyle(color: Colors.blueGrey),
-              ),
-              filled: true,
-              fillColor: const Color(0xffeeeeee),
-              labelStyle: const TextStyle(
-                color: Color(0xff808080),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20.0),
-                borderSide: const BorderSide(
-                  color: Color(0xffeeeeee),
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20.0),
-                borderSide: const BorderSide(
-                  color: Color(0xffeeeeee),
-                ),
-              ),
-              hintText: '0.00',
-              hintStyle: const TextStyle(
-                color: Color(0xff808080),
-              ),
+            readOnly: false,
+            widget: Text(
+              'Galones',
+              style: TextStyle(color: Colors.blueGrey),
             ),
           ),
           SizedBox(
@@ -371,39 +348,14 @@ class _CheckListState extends State<CheckList> {
           SizedBox(
             height: ScreenUtil().setHeight(10),
           ),
-          TextField(
+          TextFieldSelect(
+            label: '',
+            hingText: '0.00',
             controller: _kilometrajeController,
-            keyboardType: TextInputType.number,
-            textInputAction: TextInputAction.done,
-            style: const TextStyle(
-              color: Color(0xff808080),
-            ),
-            decoration: InputDecoration(
-              suffix: Text(
-                (widget.vehiculo.tipoUnidad == '1') ? 'KM' : 'Horas',
-                style: const TextStyle(color: Colors.blueGrey),
-              ),
-              filled: true,
-              fillColor: const Color(0xffeeeeee),
-              labelStyle: const TextStyle(
-                color: Color(0xff808080),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20.0),
-                borderSide: const BorderSide(
-                  color: Color(0xffeeeeee),
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20.0),
-                borderSide: const BorderSide(
-                  color: Color(0xffeeeeee),
-                ),
-              ),
-              hintText: '0.00',
-              hintStyle: const TextStyle(
-                color: Color(0xff808080),
-              ),
+            readOnly: true,
+            widget: Text(
+              (widget.vehiculo.tipoUnidad == '1') ? 'KM' : 'Horas',
+              style: const TextStyle(color: Colors.blueGrey),
             ),
           ),
           SizedBox(

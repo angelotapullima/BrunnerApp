@@ -128,7 +128,11 @@ class _PedidosGeneradosState extends State<PedidosGenerados> {
                               label: 'Empresa Contratante',
                               hingText: 'Seleccionar empresa',
                               controller: _empresaController,
-                              icon: Icons.keyboard_arrow_down,
+                              widget: Icon(
+                                Icons.keyboard_arrow_down,
+                                color: Colors.green,
+                              ),
+                              icon: true,
                               readOnly: true,
                             ),
                             SizedBox(
@@ -138,7 +142,11 @@ class _PedidosGeneradosState extends State<PedidosGenerados> {
                               label: 'Proveedor',
                               hingText: 'Seleccionar proveedor',
                               controller: _proveedorController,
-                              icon: Icons.keyboard_arrow_down,
+                              widget: Icon(
+                                Icons.keyboard_arrow_down,
+                                color: Colors.green,
+                              ),
+                              icon: true,
                               readOnly: true,
                             ),
                             SizedBox(
@@ -148,7 +156,11 @@ class _PedidosGeneradosState extends State<PedidosGenerados> {
                               label: 'Número de OP',
                               hingText: '',
                               controller: _numeroOPController,
-                              icon: Icons.numbers,
+                              widget: Icon(
+                                Icons.numbers,
+                                color: Colors.green,
+                              ),
+                              icon: true,
                               readOnly: false,
                             ),
                             SizedBox(
@@ -158,7 +170,11 @@ class _PedidosGeneradosState extends State<PedidosGenerados> {
                               label: 'Estado',
                               hingText: 'Seleccionar estado',
                               controller: _estadoController,
-                              icon: Icons.keyboard_arrow_down,
+                              widget: Icon(
+                                Icons.keyboard_arrow_down,
+                                color: Colors.green,
+                              ),
+                              icon: true,
                               readOnly: true,
                               ontap: () {
                                 FocusScope.of(context).unfocus();
@@ -177,7 +193,11 @@ class _PedidosGeneradosState extends State<PedidosGenerados> {
                               label: 'Rendiciones',
                               hingText: 'Seleccionar',
                               controller: _rendicionesController,
-                              icon: Icons.keyboard_arrow_down,
+                              widget: Icon(
+                                Icons.keyboard_arrow_down,
+                                color: Colors.green,
+                              ),
+                              icon: true,
                               readOnly: true,
                               ontap: () {
                                 FocusScope.of(context).unfocus();
@@ -191,7 +211,11 @@ class _PedidosGeneradosState extends State<PedidosGenerados> {
                               label: 'Fecha de Inicio',
                               hingText: 'Seleccionar',
                               controller: _fechaInicioController,
-                              icon: Icons.calendar_month_outlined,
+                              widget: Icon(
+                                Icons.calendar_month_outlined,
+                                color: Colors.green,
+                              ),
+                              icon: true,
                               readOnly: true,
                               ontap: () {
                                 FocusScope.of(context).unfocus();
@@ -205,7 +229,11 @@ class _PedidosGeneradosState extends State<PedidosGenerados> {
                               label: 'Fecha de Término',
                               hingText: 'Seleccionar',
                               controller: _fechaFinController,
-                              icon: Icons.calendar_month_outlined,
+                              widget: Icon(
+                                Icons.calendar_month_outlined,
+                                color: Colors.green,
+                              ),
+                              icon: true,
                               readOnly: true,
                               ontap: () {
                                 FocusScope.of(context).unfocus();

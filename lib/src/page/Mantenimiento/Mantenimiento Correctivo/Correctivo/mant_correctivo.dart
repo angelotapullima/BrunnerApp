@@ -255,7 +255,11 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                               label: 'Unidad',
                               hingText: 'Seleccionar unidad',
                               controller: _tipoVehiculo,
-                              icon: Icons.keyboard_arrow_down,
+                              widget: Icon(
+                                Icons.keyboard_arrow_down,
+                                color: Colors.green,
+                              ),
+                              icon: true,
                               readOnly: true,
                               ontap: () {
                                 FocusScope.of(context).unfocus();
@@ -269,7 +273,11 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                               label: 'Placa de la unidad',
                               hingText: 'Seleccionar',
                               controller: _placaUnidad,
-                              icon: Icons.keyboard_arrow_down,
+                              widget: Icon(
+                                Icons.keyboard_arrow_down,
+                                color: Colors.green,
+                              ),
+                              icon: true,
                               readOnly: true,
                               ontap: () {
                                 FocusScope.of(context).unfocus();
@@ -311,7 +319,11 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                               label: 'Responsable',
                               hingText: 'Seleccionar responsable',
                               controller: _responsable,
-                              icon: Icons.keyboard_arrow_down,
+                              widget: Icon(
+                                Icons.keyboard_arrow_down,
+                                color: Colors.green,
+                              ),
+                              icon: true,
                               readOnly: true,
                               ontap: () {
                                 FocusScope.of(context).unfocus();
@@ -353,7 +365,11 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                               label: 'Clase',
                               hingText: 'Seleccionar',
                               controller: _categoriaController,
-                              icon: Icons.keyboard_arrow_down,
+                              widget: Icon(
+                                Icons.keyboard_arrow_down,
+                                color: Colors.green,
+                              ),
+                              icon: true,
                               readOnly: true,
                               ontap: () {
                                 FocusScope.of(context).unfocus();
@@ -369,7 +385,11 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                               label: 'Descripción',
                               hingText: 'Seleccionar',
                               controller: _itemCatController,
-                              icon: Icons.keyboard_arrow_down,
+                              widget: Icon(
+                                Icons.keyboard_arrow_down,
+                                color: Colors.green,
+                              ),
+                              icon: true,
                               readOnly: true,
                               ontap: () {
                                 FocusScope.of(context).unfocus();
@@ -385,7 +405,11 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                               label: 'Estado',
                               hingText: 'Seleccionar estado',
                               controller: _estadoController,
-                              icon: Icons.keyboard_arrow_down,
+                              widget: Icon(
+                                Icons.keyboard_arrow_down,
+                                color: Colors.green,
+                              ),
+                              icon: true,
                               readOnly: true,
                               ontap: () {
                                 FocusScope.of(context).unfocus();
@@ -399,7 +423,11 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                               label: 'N° de Check List',
                               hingText: 'Digitar N°',
                               controller: _nroCheck,
-                              icon: Icons.numbers,
+                              widget: Icon(
+                                Icons.keyboard_arrow_down,
+                                color: Colors.green,
+                              ),
+                              icon: true,
                               readOnly: false,
                             ),
                             SizedBox(
@@ -409,7 +437,11 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                               label: 'Fecha de Inicio',
                               hingText: 'Seleccionar',
                               controller: _fechaInicio,
-                              icon: Icons.calendar_month_outlined,
+                              widget: Icon(
+                                Icons.keyboard_arrow_down,
+                                color: Colors.green,
+                              ),
+                              icon: true,
                               readOnly: true,
                               ontap: () {
                                 FocusScope.of(context).unfocus();
@@ -423,7 +455,11 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                               label: 'Fecha de Término',
                               hingText: 'Seleccionar',
                               controller: _fechaFin,
-                              icon: Icons.calendar_month_outlined,
+                              widget: Icon(
+                                Icons.keyboard_arrow_down,
+                                color: Colors.green,
+                              ),
+                              icon: true,
                               readOnly: true,
                               ontap: () {
                                 FocusScope.of(context).unfocus();
