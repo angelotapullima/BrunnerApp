@@ -29,8 +29,12 @@ class ListaVerificacion extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          InkWell(
-            onTap: () {
+          OptionWidget(
+            titulo: 'Check List',
+            descripcion: 'Lista de unidades para generar un Check List',
+            icon: Icons.checklist,
+            color: Color(0XFF09AD92),
+            ontap: () {
               final searchVehiculoBloc = ProviderBloc.vehiculo(context);
               searchVehiculoBloc.cargarVehiculos();
               Navigator.push(
@@ -42,18 +46,14 @@ class ListaVerificacion extends StatelessWidget {
                 ),
               );
             },
-
-            child: const OptionWidget(
-              titulo: 'Check List',
-              descripcion: 'Lista de unidades para generar un Check List',
-              icon: Icons.checklist,
-              color: Color(0XFF09AD92),
-            ),
-            //child: option('Check List', 'Lista de unidades para generar un Check List', Icons.checklist, const Color(0XFF09AD92)),
           ),
           SizedBox(height: ScreenUtil().setWidth(30)),
-          InkWell(
-            onTap: () {
+          OptionWidget(
+            titulo: 'Consulta de Información',
+            descripcion: 'Lista los Check List generados',
+            icon: Icons.search,
+            color: Color(0XFF09A8AD),
+            ontap: () {
               final searchVehiculoBloc = ProviderBloc.vehiculo(context);
               searchVehiculoBloc.cargarVehiculos();
               Navigator.push(
@@ -65,13 +65,6 @@ class ListaVerificacion extends StatelessWidget {
                 ),
               );
             },
-            child: const OptionWidget(
-              titulo: 'Consulta de Información',
-              descripcion: 'Lista los Check List generados',
-              icon: Icons.search,
-              color: Color(0XFF09A8AD),
-            ),
-            // child: option('Consulta de Información', 'Lista los Check List generados', Icons.search, const Color(0XFF09A8AD)),
           ),
         ],
       ),

@@ -28,45 +28,30 @@ class ConsultaInformacionOrdenPedido extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) {
-                    return const PedidosGenerados();
-                  },
-                ),
-              );
-            },
-            child: const OptionWidget(
+            child: OptionWidget(
               titulo: 'Órdenes de Pedido Generadas',
               descripcion: 'Visualización de Órdenes de Pedido Generadas',
               icon: Icons.edit_note,
-              color: Color(0XFF154360), //34495E
+              color: Color(0XFF154360),
+              ontap: () {
+                Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) {
+                      return const PedidosGenerados();
+                    },
+                  ),
+                );
+              },
             ),
           ),
           SizedBox(height: ScreenUtil().setWidth(30)),
-          InkWell(
-            onTap: () {
-              // final searchVehiculoBloc = ProviderBloc.vehiculo(context);
-              // searchVehiculoBloc.cargarVehiculos();
-              // final provider = Provider.of<ConductorController>(context, listen: false);
-              // provider.setData('', 'Seleccionar');
-              // Navigator.push(
-              //   context,
-              //   PageRouteBuilder(
-              //     pageBuilder: (context, animation, secondaryAnimation) {
-              //       return const ConsultaInformacionOrdenPedido();
-              //     },
-              //   ),
-              // );
-            },
-            child: const OptionWidget(
-              titulo: 'Órdenes de Pedido Pendientes de Aprobación',
-              descripcion: 'Visualización de Órdenes de Pedido Pendientes de Aprobación',
-              icon: Icons.check_circle_outline,
-              color: Color(0XFFF39C12),
-            ),
+          OptionWidget(
+            titulo: 'Órdenes de Pedido Pendientes de Aprobación',
+            descripcion: 'Visualización de Órdenes de Pedido Pendientes de Aprobación',
+            icon: Icons.check_circle_outline,
+            color: Color(0XFFF39C12),
+            ontap: () {},
           ),
         ],
       ),

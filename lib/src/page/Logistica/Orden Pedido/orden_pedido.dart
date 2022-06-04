@@ -27,31 +27,20 @@ class OrdenPedido extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          InkWell(
-            onTap: () {
-              // final searchVehiculoBloc = ProviderBloc.vehiculo(context);
-              // searchVehiculoBloc.cargarVehiculos();
-              // Navigator.push(
-              //   context,
-              //   PageRouteBuilder(
-              //     pageBuilder: (context, animation, secondaryAnimation) {
-              //       return const ListaVehiculosMaquinarias();
-              //     },
-              //   ),
-              // );
-            },
-
-            child: const OptionWidget(
-              titulo: 'Generar Orden de Pedido',
-              descripcion: 'Generar Orden de Pedido',
-              icon: Icons.edit_note,
-              color: Color(0XFFF39C12),
-            ),
-            //child: option('Check List', 'Lista de unidades para generar un Check List', Icons.checklist, const Color(0XFF09AD92)),
+          OptionWidget(
+            titulo: 'Generar Orden de Pedido',
+            descripcion: 'Generar Orden de Pedido',
+            icon: Icons.edit_note,
+            color: Color(0XFFF39C12),
+            ontap: () {},
           ),
           SizedBox(height: ScreenUtil().setWidth(30)),
-          InkWell(
-            onTap: () {
+          OptionWidget(
+            titulo: 'Consulta de Información',
+            descripcion: 'Ver Orden de Pedido Generadas y Pendientes',
+            icon: Icons.search,
+            color: Color(0XFF34495E),
+            ontap: () {
               Navigator.push(
                 context,
                 PageRouteBuilder(
@@ -61,13 +50,6 @@ class OrdenPedido extends StatelessWidget {
                 ),
               );
             },
-            child: const OptionWidget(
-              titulo: 'Consulta de Información',
-              descripcion: 'Ver Orden de Pedido Generadas y Pendientes',
-              icon: Icons.search,
-              color: Color(0XFF34495E),
-            ),
-            // child: option('Consulta de Información', 'Lista los Check List generados', Icons.search, const Color(0XFF09A8AD)),
           ),
         ],
       ),

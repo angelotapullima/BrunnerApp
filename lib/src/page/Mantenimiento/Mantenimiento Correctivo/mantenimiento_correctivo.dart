@@ -29,8 +29,12 @@ class MantenimientoCorrectivo extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          InkWell(
-            onTap: () {
+          OptionWidget(
+            titulo: 'Mantenimiento Correctivo',
+            descripcion: '',
+            icon: Icons.car_repair_outlined,
+            color: Color(0XFF3498DB),
+            ontap: () {
               final correctivoBloc = ProviderBloc.mantenimientoCorrectivo(context);
               correctivoBloc.getCategorias('');
               correctivoBloc.clearData();
@@ -44,16 +48,14 @@ class MantenimientoCorrectivo extends StatelessWidget {
                 ),
               );
             },
-            child: const OptionWidget(
-              titulo: 'Mantenimiento Correctivo',
-              descripcion: '',
-              icon: Icons.car_repair_outlined,
-              color: Color(0XFF3498DB),
-            ),
           ),
           SizedBox(height: ScreenUtil().setWidth(30)),
-          InkWell(
-            onTap: () {
+          OptionWidget(
+            titulo: 'Orden Habilitación Correctiva',
+            descripcion: '',
+            icon: Icons.check_circle,
+            color: Color(0XFF16A085),
+            ontap: () {
               final consultaDetallespBloc = ProviderBloc.ordenHab(context);
               consultaDetallespBloc.clear();
               Navigator.push(
@@ -65,12 +67,6 @@ class MantenimientoCorrectivo extends StatelessWidget {
                 ),
               );
             },
-            child: const OptionWidget(
-              titulo: 'Orden Habilitación Correctiva',
-              descripcion: '',
-              icon: Icons.check_circle,
-              color: Color(0XFF16A085),
-            ),
           ),
         ],
       ),
