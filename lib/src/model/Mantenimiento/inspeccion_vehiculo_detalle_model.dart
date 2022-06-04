@@ -3,6 +3,7 @@ import 'package:new_brunner_app/src/model/Mantenimiento/mantenimiento_correctivo
 class InspeccionVehiculoDetalleModel {
   String? idInspeccionDetalle;
   String? tipoUnidad;
+  String? idVehiculo;
   String? plavaVehiculo;
   String? nroCheckList;
   String? fechaInspeccion;
@@ -22,6 +23,7 @@ class InspeccionVehiculoDetalleModel {
   InspeccionVehiculoDetalleModel({
     this.idInspeccionDetalle,
     this.tipoUnidad,
+    this.idVehiculo,
     this.plavaVehiculo,
     this.nroCheckList,
     this.fechaInspeccion,
@@ -45,6 +47,7 @@ class InspeccionVehiculoDetalleModel {
   Map<String, dynamic> toJson() => {
         'idInspeccionDetalle': idInspeccionDetalle,
         'tipoUnidad': tipoUnidad,
+        'idVehiculo': idVehiculo,
         'plavaVehiculo': plavaVehiculo,
         'nroCheckList': nroCheckList,
         'fechaInspeccion': fechaInspeccion,
@@ -63,6 +66,7 @@ class InspeccionVehiculoDetalleModel {
   factory InspeccionVehiculoDetalleModel.fromJson(Map<String, dynamic> json) => InspeccionVehiculoDetalleModel(
         idInspeccionDetalle: json["idInspeccionDetalle"],
         tipoUnidad: json["tipoUnidad"],
+        idVehiculo: json["idVehiculo"],
         plavaVehiculo: json["plavaVehiculo"],
         nroCheckList: json["nroCheckList"],
         fechaInspeccion: json["fechaInspeccion"],

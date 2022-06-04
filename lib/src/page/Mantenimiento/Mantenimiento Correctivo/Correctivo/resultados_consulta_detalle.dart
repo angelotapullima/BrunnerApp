@@ -8,7 +8,7 @@ import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctiv
 import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/Correctivo/Acciones%20Mantenimiento/mantenimiento_anulado.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/Correctivo/Acciones%20Mantenimiento/visualizar_detalles.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/Correctivo/anular_detalle_inspeccion.dart';
-import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/search_person_mantenimiento.dart';
+import 'package:new_brunner_app/src/page/personas_search.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
 
 class ResultadosConsultaDetalle extends StatelessWidget {
@@ -80,6 +80,7 @@ class ResultadosConsultaDetalle extends StatelessWidget {
                             pageBuilder: (context, animation, secondaryAnimation) {
                               return AddAccionesResponsable(
                                 detalle: detalle,
+                                page: 'CORRECTIVA',
                               );
                             },
                           ),
@@ -215,7 +216,9 @@ class ResultadosConsultaDetalle extends StatelessWidget {
           context,
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) {
-              return PersonMantenimiento(
+              return PersonasSearch(
+                cargo: 'MANTENIMIENTO',
+                onChanged: (person) {},
                 idInspeccionDetalle: detalle.idInspeccionDetalle.toString(),
                 tipoUnidad: detalle.tipoUnidad.toString(),
               );

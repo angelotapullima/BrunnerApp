@@ -18,9 +18,7 @@ class _SplashState extends State<Splash> {
       if (token == null || token.isEmpty) {
         Navigator.pushNamedAndRemoveUntil(context, loginRoute, (route) => false);
       } else {
-        //Navigator.pushNamed(context, homeRoute);
         Navigator.pushNamedAndRemoveUntil(context, homeRoute, (route) => false);
-        //loginRoute
       }
     });
 

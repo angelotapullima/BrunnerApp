@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_model.dart';
-import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Check%20List/check_list.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Consulta%20Informacion/resultados_consulta.dart';
-import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/choferes_search.dart';
-import 'package:provider/provider.dart';
+import 'package:new_brunner_app/src/page/personas_search.dart';
+import 'package:new_brunner_app/src/util/utils.dart';
+import 'package:new_brunner_app/src/widget/text_field.dart';
 
 class ConsultaInformacion extends StatefulWidget {
   const ConsultaInformacion({Key? key}) : super(key: key);
@@ -24,6 +24,7 @@ class _ConsultaInformacionState extends State<ConsultaInformacion> {
   final _tipo = TextEditingController();
 
   String _estado = '';
+  String _idResponsable = '';
   List<String> spinnerItems = ['Todos', 'Unidades habilitadas', 'Unidades habilitadas con restricciones', 'Unidades inhabilitadas'];
   int count = 0;
 
@@ -170,7 +171,6 @@ class _ConsultaInformacionState extends State<ConsultaInformacion> {
   }
 
   void filtroSearch() {
-    final provider = Provider.of<ConductorController>(context, listen: false);
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -229,98 +229,51 @@ class _ConsultaInformacionState extends State<ConsultaInformacion> {
                             SizedBox(
                               height: ScreenUtil().setHeight(20),
                             ),
-                            TextField(
+                            TextFieldSelect(
+                              label: 'Placa de la Unidad o Marca',
+                              hingText: '',
                               controller: _placaUnidad,
-                              style: const TextStyle(
-                                color: Color(0xff808080),
-                              ),
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: const Color(0xffeeeeee),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                hintStyle: const TextStyle(
-                                  color: Color(0xff808080),
-                                ),
-                                labelText: 'Placa de la Unidad o Marca',
-                              ),
+                              icon: Icons.bus_alert,
+                              readOnly: false,
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(20),
                             ),
-                            ValueListenableBuilder(
-                              valueListenable: provider.conductorS,
-                              builder: (BuildContext context, String data, Widget? child) {
-                                if (data != 'Seleccionar') {
-                                  _operario.text = data;
-                                }
-                                return TextField(
-                                  readOnly: true,
-                                  controller: _operario,
-                                  maxLines: null,
-                                  style: const TextStyle(
-                                    color: Color(0xff808080),
-                                  ),
-                                  onTap: () {
-                                    FocusScope.of(context).unfocus();
-                                    Navigator.push(
-                                      context,
-                                      PageRouteBuilder(
-                                        pageBuilder: (context, animation, secondaryAnimation) {
-                                          return const ChoferesSearch(
-                                            page: 'Consulta',
-                                          );
+                            TextFieldSelect(
+                              label: 'Nombre del Operario',
+                              hingText: 'Seleccionar operario',
+                              controller: _operario,
+                              icon: Icons.keyboard_arrow_down,
+                              readOnly: true,
+                              ontap: () {
+                                FocusScope.of(context).unfocus();
+                                Navigator.push(
+                                  context,
+                                  PageRouteBuilder(
+                                    pageBuilder: (context, animation, secondaryAnimation) {
+                                      return PersonasSearch(
+                                        cargo: 'PERSONAS',
+                                        onChanged: (person) {
+                                          _operario.text = person.nombrePerson ?? '';
+                                          _idResponsable = person.idPerson.toString();
                                         },
-                                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                          var begin = const Offset(0.0, 1.0);
-                                          var end = Offset.zero;
-                                          var curve = Curves.ease;
+                                        idInspeccionDetalle: '',
+                                      );
+                                    },
+                                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                      var begin = const Offset(0.0, 1.0);
+                                      var end = Offset.zero;
+                                      var curve = Curves.ease;
 
-                                          var tween = Tween(begin: begin, end: end).chain(
-                                            CurveTween(curve: curve),
-                                          );
+                                      var tween = Tween(begin: begin, end: end).chain(
+                                        CurveTween(curve: curve),
+                                      );
 
-                                          return SlideTransition(
-                                            position: animation.drive(tween),
-                                            child: child,
-                                          );
-                                        },
-                                      ),
-                                    );
-                                  },
-                                  decoration: InputDecoration(
-                                    suffixIcon: const Icon(
-                                      Icons.person_outline,
-                                      color: Colors.green,
-                                    ),
-                                    filled: true,
-                                    fillColor: const Color(0xffeeeeee),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      borderSide: const BorderSide(
-                                        color: Color(0xffeeeeee),
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      borderSide: const BorderSide(
-                                        color: Color(0xffeeeeee),
-                                      ),
-                                    ),
-                                    hintStyle: const TextStyle(
-                                      color: Color(0xff808080),
-                                    ),
-                                    labelText: 'Nombre del operario',
+                                      return SlideTransition(
+                                        position: animation.drive(tween),
+                                        child: child,
+                                      );
+                                    },
                                   ),
                                 );
                               },
@@ -328,154 +281,54 @@ class _ConsultaInformacionState extends State<ConsultaInformacion> {
                             SizedBox(
                               height: ScreenUtil().setHeight(20),
                             ),
-                            TextField(
+                            TextFieldSelect(
+                              label: 'Estado de la Unidad',
+                              hingText: 'Seleccionar estado',
                               controller: _tipo,
-                              maxLines: null,
+                              icon: Icons.keyboard_arrow_down,
                               readOnly: true,
-                              style: const TextStyle(
-                                color: Color(0xff808080),
-                              ),
-                              onTap: () {
+                              ontap: () {
                                 FocusScope.of(context).unfocus();
                                 _bottomShetTipe(context);
                               },
-                              decoration: InputDecoration(
-                                suffixIcon: const Icon(
-                                  Icons.keyboard_arrow_down,
-                                  color: Colors.green,
-                                ),
-                                filled: true,
-                                fillColor: const Color(0xffeeeeee),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                hintText: 'Estado de la unidad',
-                                hintStyle: const TextStyle(
-                                  color: Color(0xff808080),
-                                ),
-                                labelText: 'Estado de la unidad',
-                              ),
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(20),
                             ),
-                            TextField(
+                            TextFieldSelect(
+                              label: 'N° de Check List',
+                              hingText: 'Digitar N°',
                               controller: _nroCheck,
-                              style: const TextStyle(
-                                color: Color(0xff808080),
-                              ),
-                              decoration: InputDecoration(
-                                suffixIcon: const Icon(
-                                  Icons.numbers,
-                                  color: Colors.green,
-                                ),
-                                filled: true,
-                                fillColor: const Color(0xffeeeeee),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                hintStyle: const TextStyle(
-                                  color: Color(0xff808080),
-                                ),
-                                hintText: 'Digitar N°',
-                                labelText: 'N° de Check List',
-                              ),
+                              icon: Icons.numbers,
+                              readOnly: false,
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(20),
                             ),
-                            TextField(
+                            TextFieldSelect(
+                              label: 'Fecha de Inicio',
+                              hingText: 'Fecha de Inicio',
                               controller: _fechaInicio,
+                              icon: Icons.calendar_month_outlined,
                               readOnly: true,
-                              style: const TextStyle(
-                                color: Color(0xff808080),
-                              ),
-                              onTap: () {
+                              ontap: () {
                                 FocusScope.of(context).unfocus();
-                                _selectdate(context, _fechaInicio);
+                                selectdate(context, _fechaInicio);
                               },
-                              decoration: InputDecoration(
-                                suffixIcon: const Icon(
-                                  Icons.calendar_month_outlined,
-                                  color: Colors.green,
-                                ),
-                                filled: true,
-                                fillColor: const Color(0xffeeeeee),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                hintText: 'Fecha inicio',
-                                hintStyle: const TextStyle(
-                                  color: Color(0xff808080),
-                                ),
-                                labelText: 'Fecha inicio',
-                              ),
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(20),
                             ),
-                            TextField(
+                            TextFieldSelect(
+                              label: 'Fecha Fin',
+                              hingText: 'Fecha Fin',
                               controller: _fechaFin,
+                              icon: Icons.calendar_month_outlined,
                               readOnly: true,
-                              style: const TextStyle(
-                                color: Color(0xff808080),
-                              ),
-                              onTap: () {
+                              ontap: () {
                                 FocusScope.of(context).unfocus();
-                                _selectdate(context, _fechaFin);
+                                selectdate(context, _fechaFin);
                               },
-                              decoration: InputDecoration(
-                                suffixIcon: const Icon(
-                                  Icons.calendar_month_outlined,
-                                  color: Colors.green,
-                                ),
-                                filled: true,
-                                fillColor: const Color(0xffeeeeee),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                hintText: 'Fecha fin',
-                                hintStyle: const TextStyle(
-                                  color: Color(0xff808080),
-                                ),
-                                labelText: 'Fecha término',
-                              ),
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(20),
@@ -483,9 +336,9 @@ class _ConsultaInformacionState extends State<ConsultaInformacion> {
                             InkWell(
                               onTap: () async {
                                 final consultaInspBloc = ProviderBloc.consultaInsp(context);
-                                final provider = Provider.of<ConductorController>(context, listen: false);
+
                                 consultaInspBloc.getInspeccionesVehiculo(_fechaInicio.text.trim(), _fechaFin.text.trim(), _placaUnidad.text.trim(),
-                                    provider.idS.value.trim(), _estado.trim(), _nroCheck.text.trim());
+                                    _idResponsable, _estado.trim(), _nroCheck.text.trim());
                                 Navigator.pop(context);
                               },
                               child: Container(
@@ -612,16 +465,5 @@ class _ConsultaInformacionState extends State<ConsultaInformacion> {
         );
       },
     );
-  }
-
-  _selectdate(BuildContext context, TextEditingController date) async {
-    DateTime? picked = await showDatePicker(
-      context: context,
-      firstDate: DateTime(DateTime.now().month - 1),
-      initialDate: DateTime.now(),
-      lastDate: DateTime(DateTime.now().year + 2),
-    );
-
-    date.text = "${picked!.year.toString().padLeft(2, '0')}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
   }
 }

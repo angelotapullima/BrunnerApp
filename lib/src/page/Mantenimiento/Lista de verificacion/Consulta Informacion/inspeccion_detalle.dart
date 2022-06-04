@@ -38,144 +38,152 @@ class _InspeccionDetalleState extends State<InspeccionDetalle> {
       ),
       body: Stack(
         children: [
-          StreamBuilder<List<InspeccionVehiculoModel>>(
-            stream: inspeccionBloc.inspeccionDetalleStream,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                if (snapshot.data!.isNotEmpty) {
-                  final dato = snapshot.data![0];
-
-                  return SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: fileData('Lista de verificacion de unidades', 'N° ${dato.numeroInspeccionVehiculo}', 15),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: ScreenUtil().setWidth(16),
-                            vertical: ScreenUtil().setHeight(2),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
+          StreamBuilder<bool>(
+            stream: inspeccionBloc.cargando2Stream,
+            builder: (_, c) {
+              if (c.hasData && !c.data!) {
+                return StreamBuilder<List<InspeccionVehiculoModel>>(
+                  stream: inspeccionBloc.inspeccionDetalleStream,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      if (snapshot.data!.isNotEmpty) {
+                        final dato = snapshot.data![0];
+                        return SingleChildScrollView(
+                          child: Column(
                             children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: fileData('Lista de verificacion de unidades', 'N° ${dato.numeroInspeccionVehiculo}', 15),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: ScreenUtil().setWidth(16),
+                                  vertical: ScreenUtil().setHeight(2),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      '${obtenerFecha(dato.fechaInspeccionVehiculo.toString())} ${dato.horaInspeccionVehiculo}',
+                                      style: TextStyle(
+                                        fontSize: ScreenUtil().setSp(11),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              placa(
+                                dato.placaVehiculo.toString(),
+                                Icons.bus_alert,
+                                (dato.estadoCheckInspeccionVehiculo == '2')
+                                    ? Colors.orangeAccent
+                                    : (dato.estadoCheckInspeccionVehiculo == '3')
+                                        ? Colors.redAccent
+                                        : const Color(0XFF09AD92),
+                              ),
+                              const Divider(),
                               Text(
-                                '${obtenerFecha(dato.fechaInspeccionVehiculo.toString())} ${dato.horaInspeccionVehiculo}',
-                                style: TextStyle(
-                                  fontSize: ScreenUtil().setSp(11),
+                                'INFORMACIÓN DEL CONDUCTOR',
+                                style: TextStyle(fontWeight: FontWeight.w500, fontSize: ScreenUtil().setSp(14)),
+                              ),
+                              SizedBox(height: ScreenUtil().setHeight(8)),
+                              fileData('N° Documento', '${dato.documentoChofer}', 13),
+                              SizedBox(height: ScreenUtil().setHeight(5)),
+                              fileData('Nombre y Apellido', '${dato.nombreChofer}', 13),
+                              SizedBox(height: ScreenUtil().setHeight(10)),
+                              const Divider(),
+                              Text(
+                                'PRE-USO DE VEHICULO',
+                                style: TextStyle(fontWeight: FontWeight.w500, fontSize: ScreenUtil().setSp(14)),
+                              ),
+                              SizedBox(height: ScreenUtil().setHeight(10)),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.only(right: ScreenUtil().setWidth(50)),
+                                    child: const Text('Estado'),
+                                  ),
+                                ],
+                              ),
+                              Container(
+                                margin: EdgeInsets.symmetric(
+                                  horizontal: ScreenUtil().setWidth(16),
+                                  vertical: ScreenUtil().setHeight(4),
+                                ),
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    SizedBox(width: ScreenUtil().setWidth(220)),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        shape: BoxShape.circle,
+                                        border: Border.all(color: Colors.green),
+                                      ),
+                                      child: const Icon(
+                                        Icons.check_circle,
+                                        color: Colors.green,
+                                      ),
+                                    ),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        shape: BoxShape.circle,
+                                        border: Border.all(color: Colors.orangeAccent),
+                                      ),
+                                      child: const Icon(
+                                        Icons.error_rounded,
+                                        color: Colors.orangeAccent,
+                                      ),
+                                    ),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        shape: BoxShape.circle,
+                                        border: Border.all(color: Colors.redAccent),
+                                      ),
+                                      child: const Icon(
+                                        Icons.cancel,
+                                        color: Colors.redAccent,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
+                              const CheckCategoriasInspeccion(),
+                              SizedBox(height: ScreenUtil().setHeight(10)),
+                              const Divider(),
+                              _imputText(dato.hidrolinaVehiculo.toString(), dato.kilometrajeVehiculo.toString()),
+                              SizedBox(height: ScreenUtil().setHeight(10)),
+                              const Divider(),
+                              Text(
+                                'REPORTE DE OBSERVACIONES',
+                                style: TextStyle(fontWeight: FontWeight.w500, fontSize: ScreenUtil().setSp(14)),
+                              ),
+                              SizedBox(height: ScreenUtil().setHeight(10)),
+                              ObservacionInspeccion(
+                                tipoUnidad: dato.tipoUnidad.toString(),
+                              ),
+                              _buttonPDF(dato.idInspeccionVehiculo.toString()),
+                              (dato.estadoFinal == '1' && widget.inspeccion.estadoFinal == '1') ? _buttonDelete(context, dato) : Container(),
+                              SizedBox(height: ScreenUtil().setHeight(20)),
                             ],
                           ),
-                        ),
-                        placa(
-                          dato.placaVehiculo.toString(),
-                          Icons.bus_alert,
-                          (dato.estadoCheckInspeccionVehiculo == '2')
-                              ? Colors.orangeAccent
-                              : (dato.estadoCheckInspeccionVehiculo == '3')
-                                  ? Colors.redAccent
-                                  : const Color(0XFF09AD92),
-                        ),
-                        const Divider(),
-                        Text(
-                          'INFORMACIÓN DEL CONDUCTOR',
-                          style: TextStyle(fontWeight: FontWeight.w500, fontSize: ScreenUtil().setSp(14)),
-                        ),
-                        SizedBox(height: ScreenUtil().setHeight(8)),
-                        fileData('N° Documento', '${dato.documentoChofer}', 13),
-                        SizedBox(height: ScreenUtil().setHeight(5)),
-                        fileData('Nombre y Apellido', '${dato.nombreChofer}', 13),
-                        SizedBox(height: ScreenUtil().setHeight(10)),
-                        const Divider(),
-                        Text(
-                          'PRE-USO DE VEHICULO',
-                          style: TextStyle(fontWeight: FontWeight.w500, fontSize: ScreenUtil().setSp(14)),
-                        ),
-                        SizedBox(height: ScreenUtil().setHeight(10)),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(right: ScreenUtil().setWidth(50)),
-                              child: const Text('Estado'),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(
-                            horizontal: ScreenUtil().setWidth(16),
-                            vertical: ScreenUtil().setHeight(4),
-                          ),
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SizedBox(width: ScreenUtil().setWidth(220)),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.circle,
-                                  border: Border.all(color: Colors.green),
-                                ),
-                                child: const Icon(
-                                  Icons.check_circle,
-                                  color: Colors.green,
-                                ),
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.circle,
-                                  border: Border.all(color: Colors.orangeAccent),
-                                ),
-                                child: const Icon(
-                                  Icons.error_rounded,
-                                  color: Colors.orangeAccent,
-                                ),
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.circle,
-                                  border: Border.all(color: Colors.redAccent),
-                                ),
-                                child: const Icon(
-                                  Icons.cancel,
-                                  color: Colors.redAccent,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const CheckCategoriasInspeccion(),
-                        SizedBox(height: ScreenUtil().setHeight(10)),
-                        const Divider(),
-                        _imputText(dato.hidrolinaVehiculo.toString(), dato.kilometrajeVehiculo.toString()),
-                        SizedBox(height: ScreenUtil().setHeight(10)),
-                        const Divider(),
-                        Text(
-                          'REPORTE DE OBSERVACIONES',
-                          style: TextStyle(fontWeight: FontWeight.w500, fontSize: ScreenUtil().setSp(14)),
-                        ),
-                        SizedBox(height: ScreenUtil().setHeight(10)),
-                        ObservacionInspeccion(
-                          tipoUnidad: dato.tipoUnidad.toString(),
-                        ),
-                        _buttonPDF(dato.idInspeccionVehiculo.toString()),
-                        (dato.estadoFinal == '1' && widget.inspeccion.estadoFinal == '1') ? _buttonDelete(context, dato) : Container(),
-                        SizedBox(height: ScreenUtil().setHeight(20)),
-                      ],
-                    ),
-                  );
-                } else {
-                  return const Text('Sin datos encontrados...');
-                }
-              } else {
-                return const Center(
-                  child: CupertinoActivityIndicator(),
+                        );
+                      } else {
+                        return Center(child: Text('Sin datos encontrados...'));
+                      }
+                    } else {
+                      return const Center(
+                        child: CupertinoActivityIndicator(),
+                      );
+                    }
+                  },
                 );
+              } else {
+                return Center(child: CupertinoActivityIndicator());
               }
             },
           ),

@@ -27,6 +27,12 @@ class OrdenHabilitacionCorrectivaBloc {
     _enProcesoController.close();
   }
 
+  void clear() {
+    _detalleController.sink.add([]);
+    _infPendController.sink.add([]);
+    _enProcesoController.sink.add([]);
+  }
+
   void getInspeccionesById(String placaVehiculo, String tipoUnidad) async {
     _detalleController.sink.add([]);
     _detalleController.sink.add(await _api.detalleInspDB.getDetalleInspeccionByPlacaVehiculo(placaVehiculo));
@@ -36,11 +42,15 @@ class OrdenHabilitacionCorrectivaBloc {
     _detalleController.sink.add(await _api.detalleInspDB.getDetalleInspeccionByPlacaVehiculo(placaVehiculo));
   }
 
-  void getInformesPendientesAprobacion(String plavaVehiculo) async {
+  void getInformesPendientesAprobacion(String plavaVehiculo, String tipoUnidad) async {
+    _infPendController.sink.add(await getDetalleInspeccionPlacaVehiculo(plavaVehiculo, 1));
+    await _api.getData(tipoUnidad);
     _infPendController.sink.add(await getDetalleInspeccionPlacaVehiculo(plavaVehiculo, 1));
   }
 
-  void getPendientesAtencion(String plavaVehiculo) async {
+  void getPendientesAtencion(String plavaVehiculo, String tipoUnidad) async {
+    _enProcesoController.sink.add(await getDetalleInspeccionPlacaVehiculo(plavaVehiculo, 2));
+    await _api.getData(tipoUnidad);
     _enProcesoController.sink.add(await getDetalleInspeccionPlacaVehiculo(plavaVehiculo, 2));
   }
 
@@ -70,14 +80,18 @@ class OrdenHabilitacionCorrectivaBloc {
 
       if (tipo == 1) {
         final mantenimientoDB =
-            await _api.mantCorrectivoDB.getMantenimientosOrdenHabByIdInspeccionDetalle(detalleDB[i].idInspeccionDetalle.toString());
-        detalle.mantCorrectivos = mantenimientoDB;
-        result1.add(detalle);
-      } else {
-        final mantenimientoDB =
             await _api.mantCorrectivoDB.getMantenimientosInformePendienteByIdInspeccionDetalle(detalleDB[i].idInspeccionDetalle.toString());
         detalle.mantCorrectivos = mantenimientoDB;
-        result2.add(detalle);
+        if (detalle.mantCorrectivos!.isNotEmpty) {
+          result1.add(detalle);
+        }
+      } else if (tipo == 2) {
+        final mantenimientoDB =
+            await _api.mantCorrectivoDB.getMantenimientosOrdenHabByIdInspeccionDetalle(detalleDB[i].idInspeccionDetalle.toString());
+        detalle.mantCorrectivos = mantenimientoDB;
+        if (detalle.mantCorrectivos!.isNotEmpty) {
+          result2.add(detalle);
+        }
       }
     }
 

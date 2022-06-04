@@ -37,8 +37,8 @@ class MantenimientoCorrectivoDatabase {
     try {
       final Database db = await dbprovider.getDatabase();
       List<MantenimientoCorrectivoModel> list = [];
-      List<Map> maps = await db
-          .rawQuery("SELECT * FROM MantenimientoCorrectivo WHERE idInspeccionDetalle='$idInspeccionDetalle' AND (estado=='5' OR estado=='2') ");
+      List<Map> maps = await db.rawQuery(
+          "SELECT * FROM MantenimientoCorrectivo WHERE idInspeccionDetalle='$idInspeccionDetalle' AND (estado='5' OR estado='2') AND estadoFinal='1' ");
 
       if (maps.isNotEmpty) list = MantenimientoCorrectivoModel.fromJsonList(maps);
       return list;
@@ -52,7 +52,8 @@ class MantenimientoCorrectivoDatabase {
     try {
       final Database db = await dbprovider.getDatabase();
       List<MantenimientoCorrectivoModel> list = [];
-      List<Map> maps = await db.rawQuery("SELECT * FROM MantenimientoCorrectivo WHERE idInspeccionDetalle='$idInspeccionDetalle' AND estado=='1' ");
+      List<Map> maps = await db
+          .rawQuery("SELECT * FROM MantenimientoCorrectivo WHERE idInspeccionDetalle='$idInspeccionDetalle' AND estado='1' AND estadoFinal='1' ");
 
       if (maps.isNotEmpty) list = MantenimientoCorrectivoModel.fromJsonList(maps);
       return list;

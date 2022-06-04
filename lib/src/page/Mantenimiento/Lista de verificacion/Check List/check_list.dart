@@ -7,9 +7,8 @@ import 'package:new_brunner_app/src/database/Mantenimiento/check_item_inspeccion
 import 'package:new_brunner_app/src/model/Mantenimiento/vehiculo_model.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Check%20List/categorias_inspeccion.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Check%20List/observaciones_inspeccion.dart';
-import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/choferes_search.dart';
+import 'package:new_brunner_app/src/page/personas_search.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
-import 'package:provider/provider.dart';
 
 class CheckList extends StatefulWidget {
   const CheckList({Key? key, required this.vehiculo}) : super(key: key);
@@ -22,7 +21,10 @@ class CheckList extends StatefulWidget {
 class _CheckListState extends State<CheckList> {
   final _hidrolinaController = TextEditingController();
   final _kilometrajeController = TextEditingController();
+  final _conductor = TextEditingController();
   final _controller = EditController();
+
+  String _idChofer = '';
 
   @override
   void dispose() {
@@ -33,7 +35,6 @@ class _CheckListState extends State<CheckList> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<ConductorController>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -67,50 +68,71 @@ class _CheckListState extends State<CheckList> {
                   style: TextStyle(fontWeight: FontWeight.w500, fontSize: ScreenUtil().setSp(14)),
                 ),
                 SizedBox(height: ScreenUtil().setHeight(5)),
-                ValueListenableBuilder(
-                  valueListenable: provider.conductorS,
-                  builder: (BuildContext context, String data, Widget? child) {
-                    return InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          PageRouteBuilder(
-                            pageBuilder: (context, animation, secondaryAnimation) {
-                              return const ChoferesSearch(
-                                page: 'Check',
-                              );
-                            },
-                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                              var begin = const Offset(0.0, 1.0);
-                              var end = Offset.zero;
-                              var curve = Curves.ease;
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16)),
+                  child: TextField(
+                    readOnly: true,
+                    controller: _conductor,
+                    maxLines: null,
+                    style: TextStyle(
+                      color: Color(0xff808080),
+                      fontSize: ScreenUtil().setSp(12),
+                    ),
+                    textAlign: TextAlign.center,
+                    onTap: () {
+                      FocusScope.of(context).unfocus();
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (context, animation, secondaryAnimation) {
+                            return PersonasSearch(
+                              cargo: 'PERSONAS',
+                              onChanged: (person) {
+                                _conductor.text = '${person.dniPerson}  |  ${person.nombrePerson}';
+                                _idChofer = person.idPerson.toString();
+                              },
+                              idInspeccionDetalle: '',
+                            );
+                          },
+                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                            var begin = const Offset(0.0, 1.0);
+                            var end = Offset.zero;
+                            var curve = Curves.ease;
 
-                              var tween = Tween(begin: begin, end: end).chain(
-                                CurveTween(curve: curve),
-                              );
+                            var tween = Tween(begin: begin, end: end).chain(
+                              CurveTween(curve: curve),
+                            );
 
-                              return SlideTransition(
-                                position: animation.drive(tween),
-                                child: child,
-                              );
-                            },
+                            return SlideTransition(
+                              position: animation.drive(tween),
+                              child: child,
+                            );
+                          },
+                        ),
+                      );
+                    },
+                    decoration: InputDecoration(
+                        suffixIcon: const Icon(
+                          Icons.keyboard_arrow_down,
+                          color: Colors.green,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                          borderSide: const BorderSide(
+                            color: Colors.green,
                           ),
-                        );
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        margin: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(10)),
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.green),
-                          borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Center(
-                          child: Text(data),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                          borderSide: const BorderSide(
+                            color: Colors.green,
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                        hintStyle: const TextStyle(
+                          color: Color(0xff808080),
+                        ),
+                        hintText: 'Seleccionar'),
+                  ),
                 ),
                 SizedBox(height: ScreenUtil().setHeight(10)),
                 const Divider(),
@@ -396,9 +418,8 @@ class _CheckListState extends State<CheckList> {
     return InkWell(
       onTap: () async {
         FocusScope.of(context).requestFocus(FocusNode());
-        final provider = Provider.of<ConductorController>(context, listen: false);
 
-        if (provider.idS.value != '') {
+        if (_idChofer != '') {
           final _cheksDB = CheckItemInspeccionDatabase();
 
           final _checks = await _cheksDB.getCheckItemInspeccionFALTANTESByIdVehiculo(widget.vehiculo.idVehiculo.toString());
@@ -408,8 +429,8 @@ class _CheckListState extends State<CheckList> {
               if (_kilometrajeController.text.trim().isNotEmpty) {
                 _controller.chnageCargando(true);
                 final _api = MantenimientoApi();
-                final res = await _api.saveCheckList(
-                    widget.vehiculo, provider.idS.value, _hidrolinaController.text.trim(), _kilometrajeController.text.trim());
+                final res =
+                    await _api.saveCheckList(widget.vehiculo, _idChofer, _hidrolinaController.text.trim(), _kilometrajeController.text.trim());
                 if (res.code == 1) {
                   final searchVehiculoBloc = ProviderBloc.vehiculo(context);
                   searchVehiculoBloc.cargarEstadosVehiculos();
@@ -468,18 +489,5 @@ class _CheckListState extends State<CheckList> {
         ),
       ),
     );
-  }
-}
-
-class ConductorController extends ChangeNotifier {
-  ValueNotifier<String> id = ValueNotifier('');
-  ValueNotifier<String> conductor = ValueNotifier('Seleccionar...');
-
-  ValueNotifier<String> get idS => id;
-  ValueNotifier<String> get conductorS => conductor;
-
-  void setData(String idC, String conductorN) {
-    id.value = idC;
-    conductor.value = conductorN;
   }
 }

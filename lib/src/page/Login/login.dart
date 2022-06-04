@@ -154,6 +154,7 @@ class _LoginState extends State<Login> {
                         textColor: Colors.white,
                         elevation: 0,
                         onPressed: () async {
+                          FocusScope.of(context).requestFocus(FocusNode());
                           final user = _usuarioController.text.trim();
                           final pass = _passwdController.text.trim();
                           if (user.isNotEmpty) {
@@ -190,18 +191,18 @@ class _LoginState extends State<Login> {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: ScreenUtil().setHeight(16),
-                    ),
-                    Text(
-                      '¿Olvidó la contraseña?',
-                      style: TextStyle(
-                        color: Colors.green,
-                        fontWeight: FontWeight.w500,
-                        fontSize: ScreenUtil().setSp(12),
-                        fontStyle: FontStyle.normal,
-                      ),
-                    ),
+                    // SizedBox(
+                    //   height: ScreenUtil().setHeight(16),
+                    // ),
+                    // Text(
+                    //   '¿Olvidó la contraseña?',
+                    //   style: TextStyle(
+                    //     color: Colors.green,
+                    //     fontWeight: FontWeight.w500,
+                    //     fontSize: ScreenUtil().setSp(12),
+                    //     fontStyle: FontStyle.normal,
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

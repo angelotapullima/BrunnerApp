@@ -60,11 +60,6 @@ class ResultadosConsulta extends StatelessWidget {
           ? Dismissible(
               key: UniqueKey(),
               direction: DismissDirection.endToStart,
-              // onDismissed: (direction) {
-              //   anularCheck(context, inspeccion);
-              //   final consultaInspBloc = ProviderBloc.consultaInsp(context);
-              //   consultaInspBloc.getInspeccionesVehiculoQuery();
-              // },
               confirmDismiss: (value) async {
                 if (value == DismissDirection.endToStart) {
                   anularCheck(context, inspeccion, 1);
@@ -153,11 +148,12 @@ class ResultadosConsulta extends StatelessWidget {
         children: [
           Container(
             width: ScreenUtil().setWidth(100),
+            height: ScreenUtil().setHeight(120),
             child: Stack(
               children: [
                 Container(
                   width: ScreenUtil().setWidth(100),
-                  height: ScreenUtil().setHeight(100),
+                  height: ScreenUtil().setHeight(120),
                   decoration: BoxDecoration(
                     color: colorEstado,
                     borderRadius: BorderRadius.circular(10),
@@ -165,7 +161,7 @@ class ResultadosConsulta extends StatelessWidget {
                 ),
                 SizedBox(
                   width: ScreenUtil().setWidth(100),
-                  height: ScreenUtil().setHeight(100),
+                  height: ScreenUtil().setHeight(120),
                   child: ClipRRect(
                     borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(90),
@@ -187,7 +183,7 @@ class ResultadosConsulta extends StatelessWidget {
                         ),
                         child: Center(
                           child: Image.asset(
-                            'assets/img/logo.png',
+                            'assets/img/icon_brunner.png',
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -270,16 +266,17 @@ class ResultadosConsulta extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  fileData('N° CheckList', inspeccion.numeroInspeccionVehiculo.toString()),
-                  fileData2('Fecha', '${obtenerFecha(inspeccion.fechaInspeccionVehiculo.toString())} ${inspeccion.horaInspeccionVehiculo}'),
+                  fileData('N° CheckList', inspeccion.numeroInspeccionVehiculo.toString(), 12, 12, FontWeight.w400, FontWeight.w500, TextAlign.left),
+                  fileData('Fecha', '${obtenerFecha(inspeccion.fechaInspeccionVehiculo.toString())} ${inspeccion.horaInspeccionVehiculo}', 11, 12,
+                      FontWeight.w500, FontWeight.w400, TextAlign.left),
                   Text(
                     inspeccion.razonSocialVehiculo.toString(),
                     style: TextStyle(
                       fontSize: ScreenUtil().setSp(12),
                     ),
                   ),
-                  fileData2('Chofer', inspeccion.nombreChofer.toString()),
-                  fileData2('Registrado por', inspeccion.nombreUsuario.toString()),
+                  fileData('Chofer', inspeccion.nombreChofer.toString(), 11, 12, FontWeight.w500, FontWeight.w400, TextAlign.left),
+                  fileData('Registrado por', inspeccion.nombreUsuario.toString(), 11, 12, FontWeight.w500, FontWeight.w400, TextAlign.left),
                 ],
               ),
             ),
@@ -289,50 +286,6 @@ class ResultadosConsulta extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  Widget fileData(String titulo, String data) {
-    return RichText(
-      text: TextSpan(
-          text: '$titulo: ',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w400,
-            fontSize: ScreenUtil().setSp(12),
-          ),
-          children: [
-            TextSpan(
-              text: data,
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w500,
-                fontSize: ScreenUtil().setSp(12),
-              ),
-            )
-          ]),
-    );
-  }
-
-  Widget fileData2(String titulo, String data) {
-    return RichText(
-      text: TextSpan(
-          text: '$titulo: ',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w500,
-            fontSize: ScreenUtil().setSp(11),
-          ),
-          children: [
-            TextSpan(
-              text: data,
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w400,
-                fontSize: ScreenUtil().setSp(12),
-              ),
-            )
-          ]),
     );
   }
 }

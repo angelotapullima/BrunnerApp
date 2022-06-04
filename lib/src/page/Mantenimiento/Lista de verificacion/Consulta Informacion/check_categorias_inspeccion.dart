@@ -56,7 +56,7 @@ class CheckCategoriasInspeccion extends StatelessWidget {
       ),
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-        color: (item.ckeckItemHabilitado == '1') ? Colors.blueGrey.withOpacity(0.15) : Colors.transparent,
+        color: (item.valueCheckItemInsp == '') ? Colors.blueGrey.withOpacity(0.15) : Colors.transparent,
         border: Border.all(color: Colors.blueGrey),
         borderRadius: BorderRadius.circular(5),
       ),
@@ -107,7 +107,7 @@ class CheckCategoriasInspeccion extends StatelessWidget {
   Widget check(BuildContext context, IconData icon, Color color, String value, InspeccionVehiculoItemModel item) {
     return Container(
       decoration: BoxDecoration(
-        color: (item.ckeckItemHabilitado == '1') ? Colors.blueGrey.withOpacity(0.1) : Colors.white,
+        color: (item.valueCheckItemInsp == '') ? Colors.blueGrey.withOpacity(0.1) : Colors.white,
         shape: BoxShape.circle,
         border: Border.all(color: color),
       ),

@@ -13,6 +13,7 @@ import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_deta
 import 'package:new_brunner_app/src/model/Mantenimiento/item_inspeccion_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/mantenimiento_correctivo_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/personas_model.dart';
+import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/Orden%20Habilitacion/new_observaciones_model.dart';
 
 class MantenimientoCorrectivoApi {
   final catInspeccionDB = CategoriaInspeccionDatabase();
@@ -79,6 +80,7 @@ class MantenimientoCorrectivoApi {
         final detalle = InspeccionVehiculoDetalleModel();
         detalle.idInspeccionDetalle = data["id_inspeccion_vehiculo_detalle"];
         detalle.tipoUnidad = data["tipo_unidad"];
+        detalle.idVehiculo = data["id_vehiculo"];
         detalle.plavaVehiculo = data["vehiculo_placa"];
         detalle.nroCheckList = data["numero_checklist"];
         var fechix = data["inspeccion_vehiculo_fecha"].split(' ');
@@ -219,6 +221,51 @@ class MantenimientoCorrectivoApi {
       return decodedData["result"]["code"];
     } catch (e) {
       return 1;
+    }
+  }
+
+  //Orden Habilitación Correctiva
+  Future<int> habilitarObservaciones(
+      String idVehiculo, List<InspeccionVehiculoDetalleModel> informes, List<NuevasObservacionesModel> observaciones) async {
+    try {
+      String? token = await Preferences.readData('token');
+      String? idUser = await Preferences.readData('id_user');
+
+      String informe = '';
+      for (var i = 0; i < informes.length; i++) {
+        informe +=
+            '${informes[i].mantCorrectivos![0].idMantenimiento}-.-.${informes[i].fechaInspeccion} ${informes[i].horaInspeccion}-.-.${informes[i].nroCheckList}-.-.${informes[i].descripcionCategoria}-.-.${informes[i].descripcionItem}-.-.${informes[i].mantCorrectivos![0].responsable}-.-.${informes[i].idInspeccionDetalle}-.-.${informes[i].mantCorrectivos![0].estado}/./.';
+      }
+      String observacion = '';
+
+      for (var i = 0; i < observaciones.length; i++) {
+        observacion +=
+            '${observaciones[i].idCategoria}-.-.${observaciones[i].idItem}-.-.${observaciones[i].descripcionCat}-.-.${observaciones[i].descripcionItem}-.-.${observaciones[i].observacion}/./.';
+      }
+
+      print(informe);
+      print(observacion);
+
+      final url = Uri.parse('$apiBaseURL/api/MantenimientoCorrectivo/habilitar_observaciones');
+
+      final resp = await http.post(
+        url,
+        body: {
+          'app': 'true',
+          'tn': token,
+          'id_vehiculo': idVehiculo,
+          'id_user': idUser,
+          'contenido': informe,
+          'contenido_hc': observacion,
+        },
+      );
+      final decodedData = json.decode(resp.body);
+
+      print(decodedData);
+
+      return decodedData;
+    } catch (e) {
+      return 2;
     }
   }
 }

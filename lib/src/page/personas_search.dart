@@ -3,24 +3,32 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/personas_model.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/Correctivo/asignar_responsable_mantenimiento.dart';
-import 'package:provider/provider.dart';
 
-class PersonMantenimiento extends StatefulWidget {
-  const PersonMantenimiento({Key? key, required this.idInspeccionDetalle, required this.tipoUnidad}) : super(key: key);
+class PersonasSearch extends StatefulWidget {
+  const PersonasSearch({Key? key, required this.cargo, required this.onChanged, required this.idInspeccionDetalle, this.tipoUnidad})
+      : super(key: key);
+  final String cargo;
+  final ValueChanged<PersonasModel>? onChanged;
   final String idInspeccionDetalle;
-  final String tipoUnidad;
+  final String? tipoUnidad;
 
   @override
-  State<PersonMantenimiento> createState() => _PersonMantenimientoState();
+  State<PersonasSearch> createState() => _PersonasSearchState();
 }
 
-class _PersonMantenimientoState extends State<PersonMantenimiento> {
+class _PersonasSearchState extends State<PersonasSearch> {
   final searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final searchBloc = ProviderBloc.mantenimientoCorrectivo(context);
-    searchBloc.getPersonasMantenimiento('');
+    final searchBloc = ProviderBloc.personas(context);
+
+    if (widget.cargo == 'MANTENIMIENTO') {
+      searchBloc.searchPersonasMantenimiento('');
+    } else {
+      searchBloc.searchPersons('');
+    }
+
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -42,7 +50,11 @@ class _PersonMantenimientoState extends State<PersonMantenimiento> {
               child: TextField(
                 controller: searchController,
                 onChanged: (query) {
-                  searchBloc.getPersonasMantenimiento(query.trim());
+                  if (widget.cargo == 'MANTENIMIENTO') {
+                    searchBloc.searchPersonasMantenimiento(query.trim());
+                  } else {
+                    searchBloc.searchPersons(query.trim());
+                  }
                 },
                 textAlign: TextAlign.left,
                 style: TextStyle(
@@ -67,7 +79,7 @@ class _PersonMantenimientoState extends State<PersonMantenimiento> {
             ),
             Expanded(
               child: StreamBuilder<List<PersonasModel>>(
-                stream: searchBloc.personasStream,
+                stream: searchBloc.searchStream,
                 builder: (context, snapshot) {
                   if (snapshot.hasData && snapshot.data!.isNotEmpty) {
                     return ListView.builder(
@@ -93,26 +105,20 @@ class _PersonMantenimientoState extends State<PersonMantenimiento> {
                             );
                           }
                           index = index - 1;
-                          var persona = snapshot.data![index];
+                          var person = snapshot.data![index];
                           return InkWell(
                             onTap: () {
-                              if (widget.idInspeccionDetalle == '') {
-                                Navigator.pop(context);
-                                final provider = Provider.of<PersonaMantenimientoController>(context, listen: false);
-                                String data = '';
-                                data = '${persona.nombrePerson}';
-                                provider.setData(persona.idPerson.toString(), data);
-                              } else {
+                              if (widget.idInspeccionDetalle != '') {
                                 Navigator.push(
                                   context,
                                   PageRouteBuilder(
                                     opaque: false,
                                     pageBuilder: (context, animation, secondaryAnimation) {
                                       return AsignarResponsableMantenimiento(
-                                        idIsnpeccionDetalle: widget.idInspeccionDetalle,
-                                        idPerson: persona.idPerson.toString(),
-                                        person: '${persona.nombrePerson}',
-                                        tipoUnidad: widget.tipoUnidad,
+                                        idIsnpeccionDetalle: widget.idInspeccionDetalle.toString(),
+                                        idPerson: person.idPerson.toString(),
+                                        person: '${person.nombrePerson}',
+                                        tipoUnidad: widget.tipoUnidad.toString(),
                                       );
                                     },
                                     transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -131,6 +137,9 @@ class _PersonMantenimientoState extends State<PersonMantenimiento> {
                                     },
                                   ),
                                 );
+                              } else {
+                                Navigator.pop(context);
+                                widget.onChanged!(person);
                               }
                             },
                             child: Padding(
@@ -138,7 +147,7 @@ class _PersonMantenimientoState extends State<PersonMantenimiento> {
                                 horizontal: ScreenUtil().setWidth(16),
                                 vertical: ScreenUtil().setHeight(8),
                               ),
-                              child: Text('${persona.nombrePerson}'),
+                              child: Text('${person.dniPerson}  |  ${person.nombrePerson}'),
                             ),
                           );
                         });
@@ -154,18 +163,5 @@ class _PersonMantenimientoState extends State<PersonMantenimiento> {
         ),
       ),
     );
-  }
-}
-
-class PersonaMantenimientoController extends ChangeNotifier {
-  ValueNotifier<String> id = ValueNotifier('');
-  ValueNotifier<String> persona = ValueNotifier('Seleccionar...');
-
-  ValueNotifier<String> get idS => id;
-  ValueNotifier<String> get personaS => persona;
-
-  void setData(String idC, String personaN) {
-    id.value = idC;
-    persona.value = personaN;
   }
 }

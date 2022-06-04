@@ -69,6 +69,7 @@ class InfoUser extends StatelessWidget {
                     ),
                     imageBuilder: (context, imageProvider) => Container(
                       decoration: BoxDecoration(
+                        border: Border.all(color: Colors.green),
                         shape: BoxShape.circle,
                         image: DecorationImage(
                           image: imageProvider,

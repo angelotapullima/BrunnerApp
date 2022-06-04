@@ -6,10 +6,10 @@ import 'package:new_brunner_app/src/model/Mantenimiento/categoria_inspeccion_mod
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_detalle_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/item_inspeccion_model.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/Correctivo/resultados_consulta_detalle.dart';
-import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/search_person_mantenimiento.dart';
-import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/search_vehiculos.dart';
+import 'package:new_brunner_app/src/page/search_vehiculos.dart';
+import 'package:new_brunner_app/src/page/personas_search.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
-import 'package:provider/provider.dart';
+import 'package:new_brunner_app/src/widget/text_field.dart';
 
 class MantCorrectivo extends StatefulWidget {
   const MantCorrectivo({Key? key}) : super(key: key);
@@ -30,6 +30,7 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
   final _itemCatController = TextEditingController();
 
   String _estado = '';
+  String _idPersona = '';
   List<String> estadoItems = [
     'Todos',
     'Atendido',
@@ -68,10 +69,6 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
     _estado = '';
     _tipoVehiculo.text = 'Seleccionar unidad';
     _tipoVeh = '';
-    // var data =
-    //     "${DateTime.now().year.toString().padLeft(2, '0')}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().day.toString().padLeft(2, '0')}";
-    // _fechaInicio.text = data;
-    // _fechaFin.text = data;
     Future.delayed(const Duration(microseconds: 100), () async {
       filtroSearch();
     });
@@ -196,8 +193,6 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
   }
 
   void filtroSearch() {
-    final providerPerson = Provider.of<PersonaMantenimientoController>(context, listen: false);
-    final providerPlaca = Provider.of<VehiculosController>(context, listen: false);
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -256,427 +251,184 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                             SizedBox(
                               height: ScreenUtil().setHeight(20),
                             ),
-                            TextField(
+                            TextFieldSelect(
+                              label: 'Unidad',
+                              hingText: 'Seleccionar unidad',
                               controller: _tipoVehiculo,
-                              maxLines: null,
+                              icon: Icons.keyboard_arrow_down,
                               readOnly: true,
-                              style: const TextStyle(
-                                color: Color(0xff808080),
-                              ),
-                              onTap: () {
+                              ontap: () {
                                 FocusScope.of(context).unfocus();
                                 _seleccionarTipoUnidad(context);
                               },
-                              decoration: InputDecoration(
-                                suffixIcon: const Icon(
-                                  Icons.keyboard_arrow_down,
-                                  color: Colors.green,
-                                ),
-                                filled: true,
-                                fillColor: const Color(0xffeeeeee),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                hintText: 'Unidad',
-                                hintStyle: const TextStyle(
-                                  color: Color(0xff808080),
-                                ),
-                                labelText: 'Unidad',
-                              ),
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(10),
                             ),
-                            ValueListenableBuilder(
-                              valueListenable: providerPlaca.placaS,
-                              builder: (BuildContext context, String data, Widget? child) {
-                                if (data != '') {
-                                  _placaUnidad.text = data;
-                                } else {
-                                  _placaUnidad.clear();
-                                }
-                                return TextField(
-                                  readOnly: true,
-                                  controller: _placaUnidad,
-                                  maxLines: null,
-                                  style: const TextStyle(
-                                    color: Color(0xff808080),
-                                  ),
-                                  onTap: () {
-                                    FocusScope.of(context).unfocus();
-                                    if (_tipoVeh != '') {
-                                      Navigator.push(
-                                        context,
-                                        PageRouteBuilder(
-                                          pageBuilder: (context, animation, secondaryAnimation) {
-                                            return VehiculosSearch(
-                                              tipoUnidad: _tipoVeh,
-                                            );
-                                          },
-                                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                            var begin = const Offset(0.0, 1.0);
-                                            var end = Offset.zero;
-                                            var curve = Curves.ease;
-
-                                            var tween = Tween(begin: begin, end: end).chain(
-                                              CurveTween(curve: curve),
-                                            );
-
-                                            return SlideTransition(
-                                              position: animation.drive(tween),
-                                              child: child,
-                                            );
-                                          },
-                                        ),
-                                      );
-                                    }
-                                  },
-                                  decoration: InputDecoration(
-                                    suffixIcon: const Icon(
-                                      Icons.keyboard_arrow_down,
-                                      color: Colors.green,
-                                    ),
-                                    filled: true,
-                                    fillColor: const Color(0xffeeeeee),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      borderSide: const BorderSide(
-                                        color: Color(0xffeeeeee),
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      borderSide: const BorderSide(
-                                        color: Color(0xffeeeeee),
-                                      ),
-                                    ),
-                                    hintStyle: const TextStyle(
-                                      color: Color(0xff808080),
-                                    ),
-                                    hintText: 'Seleccionar',
-                                    labelText: 'Placa de la unidad',
-                                  ),
-                                );
-                              },
-                            ),
-                            SizedBox(
-                              height: ScreenUtil().setHeight(10),
-                            ),
-                            ValueListenableBuilder(
-                              valueListenable: providerPerson.personaS,
-                              builder: (BuildContext context, String data, Widget? child) {
-                                if (data != 'Seleccionar responsable') {
-                                  _responsable.text = data;
-                                } else {
-                                  _responsable.text = '';
-                                }
-                                return TextField(
-                                  readOnly: true,
-                                  controller: _responsable,
-                                  maxLines: null,
-                                  style: const TextStyle(
-                                    color: Color(0xff808080),
-                                  ),
-                                  onTap: () {
-                                    FocusScope.of(context).unfocus();
-                                    Navigator.push(
-                                      context,
-                                      PageRouteBuilder(
-                                        pageBuilder: (context, animation, secondaryAnimation) {
-                                          return PersonMantenimiento(
-                                            idInspeccionDetalle: '',
-                                            tipoUnidad: '',
-                                          );
-                                        },
-                                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                          var begin = const Offset(0.0, 1.0);
-                                          var end = Offset.zero;
-                                          var curve = Curves.ease;
-
-                                          var tween = Tween(begin: begin, end: end).chain(
-                                            CurveTween(curve: curve),
-                                          );
-
-                                          return SlideTransition(
-                                            position: animation.drive(tween),
-                                            child: child,
-                                          );
-                                        },
-                                      ),
-                                    );
-                                  },
-                                  decoration: InputDecoration(
-                                    suffixIcon: const Icon(
-                                      Icons.keyboard_arrow_down,
-                                      color: Colors.green,
-                                    ),
-                                    filled: true,
-                                    fillColor: const Color(0xffeeeeee),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      borderSide: const BorderSide(
-                                        color: Color(0xffeeeeee),
-                                      ),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      borderSide: const BorderSide(
-                                        color: Color(0xffeeeeee),
-                                      ),
-                                    ),
-                                    hintStyle: const TextStyle(
-                                      color: Color(0xff808080),
-                                    ),
-                                    hintText: 'Seleccionar responsable',
-                                    labelText: 'Responsable',
-                                  ),
-                                );
-                              },
-                            ),
-                            SizedBox(
-                              height: ScreenUtil().setHeight(10),
-                            ),
-                            TextField(
-                              controller: _categoriaController,
-                              style: const TextStyle(
-                                color: Color(0xff808080),
-                              ),
+                            TextFieldSelect(
+                              label: 'Placa de la unidad',
+                              hingText: 'Seleccionar',
+                              controller: _placaUnidad,
+                              icon: Icons.keyboard_arrow_down,
                               readOnly: true,
-                              maxLines: null,
-                              onTap: () {
+                              ontap: () {
+                                FocusScope.of(context).unfocus();
+                                if (_tipoVeh != '') {
+                                  Navigator.push(
+                                    context,
+                                    PageRouteBuilder(
+                                      pageBuilder: (context, animation, secondaryAnimation) {
+                                        return VehiculosSearch(
+                                          tipoUnidad: _tipoVeh,
+                                          onChanged: (vehiculo) {
+                                            _placaUnidad.text = vehiculo.placaVehiculo ?? '';
+                                          },
+                                        );
+                                      },
+                                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                        var begin = const Offset(0.0, 1.0);
+                                        var end = Offset.zero;
+                                        var curve = Curves.ease;
+
+                                        var tween = Tween(begin: begin, end: end).chain(
+                                          CurveTween(curve: curve),
+                                        );
+
+                                        return SlideTransition(
+                                          position: animation.drive(tween),
+                                          child: child,
+                                        );
+                                      },
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                            SizedBox(
+                              height: ScreenUtil().setHeight(10),
+                            ),
+                            TextFieldSelect(
+                              label: 'Responsable',
+                              hingText: 'Seleccionar responsable',
+                              controller: _responsable,
+                              icon: Icons.keyboard_arrow_down,
+                              readOnly: true,
+                              ontap: () {
+                                FocusScope.of(context).unfocus();
+                                Navigator.push(
+                                  context,
+                                  PageRouteBuilder(
+                                    pageBuilder: (context, animation, secondaryAnimation) {
+                                      return PersonasSearch(
+                                        cargo: 'MANTENIMIENTO',
+                                        onChanged: (person) {
+                                          _responsable.text = person.nombrePerson ?? '';
+                                          _idPersona = person.idPerson.toString();
+                                        },
+                                        idInspeccionDetalle: '',
+                                      );
+                                    },
+                                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                      var begin = const Offset(0.0, 1.0);
+                                      var end = Offset.zero;
+                                      var curve = Curves.ease;
+
+                                      var tween = Tween(begin: begin, end: end).chain(
+                                        CurveTween(curve: curve),
+                                      );
+
+                                      return SlideTransition(
+                                        position: animation.drive(tween),
+                                        child: child,
+                                      );
+                                    },
+                                  ),
+                                );
+                              },
+                            ),
+                            SizedBox(
+                              height: ScreenUtil().setHeight(10),
+                            ),
+                            TextFieldSelect(
+                              label: 'Clase',
+                              hingText: 'Seleccionar',
+                              controller: _categoriaController,
+                              icon: Icons.keyboard_arrow_down,
+                              readOnly: true,
+                              ontap: () {
                                 FocusScope.of(context).unfocus();
                                 if (_tipoVeh != '') {
                                   _seleccionarCategorias(context);
                                 }
                               },
-                              decoration: InputDecoration(
-                                suffixIcon: const Icon(
-                                  Icons.keyboard_arrow_down,
-                                  color: Colors.green,
-                                ),
-                                filled: true,
-                                fillColor: const Color(0xffeeeeee),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                hintStyle: const TextStyle(
-                                  color: Color(0xff808080),
-                                ),
-                                hintText: 'Seleccionar',
-                                labelText: 'Clase',
-                              ),
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(10),
                             ),
-                            TextField(
+                            TextFieldSelect(
+                              label: 'Descripción',
+                              hingText: 'Seleccionar',
                               controller: _itemCatController,
-                              style: const TextStyle(
-                                color: Color(0xff808080),
-                              ),
+                              icon: Icons.keyboard_arrow_down,
                               readOnly: true,
-                              maxLines: null,
-                              onTap: () {
+                              ontap: () {
                                 FocusScope.of(context).unfocus();
                                 if (idCategoria != '') {
                                   _seleccionarItems(context);
                                 }
                               },
-                              decoration: InputDecoration(
-                                suffixIcon: const Icon(
-                                  Icons.keyboard_arrow_down,
-                                  color: Colors.green,
-                                ),
-                                filled: true,
-                                fillColor: const Color(0xffeeeeee),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                hintStyle: const TextStyle(
-                                  color: Color(0xff808080),
-                                ),
-                                hintText: 'Seleccionar',
-                                labelText: 'Descripción',
-                              ),
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(10),
                             ),
-                            TextField(
+                            TextFieldSelect(
+                              label: 'Estado',
+                              hingText: 'Seleccionar estado',
                               controller: _estadoController,
-                              maxLines: null,
+                              icon: Icons.keyboard_arrow_down,
                               readOnly: true,
-                              style: const TextStyle(
-                                color: Color(0xff808080),
-                              ),
-                              onTap: () {
+                              ontap: () {
                                 FocusScope.of(context).unfocus();
                                 _seleccionarEstadoInspeccion(context);
                               },
-                              decoration: InputDecoration(
-                                suffixIcon: const Icon(
-                                  Icons.keyboard_arrow_down,
-                                  color: Colors.green,
-                                ),
-                                filled: true,
-                                fillColor: const Color(0xffeeeeee),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                hintText: 'Estado',
-                                hintStyle: const TextStyle(
-                                  color: Color(0xff808080),
-                                ),
-                                labelText: 'Estado',
-                              ),
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(10),
                             ),
-                            TextField(
+                            TextFieldSelect(
+                              label: 'N° de Check List',
+                              hingText: 'Digitar N°',
                               controller: _nroCheck,
-                              style: const TextStyle(
-                                color: Color(0xff808080),
-                              ),
-                              decoration: InputDecoration(
-                                suffixIcon: const Icon(
-                                  Icons.numbers,
-                                  color: Colors.green,
-                                ),
-                                filled: true,
-                                fillColor: const Color(0xffeeeeee),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                hintStyle: const TextStyle(
-                                  color: Color(0xff808080),
-                                ),
-                                hintText: 'Digitar N°',
-                                labelText: 'N° de Check List',
-                              ),
+                              icon: Icons.numbers,
+                              readOnly: false,
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(10),
                             ),
-                            TextField(
+                            TextFieldSelect(
+                              label: 'Fecha de Inicio',
+                              hingText: 'Seleccionar',
                               controller: _fechaInicio,
+                              icon: Icons.calendar_month_outlined,
                               readOnly: true,
-                              style: const TextStyle(
-                                color: Color(0xff808080),
-                              ),
-                              onTap: () {
+                              ontap: () {
                                 FocusScope.of(context).unfocus();
-                                _selectdate(context, _fechaInicio);
+                                selectdate(context, _fechaInicio);
                               },
-                              decoration: InputDecoration(
-                                suffixIcon: const Icon(
-                                  Icons.calendar_month_outlined,
-                                  color: Colors.green,
-                                ),
-                                filled: true,
-                                fillColor: const Color(0xffeeeeee),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                hintText: 'Fecha inicio',
-                                hintStyle: const TextStyle(
-                                  color: Color(0xff808080),
-                                ),
-                                labelText: 'Fecha inicio',
-                              ),
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(10),
                             ),
-                            TextField(
+                            TextFieldSelect(
+                              label: 'Fecha de Término',
+                              hingText: 'Seleccionar',
                               controller: _fechaFin,
+                              icon: Icons.calendar_month_outlined,
                               readOnly: true,
-                              style: const TextStyle(
-                                color: Color(0xff808080),
-                              ),
-                              onTap: () {
+                              ontap: () {
                                 FocusScope.of(context).unfocus();
-                                _selectdate(context, _fechaFin);
+                                selectdate(context, _fechaFin);
                               },
-                              decoration: InputDecoration(
-                                suffixIcon: const Icon(
-                                  Icons.calendar_month_outlined,
-                                  color: Colors.green,
-                                ),
-                                filled: true,
-                                fillColor: const Color(0xffeeeeee),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xffeeeeee),
-                                  ),
-                                ),
-                                hintText: 'Fecha fin',
-                                hintStyle: const TextStyle(
-                                  color: Color(0xff808080),
-                                ),
-                                labelText: 'Fecha término',
-                              ),
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(10),
@@ -687,8 +439,8 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                                   final consultaDetallespBloc = ProviderBloc.mantenimientoCorrectivo(context);
                                   consultaDetallespBloc.getDetalleInsppeccionFiltro(
                                     _tipoVeh,
-                                    providerPlaca.placaS.value,
-                                    providerPerson.idS.value,
+                                    _placaUnidad.text.trim(),
+                                    _idPersona,
                                     idCategoria.trim(),
                                     idItemCategoria.trim(),
                                     _estado.trim(),
@@ -800,14 +552,12 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                                   } else {
                                     _tipoVeh = '';
                                   }
-                                  final provider = Provider.of<VehiculosController>(context, listen: false);
 
                                   idCategoria = '';
                                   _categoriaController.clear();
                                   idItemCategoria = '';
                                   _itemCatController.clear();
-
-                                  provider.setData('', '');
+                                  _placaUnidad.clear();
 
                                   Navigator.pop(context);
                                 },
@@ -1120,16 +870,5 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
         );
       },
     );
-  }
-
-  _selectdate(BuildContext context, TextEditingController date) async {
-    DateTime? picked = await showDatePicker(
-      context: context,
-      firstDate: DateTime(DateTime.now().month - 1),
-      initialDate: DateTime.now(),
-      lastDate: DateTime(DateTime.now().year + 2),
-    );
-
-    date.text = "${picked!.year.toString().padLeft(2, '0')}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
   }
 }

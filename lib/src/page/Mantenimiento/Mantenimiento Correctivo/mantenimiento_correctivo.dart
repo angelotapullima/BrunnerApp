@@ -4,10 +4,7 @@ import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/page/Home/menu_widget.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/Correctivo/mant_correctivo.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/Orden%20Habilitacion/orden_habilitacion_correctiva.dart';
-import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/search_person_mantenimiento.dart';
-import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/search_vehiculos.dart';
 import 'package:new_brunner_app/src/widget/option_widget.dart';
-import 'package:provider/provider.dart';
 
 class MantenimientoCorrectivo extends StatelessWidget {
   const MantenimientoCorrectivo({Key? key}) : super(key: key);
@@ -36,10 +33,8 @@ class MantenimientoCorrectivo extends StatelessWidget {
             onTap: () {
               final correctivoBloc = ProviderBloc.mantenimientoCorrectivo(context);
               correctivoBloc.getCategorias('');
-              final providerPlaca = Provider.of<VehiculosController>(context, listen: false);
-              providerPlaca.setData('', '');
-              final providerPerson = Provider.of<PersonaMantenimientoController>(context, listen: false);
-              providerPerson.setData('', 'Seleccionar responsable');
+              correctivoBloc.clearData();
+
               Navigator.push(
                 context,
                 PageRouteBuilder(
@@ -59,8 +54,8 @@ class MantenimientoCorrectivo extends StatelessWidget {
           SizedBox(height: ScreenUtil().setWidth(30)),
           InkWell(
             onTap: () {
-              final providerPlaca = Provider.of<VehiculosController>(context, listen: false);
-              providerPlaca.setData('', '');
+              final consultaDetallespBloc = ProviderBloc.ordenHab(context);
+              consultaDetallespBloc.clear();
               Navigator.push(
                 context,
                 PageRouteBuilder(
