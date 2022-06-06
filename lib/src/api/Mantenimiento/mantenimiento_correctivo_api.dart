@@ -13,6 +13,7 @@ import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_deta
 import 'package:new_brunner_app/src/model/Mantenimiento/item_inspeccion_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/mantenimiento_correctivo_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/personas_model.dart';
+import 'package:new_brunner_app/src/model/api_result_model.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/Orden%20Habilitacion/new_observaciones_model.dart';
 
 class MantenimientoCorrectivoApi {
@@ -266,6 +267,35 @@ class MantenimientoCorrectivoApi {
       return decodedData;
     } catch (e) {
       return 2;
+    }
+  }
+
+  Future<ApiResultModel> getPDF(String idInspeccionDetalle) async {
+    final result = ApiResultModel();
+    print(idInspeccionDetalle);
+    try {
+      String? token = await Preferences.readData('token');
+
+      final url = Uri.parse('$apiBaseURL/api/ListaVerificacion/pdf_observacion_mantenimiento_c_app');
+      final resp = await http.post(
+        url,
+        body: {
+          'app': 'true',
+          'tn': token,
+          'id': idInspeccionDetalle,
+        },
+      );
+      final decodedData = json.decode(resp.body);
+      print(decodedData);
+
+      result.code = decodedData["code"]["result"];
+      result.message = decodedData["code"]["ruta"];
+
+      return result;
+    } catch (e) {
+      result.code = 2;
+      result.message = 'Ocurrió un error, inténtelo nuevamente';
+      return result;
     }
   }
 }

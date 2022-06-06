@@ -424,7 +424,7 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                               hingText: 'Digitar N°',
                               controller: _nroCheck,
                               widget: Icon(
-                                Icons.keyboard_arrow_down,
+                                Icons.numbers,
                                 color: Colors.green,
                               ),
                               icon: true,
@@ -438,7 +438,7 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                               hingText: 'Seleccionar',
                               controller: _fechaInicio,
                               widget: Icon(
-                                Icons.keyboard_arrow_down,
+                                Icons.calendar_month_outlined,
                                 color: Colors.green,
                               ),
                               icon: true,
@@ -456,7 +456,7 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                               hingText: 'Seleccionar',
                               controller: _fechaFin,
                               widget: Icon(
-                                Icons.keyboard_arrow_down,
+                                Icons.calendar_month_outlined,
                                 color: Colors.green,
                               ),
                               icon: true,

@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/api/Mantenimiento/mantenimiento_correctivo_api.dart';
+import 'package:new_brunner_app/src/api/pdf_api.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
+import 'package:new_brunner_app/src/core/routes_constanst.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/categoria_inspeccion_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_detalle_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/item_inspeccion_model.dart';
@@ -378,7 +380,7 @@ class _DetallesOrdenHabilitacionState extends State<DetallesOrdenHabilitacion> {
         children: [
           (accion == 'VER')
               ? PopupMenuButton(
-                  onSelected: (value) {
+                  onSelected: (value) async {
                     switch (value) {
                       case 1:
                         Navigator.push(
@@ -392,10 +394,23 @@ class _DetallesOrdenHabilitacionState extends State<DetallesOrdenHabilitacion> {
                           ),
                         );
                         break;
+                      case 2:
+                        _controller.changeCargando(true);
+                        final _api = MantenimientoCorrectivoApi();
+                        final _apiPDF = PdfApi();
+                        final res = await _api.getPDF(detalle.idInspeccionDetalle.toString());
+                        if (res.code == 1) {
+                          _apiPDF.openFile(url: '$apiBaseURL/${res.message}');
+                        } else {
+                          showToast2(res.message.toString(), Colors.red);
+                        }
+                        _controller.changeCargando(false);
+                        break;
                       case 6:
                         _controller.removeInforme(detalle.idInspeccionDetalle.toString());
                         break;
                       default:
+                        break;
                     }
                   },
                   itemBuilder: (context) => [
@@ -416,6 +431,24 @@ class _DetallesOrdenHabilitacionState extends State<DetallesOrdenHabilitacion> {
                         ],
                       ),
                       value: 1,
+                    ),
+                    PopupMenuItem(
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.picture_as_pdf,
+                            color: Color(0XFF1ABC9C),
+                          ),
+                          SizedBox(
+                            width: ScreenUtil().setWidth(8),
+                          ),
+                          Text(
+                            'Documento',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        ],
+                      ),
+                      value: 2,
                     ),
                     PopupMenuItem(
                       child: Row(

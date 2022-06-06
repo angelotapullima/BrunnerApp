@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/api/Mantenimiento/inspeccion_api.dart';
+import 'package:new_brunner_app/src/api/pdf_api.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_model.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Lista%20de%20verificacion/Consulta%20Informacion/anular_inspeccion_vehiculo.dart';
@@ -302,9 +303,10 @@ class _InspeccionDetalleState extends State<InspeccionDetalle> {
       onTap: () async {
         controller.changeCargando(true);
         final _api = InspeccionApi();
+        final _apiPDF = PdfApi();
         final res = await _api.getPDF(idInspeccion);
         if (res.code == 1) {
-          _api.openFile(url: res.message.toString());
+          _apiPDF.openFile(url: res.message.toString());
         } else {
           showToast2(res.message.toString(), Colors.red);
         }

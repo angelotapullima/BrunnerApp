@@ -1,8 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:dio/dio.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:new_brunner_app/src/core/preferences.dart';
 import 'package:new_brunner_app/src/core/routes_constanst.dart';
@@ -12,8 +9,6 @@ import 'package:new_brunner_app/src/database/Mantenimiento/item_inspeccion_datab
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_item_model.dart';
 import 'package:new_brunner_app/src/model/api_result_model.dart';
-import 'package:open_file/open_file.dart';
-import 'package:path_provider/path_provider.dart';
 
 class InspeccionApi {
   final inspeccionDB = InspeccionVehiculoDatabase();
@@ -201,47 +196,6 @@ class InspeccionApi {
       result.code = 2;
       result.message = 'Ocurrió un error, inténtelo nuevamente';
       return result;
-    }
-  }
-
-  Future openFile({required String url, String? fillname}) async {
-    final name = fillname ?? url.split('/').last;
-    final file = await descargarPDF(url, name);
-    //final file = await seleccionarDoc();
-
-    if (file == null) return;
-
-    OpenFile.open(file.path);
-  }
-
-  Future<File?> seleccionarDoc() async {
-    final result = await FilePicker.platform.pickFiles();
-    if (result == null) return null;
-
-    return File(result.files.first.path!);
-  }
-
-  Future<File?> descargarPDF(String url, String name) async {
-    final appStorage = await getApplicationDocumentsDirectory();
-    final file = File('${appStorage.path}/$name');
-
-    try {
-      //await Dio().download(url, '${appStorage.path}/$name');
-      final response = await Dio().get(
-        url,
-        options: Options(
-          responseType: ResponseType.bytes,
-          followRedirects: false,
-          receiveTimeout: 0,
-        ),
-      );
-
-      final raf = file.openSync(mode: FileMode.write);
-      raf.writeFromSync(response.data);
-      await raf.close();
-      return file;
-    } catch (e) {
-      return null;
     }
   }
 
