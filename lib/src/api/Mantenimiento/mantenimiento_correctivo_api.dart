@@ -272,7 +272,6 @@ class MantenimientoCorrectivoApi {
 
   Future<ApiResultModel> getPDF(String idInspeccionDetalle) async {
     final result = ApiResultModel();
-    print(idInspeccionDetalle);
     try {
       String? token = await Preferences.readData('token');
 
@@ -286,7 +285,6 @@ class MantenimientoCorrectivoApi {
         },
       );
       final decodedData = json.decode(resp.body);
-      print(decodedData);
 
       result.code = decodedData["code"]["result"];
       result.message = decodedData["code"]["ruta"];

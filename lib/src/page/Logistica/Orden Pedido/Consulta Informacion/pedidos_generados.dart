@@ -25,7 +25,9 @@ class _PedidosGeneradosState extends State<PedidosGenerados> {
   String _rendicion = '';
   @override
   void initState() {
-    var dataInicio = "${DateTime.now().year.toString().padLeft(2, '0')}-${DateTime.now().month.toString().padLeft(2, '0')}-01";
+    DateTime fechaInit = DateTime.now().subtract(const Duration(days: 30));
+    var dataInicio =
+        "${fechaInit.year.toString().padLeft(2, '0')}-${fechaInit.month.toString().padLeft(2, '0')}-${fechaInit.day.toString().padLeft(2, '0')}";
     var dataFin =
         "${DateTime.now().year.toString().padLeft(2, '0')}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().day.toString().padLeft(2, '0')}";
     _fechaInicioController.text = dataInicio;

@@ -618,7 +618,7 @@ class _DetallesOrdenHabilitacionState extends State<DetallesOrdenHabilitacion> {
                             color: Colors.grey[600],
                           ),
                           Text(
-                            'Seleccionar Estado',
+                            'Seleccionar',
                             style: TextStyle(
                               color: const Color(0xff5a5a5a),
                               fontWeight: FontWeight.w600,
@@ -652,6 +652,9 @@ class _DetallesOrdenHabilitacionState extends State<DetallesOrdenHabilitacion> {
                                       var categories = snapshot.data![index];
                                       return InkWell(
                                         onTap: () {
+                                          if (idCategoria != categories.idCatInspeccion.toString()) {
+                                            _itemCatController.clear();
+                                          }
                                           idCategoria = categories.idCatInspeccion.toString();
                                           _categoriaController.text = categories.descripcionCatInspeccion.toString().trim();
 
@@ -713,7 +716,7 @@ class _DetallesOrdenHabilitacionState extends State<DetallesOrdenHabilitacion> {
                             color: Colors.grey[600],
                           ),
                           Text(
-                            'Seleccionar Estado',
+                            'Seleccionar',
                             style: TextStyle(
                               color: const Color(0xff5a5a5a),
                               fontWeight: FontWeight.w600,
