@@ -35,7 +35,6 @@ class _PedidosGeneradosState extends State<PedidosGenerados> {
     Future.delayed(const Duration(microseconds: 100), () async {
       filtroSearch();
     });
-
     super.initState();
   }
 
