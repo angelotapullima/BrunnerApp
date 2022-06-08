@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:new_brunner_app/src/bloc/checklist_bloc.dart';
 import 'package:new_brunner_app/src/bloc/consulta_inspeccion_bloc.dart';
 import 'package:new_brunner_app/src/bloc/data_user_bloc.dart';
+import 'package:new_brunner_app/src/bloc/logistica_op_bloc.dart';
 import 'package:new_brunner_app/src/bloc/mantenimiento_correctivo_bloc.dart';
 import 'package:new_brunner_app/src/bloc/modulos_bloc.dart';
 import 'package:new_brunner_app/src/bloc/orden_habilitacion_bloc.dart';
@@ -23,6 +24,8 @@ class ProviderBloc extends InheritedWidget {
   final mantenimientoCorrectivoBloc = MantenimientoCorrectivoBloc();
   //Orden Habilitacion
   final ordenHabilitacionBloc = OrdenHabilitacionCorrectivaBloc();
+  //Logistica
+  final logisticaOPBloc = LogisticaOPBloc();
 
   ProviderBloc({Key? key, required Widget child}) : super(key: key, child: child);
 
@@ -59,5 +62,9 @@ class ProviderBloc extends InheritedWidget {
 
   static PersonasBloc personas(BuildContext context) {
     return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.personasBloc;
+  }
+
+  static LogisticaOPBloc logisticaOP(BuildContext context) {
+    return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.logisticaOPBloc;
   }
 }

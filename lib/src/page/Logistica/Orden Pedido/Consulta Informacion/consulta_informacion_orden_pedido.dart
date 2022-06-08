@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/page/Home/menu_widget.dart';
-import 'package:new_brunner_app/src/page/Logistica/Orden%20Pedido/Consulta%20Informacion/pedidos_generados.dart';
+import 'package:new_brunner_app/src/page/Logistica/Orden%20Pedido/Consulta%20Informacion/Ordenes%20Pedido%20Lista/orden_pedido_generados.dart';
 import 'package:new_brunner_app/src/widget/option_widget.dart';
 
 class ConsultaInformacionOrdenPedido extends StatelessWidget {
@@ -9,6 +10,7 @@ class ConsultaInformacionOrdenPedido extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final logisticaOpBloc = ProviderBloc.logisticaOP(context);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -34,11 +36,14 @@ class ConsultaInformacionOrdenPedido extends StatelessWidget {
               icon: Icons.edit_note,
               color: Color(0XFF154360),
               ontap: () {
+                var fecha =
+                    "${DateTime.now().year.toString().padLeft(2, '0')}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().day.toString().padLeft(2, '0')}";
+                logisticaOpBloc.getDataFiltro(fecha);
                 Navigator.push(
                   context,
                   PageRouteBuilder(
                     pageBuilder: (context, animation, secondaryAnimation) {
-                      return const PedidosGenerados();
+                      return const OrdenesPedidosGenerados();
                     },
                   ),
                 );
