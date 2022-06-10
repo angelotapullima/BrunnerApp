@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/model/Logistica/orden_pedido_model.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
+import 'package:new_brunner_app/src/widget/show_loading.dart';
 
 class OPS extends StatelessWidget {
   const OPS({Key? key}) : super(key: key);
@@ -11,49 +13,151 @@ class OPS extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final logisticaOpBloc = ProviderBloc.logisticaOP(context);
-    return StreamBuilder<List<OrdenPedidoModel>>(
-      stream: logisticaOpBloc.opsStream,
-      builder: (_, snapshot) {
-        if (snapshot.hasData) {
-          if (snapshot.data!.isNotEmpty) {
-            return ListView.builder(
-                itemCount: snapshot.data!.length + 1,
-                itemBuilder: (_, index) {
-                  if (index == 0) {
-                    return Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: ScreenUtil().setHeight(5),
-                        horizontal: ScreenUtil().setWidth(16),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(
-                            'Se encontraron ${snapshot.data!.length} resultados',
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: ScreenUtil().setSp(10),
+    return StreamBuilder<bool>(
+      stream: logisticaOpBloc.cargandoStream,
+      builder: (_, s) {
+        if (s.hasData && !s.data!) {
+          return StreamBuilder<List<OrdenPedidoModel>>(
+            stream: logisticaOpBloc.opsStream,
+            builder: (_, snapshot) {
+              if (snapshot.hasData) {
+                if (snapshot.data!.isNotEmpty) {
+                  return ListView.builder(
+                      itemCount: snapshot.data!.length + 1,
+                      itemBuilder: (_, index) {
+                        if (index == 0) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: ScreenUtil().setHeight(5),
+                              horizontal: ScreenUtil().setWidth(16),
                             ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-                  index = index - 1;
-                  var dato = snapshot.data![index];
-                  return contenidoItem(context, dato);
-                });
-          } else {
-            return Center(
-              child: Text('Sin información disponible'),
-            );
-          }
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(
+                                  'Se encontraron ${snapshot.data!.length} resultados',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: ScreenUtil().setSp(10),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                        index = index - 1;
+                        var dato = snapshot.data![index];
+                        return _items(context, dato);
+                      });
+                } else {
+                  return Center(
+                    child: Text('Sin información disponible'),
+                  );
+                }
+              } else {
+                return Center(
+                  child: CupertinoActivityIndicator(),
+                );
+              }
+            },
+          );
         } else {
-          return Center(
-            child: CupertinoActivityIndicator(),
+          return ShowLoadding(
+            active: true,
+            h: double.infinity,
+            w: double.infinity,
+            fondo: Colors.transparent,
+            colorText: Colors.black,
           );
         }
       },
+    );
+  }
+
+  Widget _items(BuildContext context, OrdenPedidoModel item) {
+    Color color = Colors.green;
+    Color colorText = Colors.orangeAccent;
+    String textEstado = 'En proceso de rendición';
+    IconData icon = FontAwesomeIcons.r;
+    if (item.rendido == '0') {
+      color = Colors.redAccent;
+      textEstado = 'Sin rendir';
+      icon = FontAwesomeIcons.triangleExclamation;
+      colorText = Colors.redAccent;
+    }
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: ScreenUtil().setWidth(16),
+        vertical: ScreenUtil().setHeight(10),
+      ),
+      child: Stack(
+        children: [
+          PopupMenuButton(
+            onSelected: (value) {
+              switch (value) {
+                case 0:
+                  break;
+                case 1:
+                  break;
+                case 2:
+                  break;
+                default:
+                  break;
+              }
+            },
+            itemBuilder: (context) => (item.estado == '0')
+                ? [
+                    _options(icon, color, textEstado, colorText, 0),
+                    _options(Icons.remove_red_eye, Colors.blueGrey, 'Visualizar', Colors.black, 1),
+                    _options(Icons.close, Colors.redAccent, 'Eliminar', Colors.redAccent, 2),
+                  ]
+                : [
+                    _options(icon, color, textEstado, colorText, 0),
+                    _options(Icons.remove_red_eye, Colors.blueGrey, 'Visualizar', Colors.black, 1),
+                  ],
+            child: contenidoItem(context, item),
+          ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Container(
+              width: ScreenUtil().setWidth(110),
+              padding: EdgeInsets.all(4),
+              decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(50)),
+              child: Center(
+                child: Text(
+                  'OP: ${item.numeroOP}',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontSize: ScreenUtil().setSp(12),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  PopupMenuItem _options(IconData icon, Color colorIcon, String title, Color colorText, int value) {
+    return PopupMenuItem(
+      child: Row(
+        children: [
+          Icon(
+            icon,
+            color: colorIcon,
+          ),
+          SizedBox(
+            width: ScreenUtil().setWidth(8),
+          ),
+          Text(
+            title,
+            style: TextStyle(color: colorText),
+          ),
+        ],
+      ),
+      value: value,
     );
   }
 
@@ -65,11 +169,11 @@ class OPS extends StatelessWidget {
       case '1':
         color = Colors.green;
         textEstado = 'Atendido';
-        icon = Icons.check_circle;
+        icon = FontAwesomeIcons.a;
         break;
       case '2':
         color = Colors.orangeAccent;
-        textEstado = 'Atención parcial';
+        textEstado = 'Parcialmente atendido';
         break;
       default:
         color = Colors.redAccent;
@@ -137,7 +241,7 @@ class OPS extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Align(
-                  alignment: Alignment.centerRight,
+                  alignment: Alignment.topRight,
                   child: Text(
                     '${obtenerFecha(op.fechaOP.toString())}',
                     style: TextStyle(

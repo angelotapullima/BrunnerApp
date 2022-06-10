@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:new_brunner_app/src/core/preferences.dart';
 import 'package:new_brunner_app/src/core/routes_constanst.dart';
 import 'package:http/http.dart' as http;
+import 'package:new_brunner_app/src/database/Logistica/detalle_op_database.dart';
 import 'package:new_brunner_app/src/database/Logistica/empresas_database.dart';
 import 'package:new_brunner_app/src/database/Logistica/orden_pedido_database.dart';
 import 'package:new_brunner_app/src/database/Logistica/proveedores_database.dart';
+import 'package:new_brunner_app/src/model/Logistica/detalle_op_model.dart';
 import 'package:new_brunner_app/src/model/Logistica/empresas_model.dart';
 import 'package:new_brunner_app/src/model/Logistica/orden_pedido_model.dart';
 import 'package:new_brunner_app/src/model/Logistica/proveedores_model.dart';
@@ -14,6 +16,7 @@ class LogisticaApi {
   final empresaDB = EmpresasDatabase();
   final proveedoresDB = ProveedoresDatabase();
   final opDB = OrdenPedidoDatabase();
+  final detalleOPDB = DetalleOPDatabase();
   Future<int> getOrdenesPedido(String fechaIni, String fechaFin, String op, bool filtro) async {
     try {
       String? token = await Preferences.readData('token');
@@ -87,17 +90,95 @@ class LogisticaApi {
           orden.numeroOP = data["op_numero"];
           orden.nombreEmpresa = data["empresa_nombre"];
           orden.nombreSede = data["sede_nombre"];
+          orden.idProveedor = data["id_proveedor"];
           orden.nombreProveedor = data["proveedor_nombre"];
           orden.monedaOP = data["op_moneda"];
-          orden.totalOP = data["op_total"];
+          orden.fechaCreacion = data["fecha_creacion"];
           orden.fechaOP = data["fecha_op"];
           orden.nombrePerson = data["person_name"];
           orden.surnamePerson = data["person_surname"];
           orden.surname2Person = data["person_surname2"];
+          orden.nombreApro = data["persona_nombre_aprob"];
+          orden.surnameApro = data["persona_apellido1_aprob"];
+          orden.surname2Apro = data["persona_apellido2_aprob"];
           orden.estado = data["estado"];
           orden.rendido = data["rendido"];
 
           await opDB.insertarOrden(orden);
+        }
+      }
+
+      return 1;
+    } catch (e) {
+      return 2;
+    }
+  }
+
+  Future<int> getDetalleOP(String idOP, String rendido) async {
+    try {
+      String? token = await Preferences.readData('token');
+
+      final url = Uri.parse('$apiBaseURL/api/OrdenPedido/listar_ops_ws');
+      final resp = await http.post(
+        url,
+        body: {
+          'app': 'true',
+          'tn': token,
+          'id_op': idOP,
+        },
+      );
+
+      if (resp.statusCode == 200) {
+        final decodedData = json.decode(resp.body);
+
+        for (var i = 0; i < decodedData["ops"].length; i++) {
+          final data = decodedData["ops"][i];
+
+          final orden = OrdenPedidoModel();
+          orden.idOP = data["id_op"];
+          orden.numeroOP = data["op_numero"];
+          orden.nombreEmpresa = data["empresa_nombre"];
+          orden.nombreSede = data["sede_nombre"];
+          orden.idProveedor = data["id_proveedor"];
+          orden.nombreProveedor = data["proveedor_nombre"];
+          orden.monedaOP = data["op_moneda"];
+          orden.fechaCreacion = data["fecha_creacion"];
+          orden.fechaOP = data["fecha_op"];
+          orden.nombrePerson = data["person_name"];
+          orden.surnamePerson = data["person_surname"];
+          orden.surname2Person = data["person_surname2"];
+          orden.nombreApro = data["persona_nombre_aprob"];
+          orden.surnameApro = data["persona_apellido1_aprob"];
+          orden.surname2Apro = data["persona_apellido2_aprob"];
+          orden.estado = data["op_estado"];
+          orden.rendido = rendido;
+
+          await opDB.insertarOrden(orden);
+
+          //Insertar Detalle
+          for (var x = 0; x < data["detalle"].length; x++) {
+            final dato = data["detalle"][x];
+            final detalle = DetalleOPModel();
+
+            detalle.idDetalleOP = dato["id_detalleop"];
+            detalle.idOP = dato["id_op"];
+            detalle.idDetalleSI = dato["id_detallesi"];
+            detalle.precioUnitario = dato["detalleop_prec_unit"];
+            detalle.precioTotal = dato["detalleop_prec_tot"];
+            detalle.idSI = dato["id_si"];
+            detalle.idRecurso = dato["id_recurso"];
+            detalle.idTipoRecurso = dato["id_recurso_tipo"];
+            detalle.descripcionSI = dato["detallesi_descripcion"];
+            detalle.umSI = dato["detallesi_um"];
+            detalle.cantidadSI = dato["detallesi_cantidad"];
+            detalle.estadoSI = dato["detallesi_estado"];
+            detalle.atentidoSI = dato["detallesi_atendido"];
+            detalle.cajaAlmacenSI = dato["detallesi_caja_almacen"];
+            detalle.tipoNombreRecurso = dato["recurso_tipo_nombre"];
+            detalle.logisticaNombreRecurso = dato["logistica_recurso_nombre"];
+
+            await detalleOPDB.insertarDetalleOP(detalle);
+          }
         }
       }
 

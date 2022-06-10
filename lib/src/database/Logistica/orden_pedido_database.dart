@@ -20,7 +20,7 @@ class OrdenPedidoDatabase {
   }
 
   Future<List<OrdenPedidoModel>> getOPSFiltro(
-      String empresa, String proveedor, String numberOP, String estado, String rendicion, String fechaInicial, String fechaFinal) async {
+      String empresa, String proveedor, String estado, String rendicion, String fechaInicial, String fechaFinal) async {
     try {
       String query = "SELECT * FROM OrdenPedido WHERE fechaOP BETWEEN '$fechaInicial' AND '$fechaFinal'";
 
@@ -30,10 +30,6 @@ class OrdenPedidoDatabase {
 
       if (proveedor.isNotEmpty) {
         query += " AND nombreProveedor='$proveedor'";
-      }
-
-      if (numberOP.isNotEmpty) {
-        query += " AND numeroOP='$numberOP'";
       }
 
       if (estado.isNotEmpty) {
@@ -48,6 +44,34 @@ class OrdenPedidoDatabase {
       final Database db = await dbprovider.getDatabase();
       List<OrdenPedidoModel> list = [];
       List<Map> maps = await db.rawQuery(query);
+
+      if (maps.isNotEmpty) list = OrdenPedidoModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      e;
+      return [];
+    }
+  }
+
+  Future<List<OrdenPedidoModel>> getOPSByNumber(String numberOP) async {
+    try {
+      final Database db = await dbprovider.getDatabase();
+      List<OrdenPedidoModel> list = [];
+      List<Map> maps = await db.rawQuery("SELECT * FROM OrdenPedido WHERE numeroOP='$numberOP'");
+
+      if (maps.isNotEmpty) list = OrdenPedidoModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      e;
+      return [];
+    }
+  }
+
+  Future<List<OrdenPedidoModel>> getOPSByidOP(String idOP) async {
+    try {
+      final Database db = await dbprovider.getDatabase();
+      List<OrdenPedidoModel> list = [];
+      List<Map> maps = await db.rawQuery("SELECT * FROM OrdenPedido WHERE idOP='$idOP'");
 
       if (maps.isNotEmpty) list = OrdenPedidoModel.fromJsonList(maps);
       return list;

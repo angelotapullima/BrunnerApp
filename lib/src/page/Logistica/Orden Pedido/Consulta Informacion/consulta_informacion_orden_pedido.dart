@@ -39,6 +39,7 @@ class ConsultaInformacionOrdenPedido extends StatelessWidget {
                 var fecha =
                     "${DateTime.now().year.toString().padLeft(2, '0')}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().day.toString().padLeft(2, '0')}";
                 logisticaOpBloc.getDataFiltro(fecha);
+                logisticaOpBloc.clearOPS();
                 Navigator.push(
                   context,
                   PageRouteBuilder(
