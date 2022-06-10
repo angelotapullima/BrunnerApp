@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/model/Logistica/orden_pedido_model.dart';
+import 'package:new_brunner_app/src/page/Logistica/Orden%20Pedido/Consulta%20Informacion/Ordenes%20Pedido%20Lista/detalle_oden_pedido.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
 import 'package:new_brunner_app/src/widget/show_loading.dart';
 
@@ -98,6 +99,17 @@ class OPS extends StatelessWidget {
                 case 0:
                   break;
                 case 1:
+                  Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) {
+                        return DetalleOrdenPedido(
+                          idOP: item.idOP.toString(),
+                          rendicion: item.rendido.toString(),
+                        );
+                      },
+                    ),
+                  );
                   break;
                 case 2:
                   break;
@@ -257,7 +269,8 @@ class OPS extends StatelessWidget {
                 fileData('Empresa', op.nombreEmpresa.toString(), 10, 12, FontWeight.w600, FontWeight.w500, TextAlign.start),
                 fileData('Centro laboral', op.nombreSede ?? '', 10, 12, FontWeight.w600, FontWeight.w400, TextAlign.start),
                 fileData('Proveedor', op.nombreProveedor ?? '', 10, 12, FontWeight.w600, FontWeight.w400, TextAlign.start),
-                fileData('Solicitado por', '${op.nombrePerson} ${op.surnamePerson}', 10, 12, FontWeight.w600, FontWeight.w400, TextAlign.start),
+                fileData('Solicitado por', '${op.nombrePerson?.split(" ").first} ${op.surnamePerson}', 10, 12, FontWeight.w600, FontWeight.w400,
+                    TextAlign.start),
               ],
             ),
           ),

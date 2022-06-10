@@ -15,6 +15,7 @@ class DetalleOPModel {
   String? cajaAlmacenSI;
   String? tipoNombreRecurso;
   String? logisticaNombreRecurso;
+  String? nroSI;
 
   DetalleOPModel({
     this.idDetalleOP,
@@ -33,6 +34,7 @@ class DetalleOPModel {
     this.cajaAlmacenSI,
     this.tipoNombreRecurso,
     this.logisticaNombreRecurso,
+    this.nroSI,
   });
 
   static List<DetalleOPModel> fromJsonList(List<dynamic> json) => json.map((i) => DetalleOPModel.fromJson(i)).toList();
@@ -54,6 +56,7 @@ class DetalleOPModel {
         'cajaAlmacenSI': cajaAlmacenSI,
         'tipoNombreRecurso': tipoNombreRecurso,
         'logisticaNombreRecurso': logisticaNombreRecurso,
+        'nroSI': nroSI,
       };
 
   factory DetalleOPModel.fromJson(Map<String, dynamic> json) => DetalleOPModel(
@@ -73,5 +76,6 @@ class DetalleOPModel {
         cajaAlmacenSI: json["cajaAlmacenSI"],
         tipoNombreRecurso: json["tipoNombreRecurso"],
         logisticaNombreRecurso: json["logisticaNombreRecurso"],
+        nroSI: json["nroSI"],
       );
 }

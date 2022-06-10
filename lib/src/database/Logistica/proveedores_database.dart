@@ -46,4 +46,18 @@ class ProveedoresDatabase {
       return [];
     }
   }
+
+  Future<List<ProveedoresModel>> getProveedorById(String idProveedor) async {
+    try {
+      final Database db = await dbprovider.getDatabase();
+      List<ProveedoresModel> list = [];
+      List<Map> maps = await db.rawQuery("SELECT * FROM Proveedores WHERE idProveedor = '$idProveedor' ");
+
+      if (maps.isNotEmpty) list = ProveedoresModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      e;
+      return [];
+    }
+  }
 }

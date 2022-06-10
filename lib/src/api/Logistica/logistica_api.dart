@@ -93,6 +93,7 @@ class LogisticaApi {
           orden.idProveedor = data["id_proveedor"];
           orden.nombreProveedor = data["proveedor_nombre"];
           orden.monedaOP = data["op_moneda"];
+          orden.totalOP = data["op_total"];
           orden.fechaCreacion = data["fecha_creacion"];
           orden.fechaOP = data["fecha_op"];
           orden.nombrePerson = data["person_name"];
@@ -103,6 +104,7 @@ class LogisticaApi {
           orden.surname2Apro = data["persona_apellido2_aprob"];
           orden.estado = data["estado"];
           orden.rendido = data["rendido"];
+          orden.departamento = data["departamento_nombre"];
 
           await opDB.insertarOrden(orden);
         }
@@ -118,7 +120,7 @@ class LogisticaApi {
     try {
       String? token = await Preferences.readData('token');
 
-      final url = Uri.parse('$apiBaseURL/api/OrdenPedido/listar_ops_ws');
+      final url = Uri.parse('$apiBaseURL/api/OrdenPedido/listar_op_detalles_ws');
       final resp = await http.post(
         url,
         body: {
@@ -142,6 +144,7 @@ class LogisticaApi {
           orden.idProveedor = data["id_proveedor"];
           orden.nombreProveedor = data["proveedor_nombre"];
           orden.monedaOP = data["op_moneda"];
+          orden.totalOP = data["op_total"];
           orden.fechaCreacion = data["fecha_creacion"];
           orden.fechaOP = data["fecha_op"];
           orden.nombrePerson = data["person_name"];
@@ -151,6 +154,7 @@ class LogisticaApi {
           orden.surnameApro = data["persona_apellido1_aprob"];
           orden.surname2Apro = data["persona_apellido2_aprob"];
           orden.estado = data["op_estado"];
+          orden.departamento = data["departamento_nombre"];
           orden.rendido = rendido;
 
           await opDB.insertarOrden(orden);

@@ -87,30 +87,37 @@ class LogisticaOPBloc {
     final List<OrdenPedidoModel> result = [];
     final _opDB = await _api.opDB.getOPSByidOP(idOP);
     if (_opDB.isNotEmpty) {
-      final op = OrdenPedidoModel();
+      final proveedorDB = await _api.proveedoresDB.getProveedorById(_opDB[0].idProveedor.toString());
+      final empresaDB = await _api.empresaDB.getEmpresaByName(_opDB[0].nombreEmpresa.toString());
 
-      op.idOP = _opDB[0].idOP;
-      op.numeroOP = _opDB[0].numeroOP;
-      op.nombreEmpresa = _opDB[0].nombreEmpresa;
-      op.nombreSede = _opDB[0].nombreSede;
-      op.idProveedor = _opDB[0].idProveedor;
-      op.nombreProveedor = _opDB[0].nombreProveedor;
-      op.monedaOP = _opDB[0].monedaOP;
-      op.totalOP = _opDB[0].totalOP;
-      op.fechaOP = _opDB[0].fechaOP;
-      op.nombrePerson = _opDB[0].nombrePerson;
-      op.surnamePerson = _opDB[0].surnamePerson;
-      op.surname2Person = _opDB[0].surname2Person;
-      op.nombreApro = _opDB[0].nombreApro;
-      op.surnameApro = _opDB[0].surnameApro;
-      op.surname2Apro = _opDB[0].surname2Apro;
-      op.fechaCreacion = _opDB[0].fechaCreacion;
-      op.estado = _opDB[0].estado;
-      op.rendido = _opDB[0].rendido;
+      if (proveedorDB.isNotEmpty && empresaDB.isNotEmpty) {
+        final op = OrdenPedidoModel();
 
-      op.detalle = await _api.detalleOPDB.getDetalleOPByidOP(idOP);
+        op.idOP = _opDB[0].idOP;
+        op.numeroOP = _opDB[0].numeroOP;
+        op.nombreEmpresa = _opDB[0].nombreEmpresa;
+        op.nombreSede = _opDB[0].nombreSede;
+        op.idProveedor = _opDB[0].idProveedor;
+        op.nombreProveedor = _opDB[0].nombreProveedor;
+        op.monedaOP = _opDB[0].monedaOP;
+        op.totalOP = _opDB[0].totalOP;
+        op.fechaOP = _opDB[0].fechaOP;
+        op.nombrePerson = _opDB[0].nombrePerson;
+        op.surnamePerson = _opDB[0].surnamePerson;
+        op.surname2Person = _opDB[0].surname2Person;
+        op.nombreApro = _opDB[0].nombreApro;
+        op.surnameApro = _opDB[0].surnameApro;
+        op.surname2Apro = _opDB[0].surname2Apro;
+        op.fechaCreacion = _opDB[0].fechaCreacion;
+        op.estado = _opDB[0].estado;
+        op.rendido = _opDB[0].rendido;
 
-      result.add(op);
+        op.detalle = await _api.detalleOPDB.getDetalleOPByidOP(idOP);
+        op.empresa = empresaDB[0];
+        op.proveedor = proveedorDB[0];
+
+        result.add(op);
+      }
     }
     return result;
   }

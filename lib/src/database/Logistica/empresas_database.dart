@@ -32,4 +32,18 @@ class EmpresasDatabase {
       return [];
     }
   }
+
+  Future<List<EmpresasModel>> getEmpresaByName(String nombreEmpresa) async {
+    try {
+      final Database db = await dbprovider.getDatabase();
+      List<EmpresasModel> list = [];
+      List<Map> maps = await db.rawQuery("SELECT * FROM Empresas WHERE nombreEmpresa = '$nombreEmpresa' ");
+
+      if (maps.isNotEmpty) list = EmpresasModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      e;
+      return [];
+    }
+  }
 }
