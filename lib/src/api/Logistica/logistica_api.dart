@@ -105,6 +105,7 @@ class LogisticaApi {
           orden.estado = data["estado"];
           orden.rendido = data["rendido"];
           orden.departamento = data["departamento_nombre"];
+          orden.condicionesOP = data["op_condiciones"];
 
           await opDB.insertarOrden(orden);
         }
@@ -155,6 +156,7 @@ class LogisticaApi {
           orden.surname2Apro = data["persona_apellido2_aprob"];
           orden.estado = data["op_estado"];
           orden.departamento = data["departamento_nombre"];
+          orden.condicionesOP = data["op_condiciones"];
           orden.rendido = rendido;
 
           await opDB.insertarOrden(orden);
@@ -180,6 +182,7 @@ class LogisticaApi {
             detalle.cajaAlmacenSI = dato["detallesi_caja_almacen"];
             detalle.tipoNombreRecurso = dato["recurso_tipo_nombre"];
             detalle.logisticaNombreRecurso = dato["logistica_recurso_nombre"];
+            detalle.nroSI = dato["si_numero"];
 
             await detalleOPDB.insertarDetalleOP(detalle);
           }

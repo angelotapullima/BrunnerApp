@@ -47,6 +47,7 @@ class LogisticaDB {
       ' fechaCreacion TEXT,'
       ' estado TEXT,'
       ' departamento TEXT,'
+      ' condicionesOP TEXT,'
       ' rendido TEXT)';
 
   static const String detalleOrdenPedidoTableSql = 'CREATE TABLE DetalleOrdenPedido('

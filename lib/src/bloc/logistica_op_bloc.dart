@@ -111,7 +111,8 @@ class LogisticaOPBloc {
         op.fechaCreacion = _opDB[0].fechaCreacion;
         op.estado = _opDB[0].estado;
         op.rendido = _opDB[0].rendido;
-
+        op.departamento = _opDB[0].departamento;
+        op.condicionesOP = _opDB[0].condicionesOP;
         op.detalle = await _api.detalleOPDB.getDetalleOPByidOP(idOP);
         op.empresa = empresaDB[0];
         op.proveedor = proveedorDB[0];

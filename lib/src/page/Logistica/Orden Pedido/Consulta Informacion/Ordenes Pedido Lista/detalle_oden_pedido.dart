@@ -52,6 +52,7 @@ class _DetalleOrdenPedidoState extends State<DetalleOrdenPedido> {
                           animation: _controller,
                           builder: (context, snapshot) {
                             return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
@@ -88,7 +89,7 @@ class _DetalleOrdenPedidoState extends State<DetalleOrdenPedido> {
                                       fileData(
                                           'Dirección', op.empresa?.direccionEmpresa ?? '', 11, 13, FontWeight.w500, FontWeight.w400, TextAlign.start),
                                       SizedBox(height: ScreenUtil().setHeight(4)),
-                                      fileData('Departamento', '', 11, 13, FontWeight.w500, FontWeight.w400, TextAlign.start),
+                                      fileData('Departamento', op.departamento ?? '', 11, 13, FontWeight.w500, FontWeight.w400, TextAlign.start),
                                       SizedBox(height: ScreenUtil().setHeight(4)),
                                       fileData('Centro laboral', op.nombreSede ?? '', 11, 13, FontWeight.w500, FontWeight.w400, TextAlign.start),
                                     ],
@@ -150,7 +151,7 @@ class _DetalleOrdenPedidoState extends State<DetalleOrdenPedido> {
                                     Text(
                                       'Total',
                                       style: TextStyle(
-                                        fontWeight: FontWeight.w400,
+                                        fontWeight: FontWeight.w500,
                                         fontSize: ScreenUtil().setSp(15),
                                         color: Colors.blueGrey,
                                       ),
@@ -176,6 +177,9 @@ class _DetalleOrdenPedidoState extends State<DetalleOrdenPedido> {
                                     ),
                                   ],
                                 ),
+                                Divider(thickness: 1),
+                                _fileData('Aprobado por', '${op.nombreApro} ${op.surnamePerson} ${op.surname2Apro}', 12, 13, FontWeight.w500,
+                                    FontWeight.w500, TextAlign.start),
                                 SizedBox(height: ScreenUtil().setHeight(50)),
                               ],
                             );
@@ -408,7 +412,7 @@ class _DetalleOrdenPedidoState extends State<DetalleOrdenPedido> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      fileData('SI', detail.idSI ?? '', 12, 12, FontWeight.w400, FontWeight.w500, TextAlign.start),
+                      fileData('SI', detail.nroSI ?? '', 12, 12, FontWeight.w400, FontWeight.w500, TextAlign.start),
                       Text(
                         'Precio unit. ${detail.precioUnitario}',
                         style: TextStyle(
@@ -444,6 +448,30 @@ class _DetalleOrdenPedidoState extends State<DetalleOrdenPedido> {
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _fileData(String titulo, String data, num sizeT, num sizeD, FontWeight ft, FontWeight fd, TextAlign aling) {
+    return RichText(
+      textAlign: aling,
+      text: TextSpan(
+        text: '$titulo: ',
+        style: TextStyle(
+          color: Colors.blueGrey,
+          fontWeight: ft,
+          fontSize: ScreenUtil().setSp(sizeT),
+        ),
+        children: [
+          TextSpan(
+            text: data,
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: fd,
+              fontSize: ScreenUtil().setSp(sizeD),
+            ),
+          )
         ],
       ),
     );

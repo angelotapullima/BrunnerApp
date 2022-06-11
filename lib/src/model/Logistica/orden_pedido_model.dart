@@ -22,35 +22,38 @@ class OrdenPedidoModel {
   String? estado;
   String? rendido;
   String? departamento;
+  String? condicionesOP;
 
   //No en DB
   List<DetalleOPModel>? detalle;
   EmpresasModel? empresa;
   ProveedoresModel? proveedor;
 
-  OrdenPedidoModel(
-      {this.idOP,
-      this.numeroOP,
-      this.nombreEmpresa,
-      this.nombreSede,
-      this.idProveedor,
-      this.nombreProveedor,
-      this.monedaOP,
-      this.totalOP,
-      this.fechaOP,
-      this.nombrePerson,
-      this.surnamePerson,
-      this.surname2Person,
-      this.nombreApro,
-      this.surnameApro,
-      this.surname2Apro,
-      this.fechaCreacion,
-      this.estado,
-      this.rendido,
-      this.detalle,
-      this.empresa,
-      this.proveedor,
-      this.departamento});
+  OrdenPedidoModel({
+    this.idOP,
+    this.numeroOP,
+    this.nombreEmpresa,
+    this.nombreSede,
+    this.idProveedor,
+    this.nombreProveedor,
+    this.monedaOP,
+    this.totalOP,
+    this.fechaOP,
+    this.nombrePerson,
+    this.surnamePerson,
+    this.surname2Person,
+    this.nombreApro,
+    this.surnameApro,
+    this.surname2Apro,
+    this.fechaCreacion,
+    this.estado,
+    this.rendido,
+    this.detalle,
+    this.empresa,
+    this.proveedor,
+    this.departamento,
+    this.condicionesOP,
+  });
 
   static List<OrdenPedidoModel> fromJsonList(List<dynamic> json) => json.map((i) => OrdenPedidoModel.fromJson(i)).toList();
 
@@ -73,7 +76,8 @@ class OrdenPedidoModel {
         'fechaCreacion': fechaCreacion,
         'estado': estado,
         'rendido': rendido,
-        'departamento': departamento
+        'departamento': departamento,
+        'condicionesOP': condicionesOP,
       };
 
   factory OrdenPedidoModel.fromJson(Map<String, dynamic> json) => OrdenPedidoModel(
@@ -96,5 +100,6 @@ class OrdenPedidoModel {
         estado: json["estado"],
         rendido: json["rendido"],
         departamento: json["departamento"],
+        condicionesOP: json["condicionesOP"],
       );
 }
