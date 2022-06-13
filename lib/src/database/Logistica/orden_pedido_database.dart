@@ -40,7 +40,7 @@ class OrdenPedidoDatabase {
         query += " AND rendido='$rendicion'";
       }
 
-      query += " ORDER BY CAST(numeroOP AS INTEGER) DESC";
+      query += " AND numeroOP!='0' ORDER BY CAST(numeroOP AS INTEGER) DESC";
       final Database db = await dbprovider.getDatabase();
       List<OrdenPedidoModel> list = [];
       List<Map> maps = await db.rawQuery(query);
@@ -58,6 +58,20 @@ class OrdenPedidoDatabase {
       final Database db = await dbprovider.getDatabase();
       List<OrdenPedidoModel> list = [];
       List<Map> maps = await db.rawQuery("SELECT * FROM OrdenPedido WHERE numeroOP='$numberOP'");
+
+      if (maps.isNotEmpty) list = OrdenPedidoModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      e;
+      return [];
+    }
+  }
+
+  Future<List<OrdenPedidoModel>> getOPSPendientes() async {
+    try {
+      final Database db = await dbprovider.getDatabase();
+      List<OrdenPedidoModel> list = [];
+      List<Map> maps = await db.rawQuery("SELECT * FROM OrdenPedido WHERE estado='0' AND numeroOP='0'");
 
       if (maps.isNotEmpty) list = OrdenPedidoModel.fromJsonList(maps);
       return list;

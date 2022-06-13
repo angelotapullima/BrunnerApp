@@ -106,6 +106,60 @@ class LogisticaApi {
           orden.rendido = data["rendido"];
           orden.departamento = data["departamento_nombre"];
           orden.condicionesOP = data["op_condiciones"];
+          orden.rucProveedor = data["proveedor_ruc"];
+          orden.opVencimiento = data["op_vencimiento"];
+
+          await opDB.insertarOrden(orden);
+        }
+      }
+
+      return 1;
+    } catch (e) {
+      return 2;
+    }
+  }
+
+  Future<int> listarOPPendientes() async {
+    try {
+      String? token = await Preferences.readData('token');
+
+      final url = Uri.parse('$apiBaseURL/api/OrdenPedido/listar_ops_pendientes_ws');
+      final resp = await http.post(
+        url,
+        body: {
+          'app': 'true',
+          'tn': token,
+        },
+      );
+      if (resp.statusCode == 200) {
+        final decodedData = json.decode(resp.body);
+
+        for (var i = 0; i < decodedData["ops"].length; i++) {
+          final data = decodedData["ops"][i];
+
+          final orden = OrdenPedidoModel();
+          orden.idOP = data["id_op"];
+          orden.numeroOP = data["op_numero"];
+          orden.nombreEmpresa = data["empresa_nombre"];
+          orden.nombreSede = data["sede_nombre"];
+          orden.idProveedor = data["id_proveedor"];
+          orden.nombreProveedor = data["proveedor_nombre"];
+          orden.monedaOP = data["op_moneda"];
+          orden.totalOP = data["op_total"];
+          orden.fechaCreacion = data["fecha_creacion"];
+          orden.fechaOP = data["fecha_op"];
+          orden.nombrePerson = data["person_name"];
+          orden.surnamePerson = data["person_surname"];
+          orden.surname2Person = data["person_surname2"];
+          orden.nombreApro = data["persona_nombre_aprob"];
+          orden.surnameApro = data["persona_apellido1_aprob"];
+          orden.surname2Apro = data["persona_apellido2_aprob"];
+          orden.estado = data["op_estado"];
+          orden.departamento = data["departamento_nombre"];
+          orden.condicionesOP = data["op_condiciones"];
+          orden.rendido = '0';
+          orden.rucProveedor = data["proveedor_ruc"];
+          orden.opVencimiento = data["op_vencimiento"];
 
           await opDB.insertarOrden(orden);
         }
@@ -158,6 +212,8 @@ class LogisticaApi {
           orden.departamento = data["departamento_nombre"];
           orden.condicionesOP = data["op_condiciones"];
           orden.rendido = rendido;
+          orden.rucProveedor = data["proveedor_ruc"];
+          orden.opVencimiento = data["op_vencimiento"];
 
           await opDB.insertarOrden(orden);
 

@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/model/Logistica/empresas_model.dart';
+import 'package:new_brunner_app/src/model/Logistica/orden_pedido_model.dart';
+import 'package:new_brunner_app/src/page/Logistica/Orden%20Pedido/Consulta%20Informacion/Ordenes%20Pedido%20Lista/op_pendientes.dart';
 import 'package:new_brunner_app/src/page/Logistica/Orden%20Pedido/Consulta%20Informacion/Ordenes%20Pedido%20Lista/ops.dart';
 import 'package:new_brunner_app/src/page/search_proveedor.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
+import 'package:new_brunner_app/src/widget/show_loading.dart';
 import 'package:new_brunner_app/src/widget/text_field.dart';
 
 class OrdenesPedidosGenerados extends StatefulWidget {
@@ -45,6 +48,7 @@ class _OrdenesPedidosGeneradosState extends State<OrdenesPedidosGenerados> {
 
   @override
   Widget build(BuildContext context) {
+    final logisticaOpBloc = ProviderBloc.logisticaOP(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0XFF154360),
@@ -73,6 +77,7 @@ class _OrdenesPedidosGeneradosState extends State<OrdenesPedidosGenerados> {
   }
 
   void filtroSearch() {
+    final logisticaOpBloc = ProviderBloc.logisticaOP(context);
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -85,7 +90,7 @@ class _OrdenesPedidosGeneradosState extends State<OrdenesPedidosGenerados> {
             child: GestureDetector(
               onTap: () {},
               child: DraggableScrollableSheet(
-                initialChildSize: 0.8,
+                initialChildSize: 0.9,
                 minChildSize: 0.3,
                 maxChildSize: 0.9,
                 builder: (_, controller) {
@@ -285,7 +290,6 @@ class _OrdenesPedidosGeneradosState extends State<OrdenesPedidosGenerados> {
                             ),
                             InkWell(
                               onTap: () async {
-                                final logisticaOpBloc = ProviderBloc.logisticaOP(context);
                                 logisticaOpBloc.getOPSFiltro(
                                   _empresaController.text.trim(),
                                   _proveedorController.text.trim(),
@@ -327,6 +331,48 @@ class _OrdenesPedidosGeneradosState extends State<OrdenesPedidosGenerados> {
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(10),
+                            ),
+                            InkWell(
+                              onTap: () async {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                logisticaOpBloc.getOPSPendientes();
+                                Navigator.push(
+                                  context,
+                                  PageRouteBuilder(
+                                    pageBuilder: (context, animation, secondaryAnimation) {
+                                      return const OPSPendientes();
+                                    },
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                width: double.infinity,
+                                margin: const EdgeInsets.all(8),
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Color(0XFFF39C12),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      spreadRadius: 3,
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 3), // changes position of shadow
+                                    ),
+                                  ],
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Ir a Pendientes de Aprobación',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: ScreenUtil().setSp(16),
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
                           ],
                         ),

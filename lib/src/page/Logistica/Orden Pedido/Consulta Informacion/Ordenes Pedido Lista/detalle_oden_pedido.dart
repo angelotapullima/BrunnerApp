@@ -178,8 +178,8 @@ class _DetalleOrdenPedidoState extends State<DetalleOrdenPedido> {
                                   ],
                                 ),
                                 Divider(thickness: 1),
-                                _fileData('Aprobado por', '${op.nombreApro} ${op.surnamePerson} ${op.surname2Apro}', 12, 13, FontWeight.w500,
-                                    FontWeight.w500, TextAlign.start),
+                                SizedBox(height: ScreenUtil().setHeight(10)),
+                                _detallePago(op),
                                 SizedBox(height: ScreenUtil().setHeight(50)),
                               ],
                             );
@@ -472,6 +472,195 @@ class _DetalleOrdenPedidoState extends State<DetalleOrdenPedido> {
               fontSize: ScreenUtil().setSp(sizeD),
             ),
           )
+        ],
+      ),
+    );
+  }
+
+  Widget _fileBanco(
+    String data,
+    String data2,
+    String data3,
+    String data4,
+  ) {
+    return RichText(
+      text: TextSpan(
+        text: 'Banco: ',
+        style: TextStyle(
+          color: Colors.blueGrey,
+          fontWeight: FontWeight.w500,
+          fontSize: ScreenUtil().setSp(12),
+        ),
+        children: [
+          TextSpan(
+            text: data,
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.w500,
+              fontSize: ScreenUtil().setSp(13),
+            ),
+          ),
+          TextSpan(
+            text: ' | ',
+            style: TextStyle(
+              color: Colors.blueGrey,
+              fontWeight: FontWeight.w500,
+              fontSize: ScreenUtil().setSp(13),
+            ),
+          ),
+          TextSpan(
+            text: ' Número de Cuenta: ',
+            style: TextStyle(
+              color: Colors.blueGrey,
+              fontWeight: FontWeight.w400,
+              fontSize: ScreenUtil().setSp(12),
+            ),
+          ),
+          TextSpan(
+            text: data2,
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.w400,
+              fontSize: ScreenUtil().setSp(13),
+            ),
+          ),
+          TextSpan(
+            text: ' | ',
+            style: TextStyle(
+              color: Colors.blueGrey,
+              fontWeight: FontWeight.w500,
+              fontSize: ScreenUtil().setSp(13),
+            ),
+          ),
+          TextSpan(
+            text: ' Moneda: ',
+            style: TextStyle(
+              color: Colors.blueGrey,
+              fontWeight: FontWeight.w400,
+              fontSize: ScreenUtil().setSp(12),
+            ),
+          ),
+          TextSpan(
+            text: data3,
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.w400,
+              fontSize: ScreenUtil().setSp(13),
+            ),
+          ),
+          TextSpan(
+            text: ' | ',
+            style: TextStyle(
+              color: Colors.blueGrey,
+              fontWeight: FontWeight.w500,
+              fontSize: ScreenUtil().setSp(13),
+            ),
+          ),
+          TextSpan(
+            text: ' CCI: ',
+            style: TextStyle(
+              color: Colors.blueGrey,
+              fontWeight: FontWeight.w400,
+              fontSize: ScreenUtil().setSp(12),
+            ),
+          ),
+          TextSpan(
+            text: data4,
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.w400,
+              fontSize: ScreenUtil().setSp(13),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _fileBancoNacion(String data, String data2) {
+    return RichText(
+      text: TextSpan(
+        text: 'Banco: ',
+        style: TextStyle(
+          color: Colors.blueGrey,
+          fontWeight: FontWeight.w500,
+          fontSize: ScreenUtil().setSp(12),
+        ),
+        children: [
+          TextSpan(
+            text: data,
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.w500,
+              fontSize: ScreenUtil().setSp(13),
+            ),
+          ),
+          TextSpan(
+            text: ' | ',
+            style: TextStyle(
+              color: Colors.blueGrey,
+              fontWeight: FontWeight.w500,
+              fontSize: ScreenUtil().setSp(13),
+            ),
+          ),
+          TextSpan(
+            text: ' Cuenta Detracciones: ',
+            style: TextStyle(
+              color: Colors.blueGrey,
+              fontWeight: FontWeight.w400,
+              fontSize: ScreenUtil().setSp(12),
+            ),
+          ),
+          TextSpan(
+            text: data2,
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.w400,
+              fontSize: ScreenUtil().setSp(13),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _detallePago(OrdenPedidoModel op) {
+    var banco1 = op.proveedor?.banco1Proveedor?.split('/../');
+    var banco2 = op.proveedor?.banco2Proveedor?.split('/../');
+    var banco3 = op.proveedor?.banco3Proveedor?.split('/../');
+
+    print('${banco1?.length} - ${banco2?.length} - ${banco3?.length}');
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(8)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _fileData('Condiciones', op.condicionesOP ?? '', 12, 13, FontWeight.w500, FontWeight.w500, TextAlign.start),
+          (banco1?[0] != '') ? SizedBox(height: ScreenUtil().setHeight(10)) : Container(),
+          (banco1?[0] != '')
+              ? (banco1?[0] == 'BANCO DE LA NACION')
+                  ? _fileBancoNacion(banco1?[0] ?? '', banco1?[1] ?? '')
+                  : _fileBanco(banco1?[0] ?? '', banco1?[2] ?? '', banco1?[1] ?? '', banco1?[3] ?? '')
+              : Container(),
+          (banco2?[0] != '') ? SizedBox(height: ScreenUtil().setHeight(6)) : Container(),
+          (banco2?[0] != '')
+              ? (banco2?[0] == 'BANCO DE LA NACION')
+                  ? _fileBancoNacion(banco2?[0] ?? '', banco2?[1] ?? '')
+                  : _fileBanco(banco2?[0] ?? '', banco2?[2] ?? '', banco2?[1] ?? '', banco2?[3] ?? '')
+              : Container(),
+          (banco3?[0] != '') ? SizedBox(height: ScreenUtil().setHeight(6)) : Container(),
+          (banco3?[0] != '')
+              ? (banco3?[0] == 'BANCO DE LA NACION')
+                  ? _fileBancoNacion(banco3?[0] ?? '', banco3?[1] ?? '')
+                  : _fileBanco(banco3?[0] ?? '', banco3?[2] ?? '', banco3?[1] ?? '', banco3?[3] ?? '')
+              : Container(),
+          SizedBox(height: ScreenUtil().setHeight(10)),
+          _fileData('Solicitado por', '${op.nombrePerson} ${op.surnamePerson} ${op.surname2Person}', 12, 13, FontWeight.w500, FontWeight.w500,
+              TextAlign.start),
+          SizedBox(height: ScreenUtil().setHeight(10)),
+          _fileData(
+              'Aprobado por', '${op.nombreApro} ${op.surnamePerson} ${op.surname2Apro}', 12, 13, FontWeight.w500, FontWeight.w500, TextAlign.start),
         ],
       ),
     );

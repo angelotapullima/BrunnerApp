@@ -23,37 +23,40 @@ class OrdenPedidoModel {
   String? rendido;
   String? departamento;
   String? condicionesOP;
+  String? rucProveedor;
+  String? opVencimiento;
 
   //No en DB
   List<DetalleOPModel>? detalle;
   EmpresasModel? empresa;
   ProveedoresModel? proveedor;
 
-  OrdenPedidoModel({
-    this.idOP,
-    this.numeroOP,
-    this.nombreEmpresa,
-    this.nombreSede,
-    this.idProveedor,
-    this.nombreProveedor,
-    this.monedaOP,
-    this.totalOP,
-    this.fechaOP,
-    this.nombrePerson,
-    this.surnamePerson,
-    this.surname2Person,
-    this.nombreApro,
-    this.surnameApro,
-    this.surname2Apro,
-    this.fechaCreacion,
-    this.estado,
-    this.rendido,
-    this.detalle,
-    this.empresa,
-    this.proveedor,
-    this.departamento,
-    this.condicionesOP,
-  });
+  OrdenPedidoModel(
+      {this.idOP,
+      this.numeroOP,
+      this.nombreEmpresa,
+      this.nombreSede,
+      this.idProveedor,
+      this.nombreProveedor,
+      this.monedaOP,
+      this.totalOP,
+      this.fechaOP,
+      this.nombrePerson,
+      this.surnamePerson,
+      this.surname2Person,
+      this.nombreApro,
+      this.surnameApro,
+      this.surname2Apro,
+      this.fechaCreacion,
+      this.estado,
+      this.rendido,
+      this.detalle,
+      this.empresa,
+      this.proveedor,
+      this.departamento,
+      this.condicionesOP,
+      this.rucProveedor,
+      this.opVencimiento});
 
   static List<OrdenPedidoModel> fromJsonList(List<dynamic> json) => json.map((i) => OrdenPedidoModel.fromJson(i)).toList();
 
@@ -78,6 +81,8 @@ class OrdenPedidoModel {
         'rendido': rendido,
         'departamento': departamento,
         'condicionesOP': condicionesOP,
+        'rucProveedor': rucProveedor,
+        'opVencimiento': opVencimiento,
       };
 
   factory OrdenPedidoModel.fromJson(Map<String, dynamic> json) => OrdenPedidoModel(
@@ -101,5 +106,7 @@ class OrdenPedidoModel {
         rendido: json["rendido"],
         departamento: json["departamento"],
         condicionesOP: json["condicionesOP"],
+        rucProveedor: json["rucProveedor"],
+        opVencimiento: json["opVencimiento"],
       );
 }

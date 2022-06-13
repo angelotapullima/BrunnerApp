@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/page/Home/menu_widget.dart';
+import 'package:new_brunner_app/src/page/Logistica/Orden%20Pedido/Consulta%20Informacion/Ordenes%20Pedido%20Lista/op_pendientes.dart';
 import 'package:new_brunner_app/src/page/Logistica/Orden%20Pedido/Consulta%20Informacion/Ordenes%20Pedido%20Lista/orden_pedido_generados.dart';
 import 'package:new_brunner_app/src/widget/option_widget.dart';
 
@@ -57,7 +58,17 @@ class ConsultaInformacionOrdenPedido extends StatelessWidget {
             descripcion: 'Visualización de Órdenes de Pedido Pendientes de Aprobación',
             icon: Icons.check_circle_outline,
             color: Color(0XFFF39C12),
-            ontap: () {},
+            ontap: () {
+              logisticaOpBloc.getOPSPendientes();
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) {
+                    return const OPSPendientes();
+                  },
+                ),
+              );
+            },
           ),
         ],
       ),

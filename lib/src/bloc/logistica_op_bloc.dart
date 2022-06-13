@@ -19,6 +19,9 @@ class LogisticaOPBloc {
   final _detalleOPController = BehaviorSubject<List<OrdenPedidoModel>>();
   Stream<List<OrdenPedidoModel>> get detalleOPStream => _detalleOPController.stream;
 
+  final _opsPendientesController = BehaviorSubject<List<OrdenPedidoModel>>();
+  Stream<List<OrdenPedidoModel>> get opsPendientesStream => _opsPendientesController.stream;
+
   //Controlador para mostrar que se está cargando la consulta
   final _cargandoController = BehaviorSubject<bool>();
   Stream<bool> get cargandoStream => _cargandoController.stream;
@@ -33,6 +36,7 @@ class LogisticaOPBloc {
     _cargandoController.close();
     _detalleOPController.close();
     _cargando2Controller.close();
+    _opsPendientesController.close();
   }
 
   void getDataFiltro(String fecha) async {
@@ -81,6 +85,15 @@ class LogisticaOPBloc {
 
   void clearOPS() async {
     _opsController.sink.add([]);
+  }
+
+  void getOPSPendientes() async {
+    final data = await _api.opDB.getOPSPendientes();
+    _opsPendientesController.sink.add(data);
+    if (data.isEmpty) _cargandoController.sink.add(true);
+    await _api.listarOPPendientes();
+    _cargandoController.sink.add(false);
+    _opsPendientesController.sink.add(await _api.opDB.getOPSPendientes());
   }
 
   Future<List<OrdenPedidoModel>> detalleOP(String idOP) async {
