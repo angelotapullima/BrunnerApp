@@ -22,7 +22,6 @@ class PersonasBloc {
   }
 
   void searchPersonasMantenimiento(String query) async {
-    print('bUSCANDO ');
     if (query.isEmpty) {
       _searchController.sink.add(await _api.personaDB.getPersonasMantenimiento());
       await _api.getData(query);

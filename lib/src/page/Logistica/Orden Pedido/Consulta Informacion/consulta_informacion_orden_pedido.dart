@@ -37,9 +37,7 @@ class ConsultaInformacionOrdenPedido extends StatelessWidget {
               icon: Icons.edit_note,
               color: Color(0XFF154360),
               ontap: () {
-                var fecha =
-                    "${DateTime.now().year.toString().padLeft(2, '0')}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().day.toString().padLeft(2, '0')}";
-                logisticaOpBloc.getDataFiltro(fecha);
+                logisticaOpBloc.getDataFiltro();
                 logisticaOpBloc.clearOPS();
                 Navigator.push(
                   context,
@@ -55,11 +53,12 @@ class ConsultaInformacionOrdenPedido extends StatelessWidget {
           SizedBox(height: ScreenUtil().setWidth(30)),
           OptionWidget(
             titulo: 'Órdenes de Pedido Pendientes de Aprobación',
-            descripcion: 'Visualización de Órdenes de Pedido Pendientes de Aprobación',
+            descripcion: 'Visualización de OP Pendientes de Aprobación',
             icon: Icons.check_circle_outline,
             color: Color(0XFFF39C12),
             ontap: () {
               logisticaOpBloc.getOPSPendientes();
+              logisticaOpBloc.getDataFiltro();
               Navigator.push(
                 context,
                 PageRouteBuilder(

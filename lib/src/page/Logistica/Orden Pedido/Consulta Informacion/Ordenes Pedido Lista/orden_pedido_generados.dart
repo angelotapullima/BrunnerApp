@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/model/Logistica/empresas_model.dart';
-import 'package:new_brunner_app/src/model/Logistica/orden_pedido_model.dart';
 import 'package:new_brunner_app/src/page/Logistica/Orden%20Pedido/Consulta%20Informacion/Ordenes%20Pedido%20Lista/op_pendientes.dart';
 import 'package:new_brunner_app/src/page/Logistica/Orden%20Pedido/Consulta%20Informacion/Ordenes%20Pedido%20Lista/ops.dart';
 import 'package:new_brunner_app/src/page/search_proveedor.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
-import 'package:new_brunner_app/src/widget/show_loading.dart';
 import 'package:new_brunner_app/src/widget/text_field.dart';
 
 class OrdenesPedidosGenerados extends StatefulWidget {
@@ -48,7 +46,6 @@ class _OrdenesPedidosGeneradosState extends State<OrdenesPedidosGenerados> {
 
   @override
   Widget build(BuildContext context) {
-    final logisticaOpBloc = ProviderBloc.logisticaOP(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0XFF154360),

@@ -39,10 +39,10 @@ class LogisticaOPBloc {
     _opsPendientesController.close();
   }
 
-  void getDataFiltro(String fecha) async {
+  void getDataFiltro() async {
     _empresasController.sink.add(await _api.empresaDB.getEmpresas());
     _proveedoresController.sink.add(await _api.proveedoresDB.getProveedores());
-    await _api.getOrdenesPedido(fecha, fecha, '', true);
+    await _api.getEmpresasProveedores();
     _empresasController.sink.add(await _api.empresaDB.getEmpresas());
     _proveedoresController.sink.add(await _api.proveedoresDB.getProveedores());
   }
@@ -69,7 +69,7 @@ class LogisticaOPBloc {
       final data = await _api.opDB.getOPSFiltro(empresa, proveedor, estado, rendicion, fechaInicial, fechaFinal);
       _opsController.sink.add(data);
       if (data.isEmpty) _cargandoController.sink.add(true);
-      await _api.getOrdenesPedido(fechaInicial, fechaFinal, numberOP, false);
+      await _api.getOrdenesPedido(fechaInicial, fechaFinal, numberOP);
       _cargandoController.sink.add(false);
       _opsController.sink.add(await _api.opDB.getOPSFiltro(empresa, proveedor, estado, rendicion, fechaInicial, fechaFinal));
     } else {
@@ -77,7 +77,7 @@ class LogisticaOPBloc {
       _opsController.sink.add(data);
 
       if (data.isEmpty) _cargandoController.sink.add(true);
-      await _api.getOrdenesPedido(fechaInicial, fechaFinal, numberOP, false);
+      await _api.getOrdenesPedido(fechaInicial, fechaFinal, numberOP);
       _cargandoController.sink.add(false);
       _opsController.sink.add(await _api.opDB.getOPSByNumber(numberOP));
     }
@@ -87,10 +87,15 @@ class LogisticaOPBloc {
     _opsController.sink.add([]);
   }
 
+  void getOPSQuery() async {
+    _opsController.sink.add([]);
+    _opsController.sink.add(await _api.opDB.getOPSQuery());
+  }
+
   void getOPSPendientes() async {
     final data = await _api.opDB.getOPSPendientes();
     _opsPendientesController.sink.add(data);
-    if (data.isEmpty) _cargandoController.sink.add(true);
+    _cargandoController.sink.add(true);
     await _api.listarOPPendientes();
     _cargandoController.sink.add(false);
     _opsPendientesController.sink.add(await _api.opDB.getOPSPendientes());
@@ -103,35 +108,37 @@ class LogisticaOPBloc {
       final proveedorDB = await _api.proveedoresDB.getProveedorById(_opDB[0].idProveedor.toString());
       final empresaDB = await _api.empresaDB.getEmpresaByName(_opDB[0].nombreEmpresa.toString());
 
-      if (proveedorDB.isNotEmpty && empresaDB.isNotEmpty) {
-        final op = OrdenPedidoModel();
+      final op = OrdenPedidoModel();
 
-        op.idOP = _opDB[0].idOP;
-        op.numeroOP = _opDB[0].numeroOP;
-        op.nombreEmpresa = _opDB[0].nombreEmpresa;
-        op.nombreSede = _opDB[0].nombreSede;
-        op.idProveedor = _opDB[0].idProveedor;
-        op.nombreProveedor = _opDB[0].nombreProveedor;
-        op.monedaOP = _opDB[0].monedaOP;
-        op.totalOP = _opDB[0].totalOP;
-        op.fechaOP = _opDB[0].fechaOP;
-        op.nombrePerson = _opDB[0].nombrePerson;
-        op.surnamePerson = _opDB[0].surnamePerson;
-        op.surname2Person = _opDB[0].surname2Person;
-        op.nombreApro = _opDB[0].nombreApro;
-        op.surnameApro = _opDB[0].surnameApro;
-        op.surname2Apro = _opDB[0].surname2Apro;
-        op.fechaCreacion = _opDB[0].fechaCreacion;
-        op.estado = _opDB[0].estado;
-        op.rendido = _opDB[0].rendido;
-        op.departamento = _opDB[0].departamento;
-        op.condicionesOP = _opDB[0].condicionesOP;
-        op.detalle = await _api.detalleOPDB.getDetalleOPByidOP(idOP);
+      op.idOP = _opDB[0].idOP;
+      op.numeroOP = _opDB[0].numeroOP;
+      op.nombreEmpresa = _opDB[0].nombreEmpresa;
+      op.nombreSede = _opDB[0].nombreSede;
+      op.idProveedor = _opDB[0].idProveedor;
+      op.nombreProveedor = _opDB[0].nombreProveedor;
+      op.monedaOP = _opDB[0].monedaOP;
+      op.totalOP = _opDB[0].totalOP;
+      op.fechaOP = _opDB[0].fechaOP;
+      op.nombrePerson = _opDB[0].nombrePerson;
+      op.surnamePerson = _opDB[0].surnamePerson;
+      op.surname2Person = _opDB[0].surname2Person;
+      op.nombreApro = _opDB[0].nombreApro;
+      op.surnameApro = _opDB[0].surnameApro;
+      op.surname2Apro = _opDB[0].surname2Apro;
+      op.fechaCreacion = _opDB[0].fechaCreacion;
+      op.estado = _opDB[0].estado;
+      op.rendido = _opDB[0].rendido;
+      op.departamento = _opDB[0].departamento;
+      op.condicionesOP = _opDB[0].condicionesOP;
+      op.detalle = await _api.detalleOPDB.getDetalleOPByidOP(idOP);
+      if (empresaDB.isNotEmpty) {
         op.empresa = empresaDB[0];
-        op.proveedor = proveedorDB[0];
-
-        result.add(op);
       }
+      if (proveedorDB.isNotEmpty) {
+        op.proveedor = proveedorDB[0];
+      }
+
+      result.add(op);
     }
     return result;
   }

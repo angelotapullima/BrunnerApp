@@ -32,4 +32,12 @@ class DetalleOPDatabase {
       return [];
     }
   }
+
+  deleteDetalle(String idOP) async {
+    final db = await dbprovider.database;
+
+    final res = await db.rawDelete("DELETE FROM DetalleOrdenPedido WHERE idOP='$idOP'");
+
+    return res;
+  }
 }

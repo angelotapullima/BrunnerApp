@@ -1,4 +1,5 @@
 import 'package:new_brunner_app/src/core/database_config.dart';
+import 'package:new_brunner_app/src/core/preferences.dart';
 import 'package:new_brunner_app/src/model/Logistica/orden_pedido_model.dart';
 import 'package:sqflite/sqlite_api.dart';
 
@@ -41,6 +42,8 @@ class OrdenPedidoDatabase {
       }
 
       query += " AND numeroOP!='0' ORDER BY CAST(numeroOP AS INTEGER) DESC";
+
+      Preferences.saveData('query', query);
       final Database db = await dbprovider.getDatabase();
       List<OrdenPedidoModel> list = [];
       List<Map> maps = await db.rawQuery(query);
@@ -93,5 +96,30 @@ class OrdenPedidoDatabase {
       e;
       return [];
     }
+  }
+
+  Future<List<OrdenPedidoModel>> getOPSQuery() async {
+    try {
+      String? query = await Preferences.readData('query');
+
+      Preferences.saveData('query', query);
+      final Database db = await dbprovider.getDatabase();
+      List<OrdenPedidoModel> list = [];
+      List<Map> maps = await db.rawQuery(query.toString());
+
+      if (maps.isNotEmpty) list = OrdenPedidoModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      e;
+      return [];
+    }
+  }
+
+  deleteOP(String idOP) async {
+    final db = await dbprovider.database;
+
+    final res = await db.rawDelete("DELETE FROM OrdenPedido WHERE idOP='$idOP'");
+
+    return res;
   }
 }

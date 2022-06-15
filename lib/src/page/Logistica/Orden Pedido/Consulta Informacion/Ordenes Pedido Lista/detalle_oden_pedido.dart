@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:new_brunner_app/src/api/Logistica/logistica_api.dart';
+import 'package:new_brunner_app/src/api/pdf_api.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
+import 'package:new_brunner_app/src/core/routes_constanst.dart';
 import 'package:new_brunner_app/src/model/Logistica/detalle_op_model.dart';
 import 'package:new_brunner_app/src/model/Logistica/orden_pedido_model.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
@@ -45,147 +48,169 @@ class _DetalleOrdenPedidoState extends State<DetalleOrdenPedido> {
                 if (snapshot.hasData) {
                   if (snapshot.data!.isNotEmpty) {
                     var op = snapshot.data![0];
-                    return SingleChildScrollView(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: ScreenUtil().setHeight(10), horizontal: ScreenUtil().setWidth(16)),
-                        child: AnimatedBuilder(
+                    return Stack(
+                      children: [
+                        SingleChildScrollView(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: ScreenUtil().setHeight(10), horizontal: ScreenUtil().setWidth(16)),
+                            child: AnimatedBuilder(
+                              animation: _controller,
+                              builder: (context, snapshot) {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          '${obtenerFecha(op.fechaCreacion.toString())}',
+                                          style: TextStyle(
+                                            fontSize: ScreenUtil().setSp(11),
+                                            color: Colors.grey,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    (op.estado != '0' && op.numeroOP != '0') ? numberOP('OP ${op.numeroOP}', Colors.black) : Container(),
+                                    SizedBox(height: ScreenUtil().setHeight(10)),
+                                    _expandedContainer(
+                                      titulo: 'Empresa Adquiriente',
+                                      expanded: _controller.expanded1,
+                                      lugar: 1,
+                                      color: Colors.green,
+                                      contenido: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            op.nombreEmpresa ?? '',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          SizedBox(height: ScreenUtil().setHeight(4)),
+                                          fileData('Ruc', op.empresa?.rucEmpresa ?? '', 11, 13, FontWeight.w500, FontWeight.w400, TextAlign.start),
+                                          SizedBox(height: ScreenUtil().setHeight(4)),
+                                          fileData('Dirección', op.empresa?.direccionEmpresa ?? '', 11, 13, FontWeight.w500, FontWeight.w400,
+                                              TextAlign.start),
+                                          SizedBox(height: ScreenUtil().setHeight(4)),
+                                          fileData('Departamento', op.departamento ?? '', 11, 13, FontWeight.w500, FontWeight.w400, TextAlign.start),
+                                          SizedBox(height: ScreenUtil().setHeight(4)),
+                                          fileData('Centro laboral', op.nombreSede ?? '', 11, 13, FontWeight.w500, FontWeight.w400, TextAlign.start),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(height: ScreenUtil().setHeight(20)),
+                                    _expandedContainer(
+                                      titulo: 'Empresa Proveedora',
+                                      expanded: _controller.expanded2,
+                                      lugar: 2,
+                                      color: Color(0XFF154360),
+                                      contenido: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            op.nombreProveedor ?? '',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          SizedBox(height: ScreenUtil().setHeight(4)),
+                                          fileData(
+                                              'Ruc', op.proveedor?.rucProveedor ?? '', 11, 13, FontWeight.w500, FontWeight.w400, TextAlign.start),
+                                          SizedBox(height: ScreenUtil().setHeight(4)),
+                                          fileData('Dirección', op.proveedor?.direccionProveedor ?? '', 11, 13, FontWeight.w500, FontWeight.w400,
+                                              TextAlign.start),
+                                          SizedBox(height: ScreenUtil().setHeight(4)),
+                                          fileData('Persona de contacto', op.proveedor?.contactoProveedor ?? '', 11, 13, FontWeight.w500,
+                                              FontWeight.w400, TextAlign.start),
+                                          SizedBox(height: ScreenUtil().setHeight(4)),
+                                          fileData('Telefono', op.proveedor?.telefonoProveedor ?? '', 11, 13, FontWeight.w500, FontWeight.w400,
+                                              TextAlign.start),
+                                          SizedBox(height: ScreenUtil().setHeight(4)),
+                                          fileData(
+                                              'Email', op.proveedor?.emailProveedor ?? '', 11, 13, FontWeight.w500, FontWeight.w400, TextAlign.start),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(height: ScreenUtil().setHeight(15)),
+                                    ExpansionTile(
+                                      onExpansionChanged: (valor) {},
+                                      maintainState: true,
+                                      initiallyExpanded: true,
+                                      title: Text(
+                                        'Detalle',
+                                        style: TextStyle(
+                                          color: Colors.blueGrey,
+                                          fontSize: ScreenUtil().setSp(14),
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      children: op.detalle!.asMap().entries.map((item) {
+                                        int idx = item.key;
+                                        return _detalleOP(item.value, idx + 1);
+                                      }).toList(),
+                                    ),
+                                    SizedBox(height: ScreenUtil().setHeight(20)),
+                                    Row(
+                                      children: [
+                                        SizedBox(width: ScreenUtil().setWidth(15)),
+                                        Text(
+                                          'Total',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: ScreenUtil().setSp(15),
+                                            color: Colors.blueGrey,
+                                          ),
+                                        ),
+                                        Spacer(),
+                                        Text(
+                                          op.totalOP ?? '',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: ScreenUtil().setSp(18),
+                                            color: Color(0XFF154360),
+                                          ),
+                                        ),
+                                        SizedBox(width: ScreenUtil().setWidth(8)),
+                                        Text(
+                                          op.monedaOP ?? '',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: ScreenUtil().setSp(15),
+                                            color: Colors.grey,
+                                            fontStyle: FontStyle.italic,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Divider(thickness: 1),
+                                    SizedBox(height: ScreenUtil().setHeight(10)),
+                                    _detallePago(op),
+                                    SizedBox(height: ScreenUtil().setHeight(15)),
+                                    (op.estado == '0' && op.numeroOP == '0') ? _botonAprobarOP(op) : Container(),
+                                    (op.estado == '0' && op.numeroOP == '0') ? SizedBox(height: ScreenUtil().setHeight(10)) : Container(),
+                                    // _buttonPDF(op.idOP.toString()),
+                                    SizedBox(height: ScreenUtil().setHeight(50)),
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                        AnimatedBuilder(
                           animation: _controller,
-                          builder: (context, snapshot) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      '${obtenerFecha(op.fechaCreacion.toString())}',
-                                      style: TextStyle(
-                                        fontSize: ScreenUtil().setSp(11),
-                                        color: Colors.grey,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                numberOP('OP ${op.numeroOP}', Colors.black),
-                                SizedBox(height: ScreenUtil().setHeight(10)),
-                                _expandedContainer(
-                                  titulo: 'Empresa Adquiriente',
-                                  expanded: _controller.expanded1,
-                                  lugar: 1,
-                                  color: Colors.green,
-                                  contenido: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        op.nombreEmpresa ?? '',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      SizedBox(height: ScreenUtil().setHeight(4)),
-                                      fileData('Ruc', op.empresa?.rucEmpresa ?? '', 11, 13, FontWeight.w500, FontWeight.w400, TextAlign.start),
-                                      SizedBox(height: ScreenUtil().setHeight(4)),
-                                      fileData(
-                                          'Dirección', op.empresa?.direccionEmpresa ?? '', 11, 13, FontWeight.w500, FontWeight.w400, TextAlign.start),
-                                      SizedBox(height: ScreenUtil().setHeight(4)),
-                                      fileData('Departamento', op.departamento ?? '', 11, 13, FontWeight.w500, FontWeight.w400, TextAlign.start),
-                                      SizedBox(height: ScreenUtil().setHeight(4)),
-                                      fileData('Centro laboral', op.nombreSede ?? '', 11, 13, FontWeight.w500, FontWeight.w400, TextAlign.start),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(height: ScreenUtil().setHeight(20)),
-                                _expandedContainer(
-                                  titulo: 'Empresa Proveedora',
-                                  expanded: _controller.expanded2,
-                                  lugar: 2,
-                                  color: Color(0XFF154360),
-                                  contenido: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        op.nombreProveedor ?? '',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      SizedBox(height: ScreenUtil().setHeight(4)),
-                                      fileData('Ruc', op.proveedor?.rucProveedor ?? '', 11, 13, FontWeight.w500, FontWeight.w400, TextAlign.start),
-                                      SizedBox(height: ScreenUtil().setHeight(4)),
-                                      fileData('Dirección', op.proveedor?.direccionProveedor ?? '', 11, 13, FontWeight.w500, FontWeight.w400,
-                                          TextAlign.start),
-                                      SizedBox(height: ScreenUtil().setHeight(4)),
-                                      fileData('Persona de contacto', op.proveedor?.contactoProveedor ?? '', 11, 13, FontWeight.w500, FontWeight.w400,
-                                          TextAlign.start),
-                                      SizedBox(height: ScreenUtil().setHeight(4)),
-                                      fileData('Telefono', op.proveedor?.telefonoProveedor ?? '', 11, 13, FontWeight.w500, FontWeight.w400,
-                                          TextAlign.start),
-                                      SizedBox(height: ScreenUtil().setHeight(4)),
-                                      fileData(
-                                          'Email', op.proveedor?.emailProveedor ?? '', 11, 13, FontWeight.w500, FontWeight.w400, TextAlign.start),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(height: ScreenUtil().setHeight(15)),
-                                ExpansionTile(
-                                  onExpansionChanged: (valor) {},
-                                  maintainState: true,
-                                  title: Text(
-                                    'Detalle',
-                                    style: TextStyle(
-                                      color: Colors.blueGrey,
-                                      fontSize: ScreenUtil().setSp(14),
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  children: op.detalle!.asMap().entries.map((item) {
-                                    int idx = item.key;
-                                    return _detalleOP(item.value, idx + 1);
-                                  }).toList(),
-                                ),
-                                SizedBox(height: ScreenUtil().setHeight(20)),
-                                Row(
-                                  children: [
-                                    SizedBox(width: ScreenUtil().setWidth(15)),
-                                    Text(
-                                      'Total',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: ScreenUtil().setSp(15),
-                                        color: Colors.blueGrey,
-                                      ),
-                                    ),
-                                    Spacer(),
-                                    Text(
-                                      op.totalOP ?? '',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: ScreenUtil().setSp(18),
-                                        color: Color(0XFF154360),
-                                      ),
-                                    ),
-                                    SizedBox(width: ScreenUtil().setWidth(8)),
-                                    Text(
-                                      op.monedaOP ?? '',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: ScreenUtil().setSp(15),
-                                        color: Colors.grey,
-                                        fontStyle: FontStyle.italic,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Divider(thickness: 1),
-                                SizedBox(height: ScreenUtil().setHeight(10)),
-                                _detallePago(op),
-                                SizedBox(height: ScreenUtil().setHeight(50)),
-                              ],
+                          builder: (_, p) {
+                            return ShowLoadding(
+                              active: _controller.cargando,
+                              h: double.infinity,
+                              w: double.infinity,
+                              fondo: Colors.black.withOpacity(0.5),
+                              colorText: Colors.black,
                             );
                           },
                         ),
-                      ),
+                      ],
                     );
                   } else {
                     return Center(
@@ -270,7 +295,7 @@ class _DetalleOrdenPedidoState extends State<DetalleOrdenPedido> {
                     ),
                   ),
                   Icon(
-                    Icons.keyboard_arrow_down,
+                    (expanded) ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
                     color: Colors.white,
                     size: ScreenUtil().setHeight(20),
                   ),
@@ -328,7 +353,7 @@ class _DetalleOrdenPedidoState extends State<DetalleOrdenPedido> {
                   color: color,
                   borderRadius: const BorderRadius.only(
                     bottomRight: Radius.circular(10),
-                    topLeft: Radius.circular(10),
+                    //topLeft: Radius.circular(10),
                     bottomLeft: Radius.circular(100),
                     topRight: Radius.circular(10),
                   ),
@@ -396,18 +421,22 @@ class _DetalleOrdenPedidoState extends State<DetalleOrdenPedido> {
                       fontSize: ScreenUtil().setSp(12),
                     ),
                   ),
-                  SizedBox(
-                    height: ScreenUtil().setHeight(3),
-                  ),
-                  Text(
-                    detail.descripcionSI ?? '',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: ScreenUtil().setSp(11),
-                      color: Colors.grey,
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
+                  (detail.descripcionSI != '')
+                      ? SizedBox(
+                          height: ScreenUtil().setHeight(3),
+                        )
+                      : Container(),
+                  (detail.descripcionSI != '')
+                      ? Text(
+                          detail.descripcionSI ?? '',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: ScreenUtil().setSp(11),
+                            color: Colors.grey,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        )
+                      : Container(),
                   SizedBox(height: ScreenUtil().setHeight(7)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -477,12 +506,7 @@ class _DetalleOrdenPedidoState extends State<DetalleOrdenPedido> {
     );
   }
 
-  Widget _fileBanco(
-    String data,
-    String data2,
-    String data3,
-    String data4,
-  ) {
+  Widget _fileBanco(String data, String data2, String data3, String data4) {
     return RichText(
       text: TextSpan(
         text: 'Banco: ',
@@ -629,8 +653,6 @@ class _DetalleOrdenPedidoState extends State<DetalleOrdenPedido> {
     var banco2 = op.proveedor?.banco2Proveedor?.split('/../');
     var banco3 = op.proveedor?.banco3Proveedor?.split('/../');
 
-    print('${banco1?.length} - ${banco2?.length} - ${banco3?.length}');
-
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(8)),
       child: Column(
@@ -656,12 +678,120 @@ class _DetalleOrdenPedidoState extends State<DetalleOrdenPedido> {
                   : _fileBanco(banco3?[0] ?? '', banco3?[2] ?? '', banco3?[1] ?? '', banco3?[3] ?? '')
               : Container(),
           SizedBox(height: ScreenUtil().setHeight(10)),
-          _fileData('Solicitado por', '${op.nombrePerson} ${op.surnamePerson} ${op.surname2Person}', 12, 13, FontWeight.w500, FontWeight.w500,
-              TextAlign.start),
+          _fileData('Solicitado por', '${op.nombrePerson ?? ""} ${op.surnamePerson ?? ""} ${op.surname2Person ?? ""}', 12, 13, FontWeight.w500,
+              FontWeight.w500, TextAlign.start),
           SizedBox(height: ScreenUtil().setHeight(10)),
-          _fileData(
-              'Aprobado por', '${op.nombreApro} ${op.surnamePerson} ${op.surname2Apro}', 12, 13, FontWeight.w500, FontWeight.w500, TextAlign.start),
+          (op.estado != '0')
+              ? _fileData('Aprobado por', '${op.nombreApro ?? ""} ${op.surnameApro ?? ""} ${op.surname2Apro ?? ""}', 12, 13, FontWeight.w500,
+                  FontWeight.w500, TextAlign.start)
+              : Container(),
         ],
+      ),
+    );
+  }
+
+  Widget _botonAprobarOP(OrdenPedidoModel op) {
+    return InkWell(
+      onTap: () async {
+        _controller.changeCargando(true);
+        final _api = LogisticaApi();
+        final res = await _api.aprobarOP(op.idOP.toString());
+        if (res == 1) {
+          final detalleOPBloc = ProviderBloc.logisticaOP(context);
+          detalleOPBloc.getDetalleOP(op.idOP.toString(), op.rendido.toString());
+          detalleOPBloc.getOPSPendientes();
+          showToast2('Solicitud aprobada', Colors.green);
+        } else {
+          showToast2('Ocurrió un error, inténtelo nuevamente', Colors.redAccent);
+        }
+        _controller.changeCargando(false);
+      },
+      child: Container(
+        width: double.infinity,
+        margin: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Color(0XFFF39C12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 3,
+              blurRadius: 8,
+              offset: const Offset(0, 3), // changes position of shadow
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Aprobar',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: ScreenUtil().setSp(18),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            SizedBox(
+              width: ScreenUtil().setWidth(6),
+            ),
+            Icon(
+              Icons.check_circle_outline,
+              color: Colors.white,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buttonPDF(String idOP) {
+    return InkWell(
+      onTap: () async {
+        _controller.changeCargando(true);
+        final _apiPDF = PdfApi();
+        _apiPDF.openFile(url: '$apiBaseURL/OrdenPedido/pdf_op/$idOP');
+        _controller.changeCargando(false);
+      },
+      child: Center(
+        child: Container(
+          width: ScreenUtil().setWidth(200),
+          margin: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: const Color(0XFFE74C3C),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                spreadRadius: 3,
+                blurRadius: 8,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Visualizar',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: ScreenUtil().setSp(18),
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(
+                width: ScreenUtil().setWidth(8),
+              ),
+              const Icon(
+                Icons.picture_as_pdf,
+                color: Colors.white,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -669,6 +799,7 @@ class _DetalleOrdenPedidoState extends State<DetalleOrdenPedido> {
 
 class ControllerExpanded extends ChangeNotifier {
   bool expanded1 = true, expanded2 = true, expanded3 = true, expanded4 = false;
+  bool cargando = false;
 
   void changeExpanded(bool e, int lugar) {
     switch (lugar) {
@@ -687,6 +818,11 @@ class ControllerExpanded extends ChangeNotifier {
       default:
         break;
     }
+    notifyListeners();
+  }
+
+  void changeCargando(bool c) {
+    cargando = c;
     notifyListeners();
   }
 }

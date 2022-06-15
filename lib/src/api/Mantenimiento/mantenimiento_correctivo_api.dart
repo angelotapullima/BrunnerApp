@@ -244,9 +244,6 @@ class MantenimientoCorrectivoApi {
             '${observaciones[i].idCategoria}-.-.${observaciones[i].idItem}-.-.${observaciones[i].descripcionCat}-.-.${observaciones[i].descripcionItem}-.-.${observaciones[i].observacion}/./.';
       }
 
-      print(informe);
-      print(observacion);
-
       final url = Uri.parse('$apiBaseURL/api/MantenimientoCorrectivo/habilitar_observaciones');
 
       final resp = await http.post(
@@ -261,8 +258,6 @@ class MantenimientoCorrectivoApi {
         },
       );
       final decodedData = json.decode(resp.body);
-
-      print(decodedData);
 
       return decodedData;
     } catch (e) {

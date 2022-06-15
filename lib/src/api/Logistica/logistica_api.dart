@@ -17,7 +17,74 @@ class LogisticaApi {
   final proveedoresDB = ProveedoresDatabase();
   final opDB = OrdenPedidoDatabase();
   final detalleOPDB = DetalleOPDatabase();
-  Future<int> getOrdenesPedido(String fechaIni, String fechaFin, String op, bool filtro) async {
+
+  Future<int> getEmpresasProveedores() async {
+    try {
+      String? token = await Preferences.readData('token');
+
+      final url = Uri.parse('$apiBaseURL/api/OrdenPedido/listar_empresas_proveedores');
+      final resp = await http.post(
+        url,
+        body: {
+          'app': 'true',
+          'tn': token,
+        },
+      );
+
+      if (resp.statusCode == 200) {
+        final decodedData = json.decode(resp.body);
+
+        //Insertar Empresas
+        for (var i = 0; i < decodedData["empresas"].length; i++) {
+          final data = decodedData["empresas"][i];
+
+          final empresa = EmpresasModel();
+          empresa.idEmpresa = data["id_empresa"];
+          empresa.nombreEmpresa = data["empresa_nombre"];
+          empresa.rucEmpresa = data["empresa_ruc"];
+          empresa.direccionEmpresa = data["empresa_direccion"];
+          empresa.departamentoEmpresa = data["empresa_departamento"];
+          empresa.provinciaEmpresa = data["empresa_provincia"];
+          empresa.distritoEmpresa = data["empresa_distrito"];
+          empresa.estadoEmpresa = data["empresa_estado"];
+
+          await empresaDB.insertarEmpresa(empresa);
+        }
+
+        //Insertar Proveedores
+        for (var i = 0; i < decodedData["proveedores"].length; i++) {
+          final data = decodedData["proveedores"][i];
+
+          final proveedor = ProveedoresModel();
+          proveedor.idProveedor = data["id_proveedor"];
+          proveedor.nombreProveedor = data["proveedor_nombre"];
+          proveedor.rucProveedor = data["proveedor_ruc"];
+          proveedor.direccionProveedor = data["proveedor_direccion"];
+          proveedor.telefonoProveedor = data["proveedor_telefono"];
+          proveedor.contactoProveedor = data["proveedor_contacto"];
+          proveedor.emailProveedor = data["proveedor_email"];
+          proveedor.clase1Proveedor = data["proveedor_clase1"];
+          proveedor.clase2Proveedor = data["proveedor_clase2"];
+          proveedor.clase3Proveedor = data["proveedor_clase3"];
+          proveedor.clase4Proveedor = data["proveedor_clase4"];
+          proveedor.clase5Proveedor = data["proveedor_clase5"];
+          proveedor.clase6Proveedor = data["proveedor_clase6"];
+          proveedor.banco1Proveedor = data["proveedor_banco1"];
+          proveedor.banco2Proveedor = data["proveedor_banco2"];
+          proveedor.banco3Proveedor = data["proveedor_banco3"];
+          proveedor.estadoProveedor = data["proveedor_estado"];
+
+          await proveedoresDB.insertarProveedor(proveedor);
+        }
+      }
+
+      return 1;
+    } catch (e) {
+      return 2;
+    }
+  }
+
+  Future<int> getOrdenesPedido(String fechaIni, String fechaFin, String op) async {
     try {
       String? token = await Preferences.readData('token');
 
@@ -35,51 +102,6 @@ class LogisticaApi {
 
       if (resp.statusCode == 200) {
         final decodedData = json.decode(resp.body);
-
-        if (filtro) {
-          //Insertar Empresas
-          for (var i = 0; i < decodedData["empresas"].length; i++) {
-            final data = decodedData["empresas"][i];
-
-            final empresa = EmpresasModel();
-            empresa.idEmpresa = data["id_empresa"];
-            empresa.nombreEmpresa = data["empresa_nombre"];
-            empresa.rucEmpresa = data["empresa_ruc"];
-            empresa.direccionEmpresa = data["empresa_direccion"];
-            empresa.departamentoEmpresa = data["empresa_departamento"];
-            empresa.provinciaEmpresa = data["empresa_provincia"];
-            empresa.distritoEmpresa = data["empresa_distrito"];
-            empresa.estadoEmpresa = data["empresa_estado"];
-
-            await empresaDB.insertarEmpresa(empresa);
-          }
-
-          //Insertar Proveedores
-          for (var i = 0; i < decodedData["proveedores"].length; i++) {
-            final data = decodedData["proveedores"][i];
-
-            final proveedor = ProveedoresModel();
-            proveedor.idProveedor = data["id_proveedor"];
-            proveedor.nombreProveedor = data["proveedor_nombre"];
-            proveedor.rucProveedor = data["proveedor_ruc"];
-            proveedor.direccionProveedor = data["proveedor_direccion"];
-            proveedor.telefonoProveedor = data["proveedor_telefono"];
-            proveedor.contactoProveedor = data["proveedor_contacto"];
-            proveedor.emailProveedor = data["proveedor_email"];
-            proveedor.clase1Proveedor = data["proveedor_clase1"];
-            proveedor.clase2Proveedor = data["proveedor_clase2"];
-            proveedor.clase3Proveedor = data["proveedor_clase3"];
-            proveedor.clase4Proveedor = data["proveedor_clase4"];
-            proveedor.clase5Proveedor = data["proveedor_clase5"];
-            proveedor.clase6Proveedor = data["proveedor_clase6"];
-            proveedor.banco1Proveedor = data["proveedor_banco1"];
-            proveedor.banco2Proveedor = data["proveedor_banco2"];
-            proveedor.banco3Proveedor = data["proveedor_banco3"];
-            proveedor.estadoProveedor = data["proveedor_estado"];
-
-            await proveedoresDB.insertarProveedor(proveedor);
-          }
-        }
 
         //Insertar Ordenes Pedido
         for (var i = 0; i < decodedData["ops"].length; i++) {
@@ -246,6 +268,63 @@ class LogisticaApi {
       }
 
       return 1;
+    } catch (e) {
+      return 2;
+    }
+  }
+
+  Future<int> aprobarOP(String idOP) async {
+    try {
+      String? token = await Preferences.readData('token');
+      String? idUser = await Preferences.readData('id_user');
+
+      final url = Uri.parse('$apiBaseURL/api/OrdenPedido/aprobacion_op');
+      final resp = await http.post(
+        url,
+        body: {
+          'app': 'true',
+          'tn': token,
+          'id_op': idOP,
+          'id_user': idUser,
+        },
+      );
+
+      if (resp.statusCode == 200) {
+        final decodedData = json.decode(resp.body);
+        return decodedData["result"];
+      } else {
+        return 3;
+      }
+    } catch (e) {
+      return 2;
+    }
+  }
+
+  Future<int> elimarOP(String idOP, String eliminar) async {
+    try {
+      String? token = await Preferences.readData('token');
+
+      final url = Uri.parse('$apiBaseURL/api/OrdenPedido/eliminacion_op');
+      final resp = await http.post(
+        url,
+        body: {
+          'app': 'true',
+          'tn': token,
+          'id_op': idOP,
+          'eliminar': eliminar,
+        },
+      );
+
+      if (resp.statusCode == 200) {
+        final decodedData = json.decode(resp.body);
+        if (decodedData["result"] == 1) {
+          await opDB.deleteOP(idOP);
+          await detalleOPDB.deleteDetalle(idOP);
+        }
+        return decodedData["result"];
+      } else {
+        return 3;
+      }
     } catch (e) {
       return 2;
     }
