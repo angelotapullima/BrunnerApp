@@ -17,6 +17,9 @@ class VehiculoModel {
   String? estadoInspeccionVehiculo;
   String? imagenVehiculo;
   String? estadoVehiculo;
+  String? color1;
+  String? color2;
+  String? cargaUtil;
 
   VehiculoModel({
     this.idVehiculo,
@@ -37,6 +40,9 @@ class VehiculoModel {
     this.estadoInspeccionVehiculo,
     this.imagenVehiculo,
     this.estadoVehiculo,
+    this.color1,
+    this.color2,
+    this.cargaUtil,
   });
 
   static List<VehiculoModel> fromJsonList(List<dynamic> json) => json.map((i) => VehiculoModel.fromJson(i)).toList();
@@ -60,6 +66,9 @@ class VehiculoModel {
         'estadoInspeccionVehiculo': estadoInspeccionVehiculo,
         'imagenVehiculo': imagenVehiculo,
         'estadoVehiculo': estadoVehiculo,
+        'color1': color1,
+        'color2': color2,
+        'cargaUtil': cargaUtil,
       };
 
   factory VehiculoModel.fromJson(Map<String, dynamic> json) => VehiculoModel(
@@ -81,5 +90,8 @@ class VehiculoModel {
         estadoInspeccionVehiculo: json["estadoInspeccionVehiculo"],
         imagenVehiculo: json["imagenVehiculo"],
         estadoVehiculo: json["estadoVehiculo"],
+        color1: json["color1"],
+        color2: json["color2"],
+        cargaUtil: json["cargaUtil"],
       );
 }

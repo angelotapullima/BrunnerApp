@@ -17,6 +17,9 @@ class VehiculosDB {
       ' potenciaMotorVehiculo TEXT,'
       ' estadoInspeccionVehiculo TEXT,'
       ' imagenVehiculo TEXT,'
+      ' color1 TEXT,'
+      ' color2 TEXT,'
+      ' cargaUtil TEXT,'
       ' estadoVehiculo TEXT)';
 
   static const String peronasTableSql = 'CREATE TABLE Personas('

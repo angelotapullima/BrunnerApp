@@ -359,15 +359,12 @@ class _ListaVehiculosMaquinariasState extends State<ListaVehiculosMaquinarias> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     fileData('Placa', vehiculo.placaVehiculo.toString(), 12, 12, FontWeight.w400, FontWeight.w500, TextAlign.left),
-                    Text(
-                      vehiculo.razonSocialVehiculo.toString(),
-                      style: TextStyle(
-                        fontSize: ScreenUtil().setSp(12),
-                      ),
-                    ),
-                    fileData('RUC', vehiculo.rucVehiculo.toString(), 11, 12, FontWeight.w500, FontWeight.w400, TextAlign.left),
                     fileData('Marca', vehiculo.marcaVehiculo.toString(), 11, 12, FontWeight.w500, FontWeight.w400, TextAlign.left),
                     fileData('Modelo', vehiculo.modeloVehiculo.toString(), 11, 12, FontWeight.w500, FontWeight.w400, TextAlign.left),
+                    fileData('Serie', vehiculo.serieVehiculo.toString(), 11, 12, FontWeight.w500, FontWeight.w400, TextAlign.left),
+                    fileData(
+                        'Color', '${vehiculo.color1 ?? ""} - ${vehiculo.color2 ?? ""}', 11, 12, FontWeight.w500, FontWeight.w400, TextAlign.left),
+                    fileData('Carga Útil', vehiculo.cargaUtil.toString(), 11, 12, FontWeight.w500, FontWeight.w400, TextAlign.left),
                   ],
                 ),
               ),

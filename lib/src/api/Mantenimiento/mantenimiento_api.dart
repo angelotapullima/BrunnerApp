@@ -61,6 +61,9 @@ class MantenimientoApi {
         vehiculo.estadoInspeccionVehiculo = data["vehiculo_estado_inspeccion"];
         vehiculo.imagenVehiculo = data["vehiculo_foto_izquierdo"];
         vehiculo.estadoVehiculo = data["vehiculo_estado"];
+        vehiculo.color1 = data["vehiculo_color1"];
+        vehiculo.color2 = data["vehiculo_color2"];
+        vehiculo.cargaUtil = data["vehiculo_carga_util"];
 
         await vehiculosDB.insertarVehiculo(vehiculo);
       }
