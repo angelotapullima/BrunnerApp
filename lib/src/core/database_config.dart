@@ -1,3 +1,4 @@
+import 'package:new_brunner_app/src/core/ConfigDatabase/empresa_db.dart';
 import 'package:new_brunner_app/src/core/ConfigDatabase/logistica_db.dart';
 import 'package:new_brunner_app/src/core/ConfigDatabase/mantenimiento_db.dart';
 import 'package:new_brunner_app/src/core/ConfigDatabase/modulos_db.dart';
@@ -31,8 +32,10 @@ class DatabaseHelper {
       db.execute(MantenimientoDB.inspeccionVehiculoDetalleTableSql);
       db.execute(MantenimientoDB.mantenimientoCorrectivoTableSql);
 
+      //Empresa
+      db.execute(EmpresaDB.empresasTableSql);
+
       //Logistica
-      db.execute(LogisticaDB.empresasTableSql);
       db.execute(LogisticaDB.proveedoresTableSql);
       db.execute(LogisticaDB.ordenPedidoTableSql);
       db.execute(LogisticaDB.detalleOrdenPedidoTableSql);

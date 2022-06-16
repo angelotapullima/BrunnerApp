@@ -8,7 +8,7 @@ import 'package:new_brunner_app/src/database/Logistica/empresas_database.dart';
 import 'package:new_brunner_app/src/database/Logistica/orden_pedido_database.dart';
 import 'package:new_brunner_app/src/database/Logistica/proveedores_database.dart';
 import 'package:new_brunner_app/src/model/Logistica/detalle_op_model.dart';
-import 'package:new_brunner_app/src/model/Logistica/empresas_model.dart';
+import 'package:new_brunner_app/src/model/Empresa/empresas_model.dart';
 import 'package:new_brunner_app/src/model/Logistica/orden_pedido_model.dart';
 import 'package:new_brunner_app/src/model/Logistica/proveedores_model.dart';
 

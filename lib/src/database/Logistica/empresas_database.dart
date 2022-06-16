@@ -1,5 +1,5 @@
 import 'package:new_brunner_app/src/core/database_config.dart';
-import 'package:new_brunner_app/src/model/Logistica/empresas_model.dart';
+import 'package:new_brunner_app/src/model/Empresa/empresas_model.dart';
 import 'package:sqflite/sqlite_api.dart';
 
 class EmpresasDatabase {

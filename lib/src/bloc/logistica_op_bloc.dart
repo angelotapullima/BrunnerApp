@@ -1,5 +1,5 @@
 import 'package:new_brunner_app/src/api/Logistica/logistica_api.dart';
-import 'package:new_brunner_app/src/model/Logistica/empresas_model.dart';
+import 'package:new_brunner_app/src/model/Empresa/empresas_model.dart';
 import 'package:new_brunner_app/src/model/Logistica/orden_pedido_model.dart';
 import 'package:new_brunner_app/src/model/Logistica/proveedores_model.dart';
 import 'package:rxdart/subjects.dart';

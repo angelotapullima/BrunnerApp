@@ -1,14 +1,4 @@
 class LogisticaDB {
-  static const String empresasTableSql = 'CREATE TABLE Empresas('
-      ' idEmpresa TEXT PRIMARY KEY,'
-      ' nombreEmpresa TEXT,'
-      ' rucEmpresa TEXT,'
-      ' direccionEmpresa TEXT,'
-      ' departamentoEmpresa TEXT,'
-      ' provinciaEmpresa TEXT,'
-      ' distritoEmpresa TEXT,'
-      ' estadoEmpresa TEXT)';
-
   static const String proveedoresTableSql = 'CREATE TABLE Proveedores('
       ' idProveedor TEXT PRIMARY KEY,'
       ' nombreProveedor TEXT,'
