@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/page/Home/menu_widget.dart';
 import 'package:new_brunner_app/src/page/Residuos%20Solidos/Ejecucion%20Servicios/Generar%20OES/generar_orden_ejecucion_servicio.dart';
 import 'package:new_brunner_app/src/widget/option_widget.dart';
@@ -33,6 +34,8 @@ class EjecucionServicios extends StatelessWidget {
             icon: Icons.handshake,
             color: Color(0XFF73C6B6),
             ontap: () {
+              final ejecucionServicioBloc = ProviderBloc.ejecucionServicio(context);
+              ejecucionServicioBloc.getDataFiltro();
               Navigator.push(
                 context,
                 PageRouteBuilder(

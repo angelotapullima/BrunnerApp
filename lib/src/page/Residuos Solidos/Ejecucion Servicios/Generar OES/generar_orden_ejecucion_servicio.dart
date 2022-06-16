@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:new_brunner_app/src/bloc/ejecucion_servicio_bloc.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
+import 'package:new_brunner_app/src/model/Empresa/departamento_model.dart';
 import 'package:new_brunner_app/src/model/Empresa/empresas_model.dart';
+import 'package:new_brunner_app/src/model/Empresa/sede_model.dart';
 import 'package:new_brunner_app/src/page/Logistica/Orden%20Pedido/Consulta%20Informacion/Ordenes%20Pedido%20Lista/ops.dart';
-import 'package:new_brunner_app/src/page/search_proveedor.dart';
 import 'package:new_brunner_app/src/widget/text_field.dart';
 
 class GenerarOrdenEjecucionServicio extends StatefulWidget {
@@ -16,8 +18,8 @@ class GenerarOrdenEjecucionServicio extends StatefulWidget {
 
 class _GenerarOrdenEjecucionServicioState extends State<GenerarOrdenEjecucionServicio> {
   final _empresaController = TextEditingController();
-  final _proveedorController = TextEditingController();
-  final _numeroOPController = TextEditingController();
+  final _unidadOperativaController = TextEditingController();
+  final _sedeOperativaController = TextEditingController();
 
   @override
   void initState() {
@@ -57,7 +59,8 @@ class _GenerarOrdenEjecucionServicioState extends State<GenerarOrdenEjecucionSer
   }
 
   void filtroSearch() {
-    final logisticaOpBloc = ProviderBloc.logisticaOP(context);
+    final ejecucionServicioBloc = ProviderBloc.ejecucionServicio(context);
+    ejecucionServicioBloc.getDataFiltro();
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -128,16 +131,16 @@ class _GenerarOrdenEjecucionServicioState extends State<GenerarOrdenEjecucionSer
                               readOnly: true,
                               ontap: () {
                                 FocusScope.of(context).unfocus();
-                                _seleccionarEmpresa(context);
+                                _seleccionar(context, ejecucionServicioBloc, 'Seleccionar empresa', _streamEmpresa);
                               },
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(10),
                             ),
                             TextFieldSelect(
-                              label: 'Proveedor',
-                              hingText: 'Seleccionar proveedor',
-                              controller: _proveedorController,
+                              label: 'Unidad Operativa Ejecutora',
+                              hingText: 'Seleccionar',
+                              controller: _unidadOperativaController,
                               widget: Icon(
                                 Icons.keyboard_arrow_down,
                                 color: Colors.green,
@@ -146,47 +149,26 @@ class _GenerarOrdenEjecucionServicioState extends State<GenerarOrdenEjecucionSer
                               readOnly: true,
                               ontap: () {
                                 FocusScope.of(context).unfocus();
-                                Navigator.push(
-                                  context,
-                                  PageRouteBuilder(
-                                    pageBuilder: (context, animation, secondaryAnimation) {
-                                      return ProveedorSearch(
-                                        onChanged: (proveedor) {
-                                          _proveedorController.text = proveedor.nombreProveedor ?? '';
-                                        },
-                                      );
-                                    },
-                                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                      var begin = const Offset(0.0, 1.0);
-                                      var end = Offset.zero;
-                                      var curve = Curves.ease;
-
-                                      var tween = Tween(begin: begin, end: end).chain(
-                                        CurveTween(curve: curve),
-                                      );
-
-                                      return SlideTransition(
-                                        position: animation.drive(tween),
-                                        child: child,
-                                      );
-                                    },
-                                  ),
-                                );
+                                _seleccionar(context, ejecucionServicioBloc, 'Seleccionar', _streamDepartamento);
                               },
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(10),
                             ),
                             TextFieldSelect(
-                              label: 'Número de OP',
-                              hingText: '',
-                              controller: _numeroOPController,
+                              label: 'Sede Ejecutora',
+                              hingText: 'Seleccionar',
+                              controller: _sedeOperativaController,
                               widget: Icon(
-                                Icons.numbers,
+                                Icons.keyboard_arrow_down,
                                 color: Colors.green,
                               ),
                               icon: true,
-                              readOnly: false,
+                              readOnly: true,
+                              ontap: () {
+                                FocusScope.of(context).unfocus();
+                                _seleccionar(context, ejecucionServicioBloc, 'Seleccionar', _streamSede);
+                              },
                             ),
                             SizedBox(
                               height: ScreenUtil().setHeight(10),
@@ -195,8 +177,8 @@ class _GenerarOrdenEjecucionServicioState extends State<GenerarOrdenEjecucionSer
                               onTap: () async {
                                 // logisticaOpBloc.getOPSFiltro(
                                 //   _empresaController.text.trim(),
-                                //   _proveedorController.text.trim(),
-                                //   _numeroOPController.text.trim(),
+                                //   _unidadOperativaController.text.trim(),
+                                //   _sedeOperativaController.text.trim(),
                                 //   _estado.trim(),
                                 //   _rendicion.trim(),
                                 //   _fechaInicioController.text.trim(),
@@ -246,8 +228,9 @@ class _GenerarOrdenEjecucionServicioState extends State<GenerarOrdenEjecucionSer
     );
   }
 
-  void _seleccionarEmpresa(BuildContext context) {
-    final logisticaOpBloc = ProviderBloc.logisticaOP(context);
+  void _seleccionar(
+      BuildContext context, EjecucionServicioBloc bloc, String titulo, Widget stream(EjecucionServicioBloc stream, ScrollController controller)) {
+    final ejecucionServicioBloc = ProviderBloc.ejecucionServicio(context);
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -278,7 +261,7 @@ class _GenerarOrdenEjecucionServicioState extends State<GenerarOrdenEjecucionSer
                           color: Colors.grey[600],
                         ),
                         Text(
-                          'Seleccionar empresa',
+                          titulo,
                           style: TextStyle(
                             color: const Color(0xff5a5a5a),
                             fontWeight: FontWeight.w600,
@@ -290,42 +273,7 @@ class _GenerarOrdenEjecucionServicioState extends State<GenerarOrdenEjecucionSer
                           color: Colors.black,
                         ),
                         Expanded(
-                          child: StreamBuilder<List<EmpresasModel>>(
-                              stream: logisticaOpBloc.empresasStream,
-                              builder: (context, snapshot) {
-                                if (!snapshot.hasData) {
-                                  return Center(
-                                    child: CupertinoActivityIndicator(),
-                                  );
-                                }
-
-                                if (snapshot.data!.isEmpty) {
-                                  return Center(
-                                    child: Text('Sin información disponible'),
-                                  );
-                                }
-
-                                return ListView.builder(
-                                  controller: controller,
-                                  itemCount: snapshot.data!.length,
-                                  itemBuilder: (_, index) {
-                                    var item = snapshot.data![index];
-                                    return InkWell(
-                                      onTap: () {
-                                        _empresaController.text = item.nombreEmpresa.toString().trim();
-
-                                        Navigator.pop(context);
-                                      },
-                                      child: Card(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8),
-                                          child: Text(item.nombreEmpresa.toString().trim()),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              }),
+                          child: stream(ejecucionServicioBloc, controller),
                         ),
                       ],
                     ),
@@ -334,6 +282,126 @@ class _GenerarOrdenEjecucionServicioState extends State<GenerarOrdenEjecucionSer
               ),
             ),
           ),
+        );
+      },
+    );
+  }
+
+  Widget _streamEmpresa(EjecucionServicioBloc stream, ScrollController controller) {
+    return StreamBuilder<List<EmpresasModel>>(
+      stream: stream.empresasStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: CupertinoActivityIndicator(),
+          );
+        }
+
+        if (snapshot.data!.isEmpty) {
+          return Center(
+            child: Text('Sin información disponible'),
+          );
+        }
+
+        return ListView.builder(
+          controller: controller,
+          itemCount: snapshot.data!.length,
+          itemBuilder: (_, index) {
+            var item = snapshot.data![index];
+            return InkWell(
+              onTap: () {
+                _empresaController.text = item.nombreEmpresa.toString().trim();
+
+                Navigator.pop(context);
+              },
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Text(item.nombreEmpresa.toString().trim()),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _streamDepartamento(EjecucionServicioBloc stream, ScrollController controller) {
+    return StreamBuilder<List<DepartamentoModel>>(
+      stream: stream.departamentosStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: CupertinoActivityIndicator(),
+          );
+        }
+
+        if (snapshot.data!.isEmpty) {
+          return Center(
+            child: Text('Sin información disponible'),
+          );
+        }
+
+        return ListView.builder(
+          controller: controller,
+          itemCount: snapshot.data!.length,
+          itemBuilder: (_, index) {
+            var item = snapshot.data![index];
+            return InkWell(
+              onTap: () {
+                _unidadOperativaController.text = item.nombreDepartamento.toString().trim();
+
+                Navigator.pop(context);
+              },
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Text(item.nombreDepartamento.toString().trim()),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _streamSede(EjecucionServicioBloc stream, ScrollController controller) {
+    return StreamBuilder<List<SedeModel>>(
+      stream: stream.sedesStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: CupertinoActivityIndicator(),
+          );
+        }
+
+        if (snapshot.data!.isEmpty) {
+          return Center(
+            child: Text('Sin información disponible'),
+          );
+        }
+
+        return ListView.builder(
+          controller: controller,
+          itemCount: snapshot.data!.length,
+          itemBuilder: (_, index) {
+            var item = snapshot.data![index];
+            return InkWell(
+              onTap: () {
+                _sedeOperativaController.text = item.nombreSede.toString().trim();
+
+                Navigator.pop(context);
+              },
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Text(item.nombreSede.toString().trim()),
+                ),
+              ),
+            );
+          },
         );
       },
     );

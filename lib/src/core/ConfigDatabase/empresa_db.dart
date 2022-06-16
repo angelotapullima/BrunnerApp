@@ -8,4 +8,14 @@ class EmpresaDB {
       ' provinciaEmpresa TEXT,'
       ' distritoEmpresa TEXT,'
       ' estadoEmpresa TEXT)';
+
+  static const String departamentoTableSql = 'CREATE TABLE Departamento('
+      ' idDepartamento TEXT PRIMARY KEY,'
+      ' nombreDepartamento TEXT,'
+      ' estadoDepartamento TEXT)';
+
+  static const String sedeTableSql = 'CREATE TABLE Sede('
+      ' idSede TEXT PRIMARY KEY,'
+      ' nombreSede TEXT,'
+      ' estadoSede TEXT)';
 }

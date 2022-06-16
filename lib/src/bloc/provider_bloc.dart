@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:new_brunner_app/src/bloc/checklist_bloc.dart';
 import 'package:new_brunner_app/src/bloc/consulta_inspeccion_bloc.dart';
 import 'package:new_brunner_app/src/bloc/data_user_bloc.dart';
+import 'package:new_brunner_app/src/bloc/ejecucion_servicio_bloc.dart';
 import 'package:new_brunner_app/src/bloc/logistica_op_bloc.dart';
 import 'package:new_brunner_app/src/bloc/mantenimiento_correctivo_bloc.dart';
 import 'package:new_brunner_app/src/bloc/modulos_bloc.dart';
@@ -26,6 +27,8 @@ class ProviderBloc extends InheritedWidget {
   final ordenHabilitacionBloc = OrdenHabilitacionCorrectivaBloc();
   //Logistica
   final logisticaOPBloc = LogisticaOPBloc();
+  //Residuos Solidos
+  final ejecucionServicioBloc = EjecucionServicioBloc();
 
   ProviderBloc({Key? key, required Widget child}) : super(key: key, child: child);
 
@@ -66,5 +69,9 @@ class ProviderBloc extends InheritedWidget {
 
   static LogisticaOPBloc logisticaOP(BuildContext context) {
     return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.logisticaOPBloc;
+  }
+
+  static EjecucionServicioBloc ejecucionServicio(BuildContext context) {
+    return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.ejecucionServicioBloc;
   }
 }
