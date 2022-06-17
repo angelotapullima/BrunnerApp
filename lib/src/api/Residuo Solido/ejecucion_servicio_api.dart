@@ -6,6 +6,7 @@ import 'package:new_brunner_app/src/core/routes_constanst.dart';
 import 'package:new_brunner_app/src/database/Empresa/departamento_database.dart';
 import 'package:new_brunner_app/src/database/Empresa/empresas_database.dart';
 import 'package:new_brunner_app/src/database/Empresa/sede_database.dart';
+import 'package:new_brunner_app/src/model/Empresa/clientes_model.dart';
 import 'package:new_brunner_app/src/model/Empresa/departamento_model.dart';
 import 'package:new_brunner_app/src/model/Empresa/empresas_model.dart';
 import 'package:new_brunner_app/src/model/Empresa/sede_model.dart';
@@ -30,7 +31,6 @@ class EjecucionServicioApi {
 
       if (resp.statusCode == 200) {
         final decodedData = json.decode(resp.body);
-        print(decodedData);
 
         //Insertar Empresas
         for (var i = 0; i < decodedData["data"]["empresa"].length; i++) {
@@ -76,6 +76,44 @@ class EjecucionServicioApi {
       return 1;
     } catch (e) {
       return 2;
+    }
+  }
+
+  Future<List<ClientesModel>?> getActividadesORDEJEC(String idEmpresa, String idDepartamento, String idSede) async {
+    try {
+      String? token = await Preferences.readData('token');
+
+      final url = Uri.parse('$apiBaseURL/api/Ejecucion/buscar_actividades_clientes');
+      final resp = await http.post(
+        url,
+        body: {
+          'app': 'true',
+          'tn': token,
+          'id_empresa': idEmpresa,
+          'id_departamento': idDepartamento,
+          'id_sede': idSede,
+        },
+      );
+
+      if (resp.statusCode == 200) {
+        final decodedData = json.decode(resp.body);
+
+        final List<ClientesModel> lista = [];
+
+        for (var i = 0; i < decodedData["result"].length; i++) {
+          var data = decodedData["result"][i];
+          final cliente = ClientesModel();
+          cliente.idCliente = data["id_cliente"];
+          cliente.nombreCliente = data["cliente_nombre"];
+          lista.add(cliente);
+        }
+
+        return lista;
+      } else {
+        return [];
+      }
+    } catch (e) {
+      return null;
     }
   }
 }

@@ -23,7 +23,7 @@ class DepartamentoDatabase {
     try {
       final Database db = await dbprovider.getDatabase();
       List<DepartamentoModel> list = [];
-      List<Map> maps = await db.rawQuery("SELECT * FROM Departamento");
+      List<Map> maps = await db.rawQuery("SELECT * FROM Departamento WHERE estadoDepartamento='0'");
 
       if (maps.isNotEmpty) list = DepartamentoModel.fromJsonList(maps);
       return list;

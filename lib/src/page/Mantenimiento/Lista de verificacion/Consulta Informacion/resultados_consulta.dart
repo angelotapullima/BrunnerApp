@@ -275,7 +275,7 @@ class ResultadosConsulta extends StatelessWidget {
                       fontSize: ScreenUtil().setSp(12),
                     ),
                   ),
-                  fileData('Chofer', inspeccion.nombreChofer.toString(), 11, 12, FontWeight.w500, FontWeight.w400, TextAlign.left),
+                  fileData('Operador', inspeccion.nombreChofer.toString(), 11, 12, FontWeight.w500, FontWeight.w400, TextAlign.left),
                   fileData('Registrado por', inspeccion.nombreUsuario.toString(), 11, 12, FontWeight.w500, FontWeight.w400, TextAlign.left),
                 ],
               ),

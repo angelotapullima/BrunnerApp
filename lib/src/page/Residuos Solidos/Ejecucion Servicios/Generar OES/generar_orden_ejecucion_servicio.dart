@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/ejecucion_servicio_bloc.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
+import 'package:new_brunner_app/src/model/Empresa/clientes_model.dart';
 import 'package:new_brunner_app/src/model/Empresa/departamento_model.dart';
 import 'package:new_brunner_app/src/model/Empresa/empresas_model.dart';
 import 'package:new_brunner_app/src/model/Empresa/sede_model.dart';
-import 'package:new_brunner_app/src/page/Logistica/Orden%20Pedido/Consulta%20Informacion/Ordenes%20Pedido%20Lista/ops.dart';
+import 'package:new_brunner_app/src/page/Residuos%20Solidos/Ejecucion%20Servicios/Generar%20OES/result_oe.dart';
+import 'package:new_brunner_app/src/util/utils.dart';
+import 'package:new_brunner_app/src/widget/show_loading.dart';
 import 'package:new_brunner_app/src/widget/text_field.dart';
 
 class GenerarOrdenEjecucionServicio extends StatefulWidget {
@@ -21,6 +24,10 @@ class _GenerarOrdenEjecucionServicioState extends State<GenerarOrdenEjecucionSer
   final _unidadOperativaController = TextEditingController();
   final _sedeOperativaController = TextEditingController();
 
+  String idEmpresa = '';
+  String idDepartamento = '';
+  String idSede = '';
+
   @override
   void initState() {
     Future.delayed(const Duration(microseconds: 100), () async {
@@ -31,6 +38,7 @@ class _GenerarOrdenEjecucionServicioState extends State<GenerarOrdenEjecucionSer
 
   @override
   Widget build(BuildContext context) {
+    final ejecucionServicioBloc = ProviderBloc.ejecucionServicio(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0XFF73C6B6),
@@ -54,7 +62,83 @@ class _GenerarOrdenEjecucionServicioState extends State<GenerarOrdenEjecucionSer
           ),
         ],
       ),
-      body: OPS(),
+      body: StreamBuilder<bool>(
+        stream: ejecucionServicioBloc.cargandoStream,
+        builder: (_, c) {
+          if (c.hasData && !c.data!) {
+            return StreamBuilder<List<ClientesModel>?>(
+              stream: ejecucionServicioBloc.clientesStream,
+              builder: (_, snapshot) {
+                if (snapshot.hasData) {
+                  if (snapshot.data!.isNotEmpty) {
+                    return ResultOE(
+                      clientes: snapshot.data!,
+                    );
+                  } else {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16)),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('No existen Periodos Contractuales activos, para los datos ingresados'),
+                          InkWell(
+                            onTap: () async {
+                              filtroSearch();
+                            },
+                            child: Container(
+                              width: double.infinity,
+                              margin: const EdgeInsets.all(8),
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.green,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.2),
+                                    spreadRadius: 3,
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 3), // changes position of shadow
+                                  ),
+                                ],
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Buscar',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: ScreenUtil().setSp(20),
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                } else {
+                  return ShowLoadding(
+                    active: true,
+                    h: double.infinity,
+                    w: double.infinity,
+                    fondo: Colors.transparent,
+                    colorText: Colors.black,
+                  );
+                }
+              },
+            );
+          } else {
+            return ShowLoadding(
+              active: true,
+              h: double.infinity,
+              w: double.infinity,
+              fondo: Colors.transparent,
+              colorText: Colors.black,
+            );
+          }
+        },
+      ),
     );
   }
 
@@ -175,16 +259,12 @@ class _GenerarOrdenEjecucionServicioState extends State<GenerarOrdenEjecucionSer
                             ),
                             InkWell(
                               onTap: () async {
-                                // logisticaOpBloc.getOPSFiltro(
-                                //   _empresaController.text.trim(),
-                                //   _unidadOperativaController.text.trim(),
-                                //   _sedeOperativaController.text.trim(),
-                                //   _estado.trim(),
-                                //   _rendicion.trim(),
-                                //   _fechaInicioController.text.trim(),
-                                //   _fechaFinController.text.trim(),
-                                // );
-                                Navigator.pop(context);
+                                if (idEmpresa != '' && idDepartamento != '' && idSede != '') {
+                                  ejecucionServicioBloc.getActividadesClientes(idEmpresa, idDepartamento, idSede);
+                                  Navigator.pop(context);
+                                } else {
+                                  showToast2('Seleccione los 3 filtros', Colors.redAccent);
+                                }
                               },
                               child: Container(
                                 width: double.infinity,
@@ -311,6 +391,7 @@ class _GenerarOrdenEjecucionServicioState extends State<GenerarOrdenEjecucionSer
             return InkWell(
               onTap: () {
                 _empresaController.text = item.nombreEmpresa.toString().trim();
+                idEmpresa = item.idEmpresa.toString().trim();
 
                 Navigator.pop(context);
               },
@@ -351,6 +432,7 @@ class _GenerarOrdenEjecucionServicioState extends State<GenerarOrdenEjecucionSer
             return InkWell(
               onTap: () {
                 _unidadOperativaController.text = item.nombreDepartamento.toString().trim();
+                idDepartamento = item.idDepartamento.toString().trim();
 
                 Navigator.pop(context);
               },
@@ -391,6 +473,7 @@ class _GenerarOrdenEjecucionServicioState extends State<GenerarOrdenEjecucionSer
             return InkWell(
               onTap: () {
                 _sedeOperativaController.text = item.nombreSede.toString().trim();
+                idSede = item.idSede.toString().trim();
 
                 Navigator.pop(context);
               },
