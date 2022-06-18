@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/ejecucion_servicio_bloc.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
-import 'package:new_brunner_app/src/model/Empresa/clientes_model.dart';
 import 'package:new_brunner_app/src/model/Empresa/departamento_model.dart';
 import 'package:new_brunner_app/src/model/Empresa/empresas_model.dart';
 import 'package:new_brunner_app/src/model/Empresa/sede_model.dart';
+import 'package:new_brunner_app/src/model/Residuos%20Solidos/Orden%20Ejecucion/clientes_oe_model.dart';
 import 'package:new_brunner_app/src/page/Residuos%20Solidos/Ejecucion%20Servicios/Generar%20OES/result_oe.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
 import 'package:new_brunner_app/src/widget/show_loading.dart';
@@ -66,13 +66,13 @@ class _GenerarOrdenEjecucionServicioState extends State<GenerarOrdenEjecucionSer
         stream: ejecucionServicioBloc.cargandoStream,
         builder: (_, c) {
           if (c.hasData && !c.data!) {
-            return StreamBuilder<List<ClientesModel>?>(
+            return StreamBuilder<List<ClientesOEModel>?>(
               stream: ejecucionServicioBloc.clientesStream,
               builder: (_, snapshot) {
                 if (snapshot.hasData) {
                   if (snapshot.data!.isNotEmpty) {
                     return ResultOE(
-                      clientes: snapshot.data!,
+                      id: '$idEmpresa$idDepartamento$idSede',
                     );
                   } else {
                     return Padding(

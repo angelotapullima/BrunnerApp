@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
-import 'package:new_brunner_app/src/model/Empresa/clientes_model.dart';
+import 'package:new_brunner_app/src/model/Residuos%20Solidos/Orden%20Ejecucion/clientes_oe_model.dart';
 
 class ClienteSearch extends StatefulWidget {
-  const ClienteSearch({Key? key, required this.onChanged, required this.clientes}) : super(key: key);
-  final ValueChanged<ClientesModel>? onChanged;
-  final List<ClientesModel> clientes;
+  const ClienteSearch({Key? key, required this.onChanged, required this.id}) : super(key: key);
+  final ValueChanged<ClientesOEModel>? onChanged;
+  final String id;
 
   @override
   State<ClienteSearch> createState() => _ClienteSearchState();
@@ -17,7 +17,7 @@ class _ClienteSearchState extends State<ClienteSearch> {
 
   @override
   Widget build(BuildContext context) {
-    final searchBloc = ProviderBloc.logisticaOP(context);
+    final searchBloc = ProviderBloc.ejecucionServicio(context);
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -39,7 +39,7 @@ class _ClienteSearchState extends State<ClienteSearch> {
               child: TextField(
                 controller: searchController,
                 onChanged: (query) {
-                  searchBloc.getProveedoresByQuery(query.trim());
+                  searchBloc.sarchClientesByQuery(query.trim(), widget.id);
                 },
                 textAlign: TextAlign.left,
                 style: TextStyle(
@@ -63,56 +63,66 @@ class _ClienteSearchState extends State<ClienteSearch> {
               height: ScreenUtil().setHeight(10),
             ),
             Expanded(
-              child: ListView.builder(
-                itemCount: widget.clientes.length + 1,
-                itemBuilder: (_, index) {
-                  if (index == 0) {
-                    return Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: ScreenUtil().setWidth(16),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(
-                            'Se encontraron ${widget.clientes.length} resultados',
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: ScreenUtil().setSp(10),
+              child: StreamBuilder<List<ClientesOEModel>>(
+                stream: searchBloc.clientesSearchStream,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                    return ListView.builder(
+                        itemCount: snapshot.data!.length + 1,
+                        itemBuilder: (_, index) {
+                          if (index == 0) {
+                            return Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: ScreenUtil().setWidth(16),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    'Se encontraron ${snapshot.data!.length} resultados',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: ScreenUtil().setSp(10),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                          index = index - 1;
+                          var cliente = snapshot.data![index];
+                          return InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                              widget.onChanged!(cliente);
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: ScreenUtil().setWidth(16),
+                                vertical: ScreenUtil().setHeight(8),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${cliente.nombreCliente}',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: ScreenUtil().setSp(14),
+                                    ),
+                                  ),
+                                  Divider(),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
+                          );
+                        });
+                  } else {
+                    return const Center(
+                      child: Text('Sin clientes...'),
                     );
                   }
-                  index = index - 1;
-                  var cliente = widget.clientes[index];
-                  return InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                      widget.onChanged!(cliente);
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: ScreenUtil().setWidth(16),
-                        vertical: ScreenUtil().setHeight(8),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${cliente.nombreCliente}',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w400,
-                              fontSize: ScreenUtil().setSp(14),
-                            ),
-                          ),
-                          Divider(),
-                        ],
-                      ),
-                    ),
-                  );
                 },
               ),
             ),

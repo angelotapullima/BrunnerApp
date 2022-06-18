@@ -2,6 +2,7 @@ import 'package:new_brunner_app/src/core/ConfigDatabase/empresa_db.dart';
 import 'package:new_brunner_app/src/core/ConfigDatabase/logistica_db.dart';
 import 'package:new_brunner_app/src/core/ConfigDatabase/mantenimiento_db.dart';
 import 'package:new_brunner_app/src/core/ConfigDatabase/modulos_db.dart';
+import 'package:new_brunner_app/src/core/ConfigDatabase/orden_ejecucion.dart';
 import 'package:new_brunner_app/src/core/ConfigDatabase/vehiculos_db.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -28,6 +29,7 @@ class DatabaseHelper {
       db.execute(MantenimientoDB.checkItemInspeccionTableSql);
       db.execute(MantenimientoDB.inspeccionVehiculosTableSql);
       db.execute(MantenimientoDB.inspeccionVehiculoItemTableSql);
+
       //Mantenimiento Correctivo
       db.execute(MantenimientoDB.inspeccionVehiculoDetalleTableSql);
       db.execute(MantenimientoDB.mantenimientoCorrectivoTableSql);
@@ -41,6 +43,15 @@ class DatabaseHelper {
       db.execute(LogisticaDB.proveedoresTableSql);
       db.execute(LogisticaDB.ordenPedidoTableSql);
       db.execute(LogisticaDB.detalleOrdenPedidoTableSql);
+
+      //Residuos Solidos - Orden Ejecucion
+      db.execute(OrdenEjecucionDB.clientesOETableSql);
+      db.execute(OrdenEjecucionDB.contactosOETableSql);
+      db.execute(OrdenEjecucionDB.codigosOETableSql);
+      db.execute(OrdenEjecucionDB.lugaresOETableSql);
+      db.execute(OrdenEjecucionDB.actividadesOETableSql);
+
+      //
     }, version: 1, onDowngrade: onDatabaseDowngradeDelete);
   }
 }
