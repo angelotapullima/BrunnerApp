@@ -38,6 +38,7 @@ class DatabaseHelper {
       db.execute(EmpresaDB.empresasTableSql);
       db.execute(EmpresaDB.departamentoTableSql);
       db.execute(EmpresaDB.sedeTableSql);
+      db.execute(EmpresaDB.tipoDocTableSql);
 
       //Logistica
       db.execute(LogisticaDB.proveedoresTableSql);

@@ -18,4 +18,10 @@ class EmpresaDB {
       ' idSede TEXT PRIMARY KEY,'
       ' nombreSede TEXT,'
       ' estadoSede TEXT)';
+
+  static const String tipoDocTableSql = 'CREATE TABLE TipoDoc('
+      ' idTipoDoc TEXT PRIMARY KEY,'
+      ' nombre TEXT,'
+      ' estado TEXT,'
+      ' valueCheck TEXT)';
 }

@@ -1,7 +1,17 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:new_brunner_app/src/bloc/ejecucion_servicio_bloc.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
+import 'package:new_brunner_app/src/model/Empresa/tipo_doc_model.dart';
+import 'package:new_brunner_app/src/model/Residuos%20Solidos/Orden%20Ejecucion/actividades_oe_model.dart';
+import 'package:new_brunner_app/src/model/Residuos%20Solidos/Orden%20Ejecucion/codigos_ue_model.dart';
+import 'package:new_brunner_app/src/model/Residuos%20Solidos/Orden%20Ejecucion/contactos_oe_model.dart';
+import 'package:new_brunner_app/src/model/Residuos%20Solidos/Orden%20Ejecucion/lugares_oe_model.dart';
+import 'package:new_brunner_app/src/page/Residuos%20Solidos/Ejecucion%20Servicios/Generar%20OES/generar_orden_ejecucion_servicio.dart';
+import 'package:new_brunner_app/src/page/Residuos%20Solidos/Ejecucion%20Servicios/Generar%20OES/select_actividades_contractuales.dart';
 import 'package:new_brunner_app/src/page/search_clientes.dart';
+import 'package:new_brunner_app/src/util/utils.dart';
 import 'package:new_brunner_app/src/widget/text_field.dart';
 
 class ResultOE extends StatefulWidget {
@@ -20,6 +30,52 @@ class _ResultOEState extends State<ResultOE> {
   final _responsableController = TextEditingController();
   final _contactoController = TextEditingController();
   final _actividadesController = TextEditingController();
+
+  final _descripcionController = TextEditingController();
+  final _fechaController = TextEditingController();
+  final _cipResponsableController = TextEditingController();
+  final _telefonoContactoController = TextEditingController();
+  final _emailContactoController = TextEditingController();
+
+  //String para los ID
+  String idCliente = '';
+  String idCod = '';
+  String idLugar = '';
+  String idCondicion = '';
+  String idResponsable = '';
+  String idContacto = '';
+
+  //List
+  List<String> itemsCondicion = ['FLEXIBLE', 'NO FLEXIBLE'];
+
+  //Controllador de Actividades
+  final _controller = ControllerActividades();
+
+  void clearControllers() {
+    _codigoController.clear();
+    _lugarController.clear();
+    _responsableController.clear();
+    _contactoController.clear();
+    _actividadesController.clear();
+    _descripcionController.clear();
+    _fechaController.clear();
+    _cipResponsableController.clear();
+    _telefonoContactoController.clear();
+    _emailContactoController.clear();
+
+    idCod = '';
+    idLugar = '';
+    idResponsable = '';
+    idContacto = '';
+    _controller.clearActiviades();
+  }
+
+  @override
+  void initState() {
+    _condicionController.text = itemsCondicion[0];
+    idCondicion = '1';
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +108,9 @@ class _ResultOEState extends State<ResultOE> {
                       return ClienteSearch(
                         id: widget.id,
                         onChanged: (cliente) {
+                          idCliente = cliente.idCliente.toString();
                           _clienteController.text = cliente.nombreCliente ?? '';
+                          clearControllers();
                         },
                       );
                     },
@@ -89,7 +147,9 @@ class _ResultOEState extends State<ResultOE> {
               readOnly: true,
               ontap: () {
                 FocusScope.of(context).unfocus();
-                // _seleccionar(context, 'Seleccionar', _streamCliente);
+                if (idCliente != '') {
+                  _seleccionar(context, ejecucionServicioBloc, 'Seleccionar', _streamCodigos);
+                }
               },
             ),
             SizedBox(
@@ -107,7 +167,9 @@ class _ResultOEState extends State<ResultOE> {
               readOnly: true,
               ontap: () {
                 FocusScope.of(context).unfocus();
-                // _seleccionar(context, 'Seleccionar', _streamCliente);
+                if (idCliente != '') {
+                  _seleccionar(context, ejecucionServicioBloc, 'Seleccionar', _streamLugares);
+                }
               },
             ),
             SizedBox(
@@ -125,7 +187,7 @@ class _ResultOEState extends State<ResultOE> {
               readOnly: true,
               ontap: () {
                 FocusScope.of(context).unfocus();
-                // _seleccionar(context, 'Seleccionar', _streamCliente);
+                _condicion(context);
               },
             ),
             SizedBox(
@@ -134,17 +196,13 @@ class _ResultOEState extends State<ResultOE> {
             TextFieldSelect(
               label: 'Descripción General del Servicio',
               hingText: '',
-              controller: _condicionController,
+              controller: _descripcionController,
               widget: Icon(
-                Icons.keyboard_arrow_down,
+                Icons.edit_outlined,
                 color: Colors.green,
               ),
               icon: true,
-              readOnly: true,
-              ontap: () {
-                FocusScope.of(context).unfocus();
-                // _seleccionar(context, 'Seleccionar', _streamCliente);
-              },
+              readOnly: false,
             ),
             SizedBox(
               height: ScreenUtil().setHeight(15),
@@ -152,16 +210,16 @@ class _ResultOEState extends State<ResultOE> {
             TextFieldSelect(
               label: 'Fecha del Servicio',
               hingText: '',
-              controller: _condicionController,
+              controller: _fechaController,
               widget: Icon(
-                Icons.keyboard_arrow_down,
+                Icons.calendar_month_outlined,
                 color: Colors.green,
               ),
               icon: true,
               readOnly: true,
               ontap: () {
                 FocusScope.of(context).unfocus();
-                // _seleccionar(context, 'Seleccionar', _streamCliente);
+                selectdate(context, _fechaController);
               },
             ),
             SizedBox(
@@ -179,7 +237,9 @@ class _ResultOEState extends State<ResultOE> {
               readOnly: true,
               ontap: () {
                 FocusScope.of(context).unfocus();
-                // _seleccionar(context, 'Seleccionar', _streamCliente);
+                if (idCliente != '') {
+                  _seleccionar(context, ejecucionServicioBloc, 'Seleccionar', _streamResponsable);
+                }
               },
             ),
             SizedBox(
@@ -188,17 +248,9 @@ class _ResultOEState extends State<ResultOE> {
             TextFieldSelect(
               label: 'CIP Responsable Técnico',
               hingText: '',
-              controller: _responsableController,
-              widget: Icon(
-                Icons.keyboard_arrow_down,
-                color: Colors.green,
-              ),
-              icon: true,
-              readOnly: true,
-              ontap: () {
-                FocusScope.of(context).unfocus();
-                // _seleccionar(context, 'Seleccionar', _streamCliente);
-              },
+              controller: _cipResponsableController,
+              icon: false,
+              readOnly: false,
             ),
             SizedBox(
               height: ScreenUtil().setHeight(20),
@@ -215,7 +267,9 @@ class _ResultOEState extends State<ResultOE> {
               readOnly: true,
               ontap: () {
                 FocusScope.of(context).unfocus();
-                // _seleccionar(context, 'Seleccionar', _streamCliente);
+                if (idCliente != '') {
+                  _seleccionar(context, ejecucionServicioBloc, 'Seleccionar', _streamContacto);
+                }
               },
             ),
             SizedBox(
@@ -224,17 +278,9 @@ class _ResultOEState extends State<ResultOE> {
             TextFieldSelect(
               label: 'Teléfono de Contacto',
               hingText: '',
-              controller: _responsableController,
-              widget: Icon(
-                Icons.keyboard_arrow_down,
-                color: Colors.green,
-              ),
-              icon: true,
-              readOnly: true,
-              ontap: () {
-                FocusScope.of(context).unfocus();
-                // _seleccionar(context, 'Seleccionar', _streamCliente);
-              },
+              controller: _telefonoContactoController,
+              icon: false,
+              readOnly: false,
             ),
             SizedBox(
               height: ScreenUtil().setHeight(15),
@@ -242,20 +288,37 @@ class _ResultOEState extends State<ResultOE> {
             TextFieldSelect(
               label: 'Email de Contacto',
               hingText: '',
-              controller: _responsableController,
-              widget: Icon(
-                Icons.keyboard_arrow_down,
-                color: Colors.green,
+              controller: _emailContactoController,
+              icon: false,
+              readOnly: false,
+            ),
+            SizedBox(
+              height: ScreenUtil().setHeight(10),
+            ),
+            Divider(),
+            Text(
+              'Actividades Contractuales',
+              style: TextStyle(
+                fontSize: ScreenUtil().setSp(16),
+                fontWeight: FontWeight.w500,
               ),
-              icon: true,
-              readOnly: true,
-              ontap: () {
-                FocusScope.of(context).unfocus();
-                // _seleccionar(context, 'Seleccionar', _streamCliente);
+            ),
+            SizedBox(
+              height: ScreenUtil().setHeight(10),
+            ),
+            AnimatedBuilder(
+              animation: _controller,
+              builder: (_, t) {
+                return Column(
+                  children: _controller.actividades.asMap().entries.map((item) {
+                    int idx = item.key;
+                    return actividadItem(item.value, idx + 1);
+                  }).toList(),
+                );
               },
             ),
             SizedBox(
-              height: ScreenUtil().setHeight(25),
+              height: ScreenUtil().setHeight(20),
             ),
             TextFieldSelect(
               label: 'Actividades Contractuales',
@@ -269,12 +332,612 @@ class _ResultOEState extends State<ResultOE> {
               readOnly: true,
               ontap: () {
                 FocusScope.of(context).unfocus();
-                // _seleccionar(context, 'Seleccionar', _streamCliente);
+                if (idCliente != '') {
+                  ejecucionServicioBloc.searchActividadesContractuales('', idCliente);
+                  Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) {
+                        return ActividadesContractualesSelect(
+                          idCliente: idCliente,
+                          onChanged: (actividad) {
+                            _controller.saveActividad(actividad);
+                          },
+                        );
+                      },
+                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                        var begin = const Offset(0.0, 1.0);
+                        var end = Offset.zero;
+                        var curve = Curves.ease;
+
+                        var tween = Tween(begin: begin, end: end).chain(
+                          CurveTween(curve: curve),
+                        );
+
+                        return SlideTransition(
+                          position: animation.drive(tween),
+                          child: child,
+                        );
+                      },
+                    ),
+                  );
+                }
               },
+            ),
+            SizedBox(
+              height: ScreenUtil().setHeight(10),
+            ),
+            Divider(),
+            StreamBuilder<List<TipoDocModel>>(
+                stream: ejecucionServicioBloc.tipoDocStream,
+                builder: (_, data) {
+                  if (!data.hasData || data.data!.isEmpty) {
+                    return Container();
+                  }
+                  return Column(
+                    children: [
+                      Text(
+                        'Tipo de Documento',
+                        style: TextStyle(
+                          fontSize: ScreenUtil().setSp(16),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(
+                        height: ScreenUtil().setHeight(10),
+                      ),
+                      Column(
+                        children: data.data!
+                            .map(
+                              (e) => tipoDoc(e),
+                            )
+                            .toList(),
+                      ),
+                    ],
+                  );
+                }),
+            SizedBox(
+              height: ScreenUtil().setHeight(20),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                    ejecucionServicioBloc.getDataFiltro();
+                    ejecucionServicioBloc.clearData();
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) {
+                          return const GenerarOrdenEjecucionServicio();
+                        },
+                      ),
+                    );
+                  },
+                  child: Container(
+                    width: ScreenUtil().setWidth(100),
+                    margin: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.redAccent,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          spreadRadius: 3,
+                          blurRadius: 8,
+                          offset: const Offset(0, 3), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Text(
+                        'Regresar',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: ScreenUtil().setSp(15),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {},
+                  child: Container(
+                    width: ScreenUtil().setWidth(120),
+                    margin: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.green,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          spreadRadius: 3,
+                          blurRadius: 8,
+                          offset: const Offset(0, 3), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Text(
+                        'Generar',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: ScreenUtil().setSp(20),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: ScreenUtil().setHeight(50),
             ),
           ],
         ),
       ),
     );
+  }
+
+  Widget tipoDoc(TipoDocModel tipo) {
+    return Row(
+      children: [
+        Expanded(child: Text(tipo.nombre ?? '')),
+        IconButton(
+          onPressed: () {
+            final ejecucionServicioBloc = ProviderBloc.ejecucionServicio(context);
+            ejecucionServicioBloc.changeSelectTipoDoc(tipo.idTipoDoc.toString(), (tipo.valueCheck == '1') ? '0' : '1');
+          },
+          icon: Icon((tipo.valueCheck == '1') ? Icons.check_box_rounded : Icons.check_box_outline_blank),
+          color: Colors.green,
+        ),
+      ],
+    );
+  }
+
+  Widget actividadItem(ActividadesOEModel actividad, int index) {
+    return Row(
+      children: [
+        Text(index.toString()),
+        Expanded(
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(10), vertical: ScreenUtil().setHeight(5)),
+            padding: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.transparent.withOpacity(0.2),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                Text("${actividad.nombreActividad ?? ''} ${actividad.descripcionDetallePeriodo ?? ''}"),
+                SizedBox(height: ScreenUtil().setHeight(8)),
+                RichText(
+                  text: TextSpan(
+                    text: actividad.cantDetallePeriodo,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                      fontSize: ScreenUtil().setSp(17),
+                    ),
+                    children: [
+                      TextSpan(
+                        text: ' ',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w400,
+                          fontSize: ScreenUtil().setSp(15),
+                        ),
+                      ),
+                      TextSpan(
+                        text: actividad.umDetallePeriodo,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w400,
+                          fontSize: ScreenUtil().setSp(15),
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+        IconButton(
+          onPressed: () {
+            _controller.removeActividad(actividad.idDetallePeriodo.toString());
+          },
+          icon: Icon(
+            Icons.close,
+            color: Colors.redAccent,
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _seleccionar(
+      BuildContext context, EjecucionServicioBloc bloc, String titulo, Widget stream(EjecucionServicioBloc stream, ScrollController controller)) {
+    bloc.getDataSelec(idCliente);
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return GestureDetector(
+          child: Container(
+            color: const Color.fromRGBO(0, 0, 0, 0.001),
+            child: GestureDetector(
+              onTap: () {},
+              child: DraggableScrollableSheet(
+                initialChildSize: 0.7,
+                minChildSize: 0.2,
+                maxChildSize: 0.9,
+                builder: (_, controller) {
+                  return Container(
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(25.0),
+                        topRight: Radius.circular(25.0),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.remove,
+                          color: Colors.grey[600],
+                        ),
+                        Text(
+                          titulo,
+                          style: TextStyle(
+                            color: const Color(0xff5a5a5a),
+                            fontWeight: FontWeight.w600,
+                            fontSize: ScreenUtil().setSp(20),
+                          ),
+                        ),
+                        const Divider(
+                          thickness: 1,
+                          color: Colors.black,
+                        ),
+                        Expanded(
+                          child: stream(bloc, controller),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _streamCodigos(EjecucionServicioBloc stream, ScrollController controller) {
+    return StreamBuilder<List<CodigosOEModel>>(
+      stream: stream.codigosStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: CupertinoActivityIndicator(),
+          );
+        }
+
+        if (snapshot.data!.isEmpty) {
+          return Center(
+            child: Text('Sin información disponible'),
+          );
+        }
+
+        return ListView.builder(
+          controller: controller,
+          itemCount: snapshot.data!.length,
+          itemBuilder: (_, index) {
+            var item = snapshot.data![index];
+            return InkWell(
+              onTap: () {
+                _codigoController.text = item.periodoCod.toString().trim();
+                idCod = item.idCod.toString().trim();
+
+                Navigator.pop(context);
+              },
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Text(item.periodoCod.toString().trim()),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _streamLugares(EjecucionServicioBloc stream, ScrollController controller) {
+    return StreamBuilder<List<LugaresOEModel>>(
+      stream: stream.lugaresStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: CupertinoActivityIndicator(),
+          );
+        }
+
+        if (snapshot.data!.isEmpty) {
+          return Center(
+            child: Text('Sin información disponible'),
+          );
+        }
+
+        return ListView.builder(
+          controller: controller,
+          itemCount: snapshot.data!.length,
+          itemBuilder: (_, index) {
+            var item = snapshot.data![index];
+            return InkWell(
+              onTap: () {
+                _lugarController.text = item.establecimientoLugar.toString().trim();
+                idCod = item.idLugar.toString().trim();
+
+                Navigator.pop(context);
+              },
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Text(item.establecimientoLugar.toString().trim()),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _condicion(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return GestureDetector(
+          child: Container(
+            color: const Color.fromRGBO(0, 0, 0, 0.001),
+            child: GestureDetector(
+              onTap: () {},
+              child: DraggableScrollableSheet(
+                initialChildSize: 0.7,
+                minChildSize: 0.2,
+                maxChildSize: 0.9,
+                builder: (_, controller) {
+                  return Container(
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(25.0),
+                        topRight: Radius.circular(25.0),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.remove,
+                          color: Colors.grey[600],
+                        ),
+                        Text(
+                          'Seleccionar',
+                          style: TextStyle(
+                            color: const Color(0xff5a5a5a),
+                            fontWeight: FontWeight.w600,
+                            fontSize: ScreenUtil().setSp(20),
+                          ),
+                        ),
+                        const Divider(
+                          thickness: 1,
+                          color: Colors.black,
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                            controller: controller,
+                            itemCount: itemsCondicion.length,
+                            itemBuilder: (_, index) {
+                              return InkWell(
+                                onTap: () {
+                                  _condicionController.text = itemsCondicion[index];
+                                  if (_condicionController.text == 'FLEXIBLE') {
+                                    idCondicion = '1';
+                                  } else if (_condicionController.text == 'NO FLEXIBLE') {
+                                    idCondicion = '2';
+                                  } else {
+                                    idCondicion = '';
+                                  }
+
+                                  Navigator.pop(context);
+                                },
+                                child: Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8),
+                                    child: Text(
+                                      itemsCondicion[index],
+                                      style: TextStyle(
+                                        color: (itemsCondicion[index] == 'FLEXIBLE') ? Colors.green : Colors.red,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _streamResponsable(EjecucionServicioBloc stream, ScrollController controller) {
+    return StreamBuilder<List<ContactosOEModel>>(
+      stream: stream.contactosStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: CupertinoActivityIndicator(),
+          );
+        }
+
+        if (snapshot.data!.isEmpty) {
+          return Center(
+            child: Text('Sin información disponible'),
+          );
+        }
+
+        return ListView.builder(
+          controller: controller,
+          itemCount: snapshot.data!.length,
+          itemBuilder: (_, index) {
+            var item = snapshot.data![index];
+            return InkWell(
+              onTap: () {
+                _responsableController.text = item.contactoCliente.toString().trim();
+                idContacto = item.idContacto.toString().trim();
+                if (item.cipCliente != '000') {
+                  _cipResponsableController.text = item.cipCliente ?? '';
+                } else {
+                  _cipResponsableController.text = '';
+                }
+
+                Navigator.pop(context);
+              },
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Text(item.contactoCliente.toString().trim()),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _streamContacto(EjecucionServicioBloc stream, ScrollController controller) {
+    return StreamBuilder<List<ContactosOEModel>>(
+      stream: stream.contactosStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: CupertinoActivityIndicator(),
+          );
+        }
+
+        if (snapshot.data!.isEmpty) {
+          return Center(
+            child: Text('Sin información disponible'),
+          );
+        }
+
+        return ListView.builder(
+          controller: controller,
+          itemCount: snapshot.data!.length,
+          itemBuilder: (_, index) {
+            var item = snapshot.data![index];
+            return InkWell(
+              onTap: () {
+                _contactoController.text = item.contactoCliente.toString().trim();
+                idContacto = item.idContacto.toString().trim();
+
+                _telefonoContactoController.text = item.telefonoCliente ?? '';
+                _emailContactoController.text = item.emailCliente ?? '';
+
+                Navigator.pop(context);
+              },
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Text(item.contactoCliente.toString().trim()),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class ControllerActividades extends ChangeNotifier {
+  List<ActividadesOEModel> actividades = [];
+  bool cargando = false;
+  bool td1 = false, td2 = false, td3 = false, td4 = false, td5 = false, td6 = false;
+
+  void saveActividad(ActividadesOEModel item) {
+    actividades.removeWhere((element) => element.idDetallePeriodo == item.idDetallePeriodo);
+    actividades.add(item);
+    notifyListeners();
+  }
+
+  void removeActividad(String id) {
+    actividades.removeWhere((item) => item.idDetallePeriodo == id);
+    notifyListeners();
+  }
+
+  void clearActiviades() {
+    actividades.clear();
+    notifyListeners();
+  }
+
+  void activeTipoDoc(int tipo, bool data) {
+    switch (tipo) {
+      case 1:
+        td1 = data;
+        break;
+      case 2:
+        td2 = data;
+        break;
+      case 3:
+        td3 = data;
+        break;
+      case 4:
+        td4 = data;
+        break;
+      case 5:
+        td5 = data;
+        break;
+      case 6:
+        td6 = data;
+        break;
+      default:
+        break;
+    }
+    notifyListeners();
+  }
+
+  void changeCargando(bool b) {
+    cargando = b;
+    notifyListeners();
   }
 }

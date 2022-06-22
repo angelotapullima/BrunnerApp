@@ -6,6 +6,7 @@ import 'package:new_brunner_app/src/core/routes_constanst.dart';
 import 'package:new_brunner_app/src/database/Empresa/departamento_database.dart';
 import 'package:new_brunner_app/src/database/Empresa/empresas_database.dart';
 import 'package:new_brunner_app/src/database/Empresa/sede_database.dart';
+import 'package:new_brunner_app/src/database/Empresa/tipo_doc_database.dart';
 import 'package:new_brunner_app/src/database/Residuos%20Solidos/Orden%20Ejecucion/actividades_oe_database.dart';
 import 'package:new_brunner_app/src/database/Residuos%20Solidos/Orden%20Ejecucion/clientes_oe_database.dart';
 import 'package:new_brunner_app/src/database/Residuos%20Solidos/Orden%20Ejecucion/codigos_oe_database.dart';
@@ -15,6 +16,7 @@ import 'package:new_brunner_app/src/model/Empresa/clientes_model.dart';
 import 'package:new_brunner_app/src/model/Empresa/departamento_model.dart';
 import 'package:new_brunner_app/src/model/Empresa/empresas_model.dart';
 import 'package:new_brunner_app/src/model/Empresa/sede_model.dart';
+import 'package:new_brunner_app/src/model/Empresa/tipo_doc_model.dart';
 import 'package:new_brunner_app/src/model/Residuos%20Solidos/Orden%20Ejecucion/actividades_oe_model.dart';
 import 'package:new_brunner_app/src/model/Residuos%20Solidos/Orden%20Ejecucion/clientes_oe_model.dart';
 import 'package:new_brunner_app/src/model/Residuos%20Solidos/Orden%20Ejecucion/codigos_ue_model.dart';
@@ -31,6 +33,7 @@ class EjecucionServicioApi {
   final codigosDB = CodigosOEDatabase();
   final lugaresDB = LugaresOEDatabase();
   final actividadesDB = ActividadesOEDatabase();
+  final tipoDocDB = TipoDocDatabase();
 
   Future<int> getFiltrosApi() async {
     try {
@@ -215,6 +218,18 @@ class EjecucionServicioApi {
 
             await actividadesDB.insertarActividadOE(actividad);
           }
+        }
+
+        for (var i = 0; i < decodedData["tipoadjuntos"].length; i++) {
+          var datito = decodedData["tipoadjuntos"][i];
+
+          final doc = TipoDocModel();
+          doc.idTipoDoc = datito["id_tipo_documentos_ej"];
+          doc.nombre = datito["tipo_nombre"];
+          doc.estado = datito["tipo_documento_estado"];
+          doc.valueCheck = '0';
+
+          await tipoDocDB.insertarTipoDoc(doc);
         }
 
         return lista;

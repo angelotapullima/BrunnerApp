@@ -2,6 +2,7 @@ import 'package:new_brunner_app/src/api/Residuo%20Solido/ejecucion_servicio_api.
 import 'package:new_brunner_app/src/model/Empresa/departamento_model.dart';
 import 'package:new_brunner_app/src/model/Empresa/empresas_model.dart';
 import 'package:new_brunner_app/src/model/Empresa/sede_model.dart';
+import 'package:new_brunner_app/src/model/Empresa/tipo_doc_model.dart';
 import 'package:new_brunner_app/src/model/Residuos%20Solidos/Orden%20Ejecucion/actividades_oe_model.dart';
 import 'package:new_brunner_app/src/model/Residuos%20Solidos/Orden%20Ejecucion/clientes_oe_model.dart';
 import 'package:new_brunner_app/src/model/Residuos%20Solidos/Orden%20Ejecucion/codigos_ue_model.dart';
@@ -44,6 +45,9 @@ class EjecucionServicioBloc {
   final _actividadesController = BehaviorSubject<List<ActividadesOEModel>>();
   Stream<List<ActividadesOEModel>> get actividadesStream => _actividadesController.stream;
 
+  final _tipoDocController = BehaviorSubject<List<TipoDocModel>>();
+  Stream<List<TipoDocModel>> get tipoDocStream => _tipoDocController.stream;
+
   dispose() {
     _empresasController.close();
     _departamentosController.close();
@@ -55,6 +59,7 @@ class EjecucionServicioBloc {
     _lugaresController.close();
     _actividadesController.close();
     _clientesSearchController.close();
+    _tipoDocController.close();
   }
 
   void getDataFiltro() async {
@@ -68,10 +73,15 @@ class EjecucionServicioBloc {
   }
 
   void getActividadesClientes(String idEmpresa, String idDepartamento, String idSede) async {
-    _clientesController.sink.add(null);
+    _clientesController.sink.add([]);
     _cargandoController.sink.add(true);
     _clientesController.sink.add(await _api.getClientesORDEJEC(idEmpresa, idDepartamento, idSede));
+    _tipoDocController.sink.add(await _api.tipoDocDB.getTiposDoc());
     _cargandoController.sink.add(false);
+  }
+
+  void clearData() {
+    _clientesController.sink.add(null);
   }
 
   void getDataSelec(String idCliente) async {
@@ -79,6 +89,12 @@ class EjecucionServicioBloc {
     _codigosController.sink.add(await _api.codigosDB.getCodigosOEByIdCliente(idCliente));
     _lugaresController.sink.add(await _api.lugaresDB.getLugaresOEByIdCliente(idCliente));
     _actividadesController.sink.add(await _api.actividadesDB.getActividadesOEByIdCliente(idCliente));
+    //await _api.tipoDocDB.updateHabilitarAll();
+  }
+
+  void changeSelectTipoDoc(String idTipoDoc, String valueCheck) async {
+    await _api.tipoDocDB.updateHabilitarCheck(idTipoDoc, valueCheck);
+    _tipoDocController.sink.add(await _api.tipoDocDB.getTiposDoc());
   }
 
   void sarchClientesByQuery(String query, String id) async {
@@ -86,6 +102,14 @@ class EjecucionServicioBloc {
       _clientesSearchController.sink.add(await _api.clientesDB.getClientesOE(id));
     } else {
       _clientesSearchController.sink.add(await _api.clientesDB.getClientesOEByQuery(query, id));
+    }
+  }
+
+  void searchActividadesContractuales(String query, String idCliente) async {
+    if (query.isNotEmpty) {
+      _actividadesController.sink.add(await _api.actividadesDB.getActividadesOEByIdCliente(idCliente));
+    } else {
+      _actividadesController.sink.add(await _api.actividadesDB.getActividadesOEByQueryANDIdCliente(query, idCliente));
     }
   }
 }
