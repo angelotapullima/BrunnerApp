@@ -72,7 +72,10 @@ class _GenerarOrdenEjecucionServicioState extends State<GenerarOrdenEjecucionSer
                 if (snapshot.hasData) {
                   if (snapshot.data!.isNotEmpty) {
                     return ResultOE(
-                      id: '$idEmpresa$idDepartamento$idSede',
+                      idEmpresa: idEmpresa,
+                      idDepartamento: idDepartamento,
+                      idSede: idSede,
+                      //id: '$idEmpresa$idDepartamento$idSede',
                     );
                   } else {
                     return Padding(

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+
 import 'package:new_brunner_app/src/core/preferences.dart';
 import 'package:new_brunner_app/src/core/routes_constanst.dart';
 import 'package:new_brunner_app/src/database/Empresa/departamento_database.dart';
@@ -240,4 +241,80 @@ class EjecucionServicioApi {
       return null;
     }
   }
+
+  Future<int> saveOrdenEjecuion(ModelGenerarOE oe) async {
+    try {
+      String? token = await Preferences.readData('token');
+      String? idUser = await Preferences.readData('id_user');
+
+      final url = Uri.parse('$apiBaseURL/api/Ejecucion/save_ejecucion');
+      final resp = await http.post(
+        url,
+        body: {
+          'app': 'true',
+          'tn': token,
+          'id_user_creacion': idUser,
+          'id_empresa': oe.idEmpresa,
+          'id_departamento': oe.idDepartamento,
+          'id_sede': oe.idSede,
+          'observaciones': oe.observaciones,
+          'ejecucion_cip_rt': oe.responsableCIP,
+          'ejecucion_rt': oe.responsable,
+          'periodo_contacto': oe.contacto,
+          'periodo_telefono': oe.contactoTelefono,
+          'periodo_email': oe.contactoEmail,
+          'id_lugar': oe.idLugar,
+          'select_condicion': oe.condicion,
+          'fecha': oe.fecha,
+          'contenido': oe.contenido,
+          'documento_check': oe.documento,
+        },
+      );
+
+      if (resp.statusCode == 200) {
+        final decodedData = json.decode(resp.body);
+        print(decodedData);
+
+        return decodedData;
+      } else {
+        return 0;
+      }
+    } catch (e) {
+      print(e);
+      return 2;
+    }
+  }
+}
+
+class ModelGenerarOE {
+  String? idEmpresa;
+  String? idDepartamento;
+  String? idSede;
+  String? observaciones;
+  String? responsableCIP;
+  String? responsable;
+  String? contacto;
+  String? contactoTelefono;
+  String? contactoEmail;
+  String? idLugar;
+  String? condicion;
+  String? fecha;
+  String? contenido;
+  String? documento;
+  ModelGenerarOE({
+    this.idEmpresa,
+    this.idDepartamento,
+    this.idSede,
+    this.observaciones,
+    this.responsableCIP,
+    this.responsable,
+    this.contacto,
+    this.contactoTelefono,
+    this.contactoEmail,
+    this.idLugar,
+    this.condicion,
+    this.fecha,
+    this.contenido,
+    this.documento,
+  });
 }
