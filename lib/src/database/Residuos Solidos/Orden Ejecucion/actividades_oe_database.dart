@@ -19,11 +19,11 @@ class ActividadesOEDatabase {
     }
   }
 
-  Future<List<ActividadesOEModel>> getActividadesOEByIdCliente(String idCliente) async {
+  Future<List<ActividadesOEModel>> getActividadesOEByidPeriodo(String idPeriodo) async {
     try {
       final Database db = await dbprovider.getDatabase();
       List<ActividadesOEModel> list = [];
-      List<Map> maps = await db.rawQuery("SELECT * FROM ActividadesOE WHERE idCliente = '$idCliente'");
+      List<Map> maps = await db.rawQuery("SELECT * FROM ActividadesOE WHERE idPeriodo = '$idPeriodo'");
 
       if (maps.isNotEmpty) list = ActividadesOEModel.fromJsonList(maps);
       return list;
@@ -33,12 +33,12 @@ class ActividadesOEDatabase {
     }
   }
 
-  Future<List<ActividadesOEModel>> getActividadesOEByQueryANDIdCliente(String query, String idCliente) async {
+  Future<List<ActividadesOEModel>> getActividadesOEByQueryANDidPeriodo(String query, String idPeriodo) async {
     try {
       final Database db = await dbprovider.getDatabase();
       List<ActividadesOEModel> list = [];
       List<Map> maps = await db.rawQuery(
-          "SELECT * FROM ActividadesOE WHERE idCliente = '$idCliente' AND (total LIKE '%$query%' OR nombreActividad LIKE '%$query%' OR descripcionDetallePeriodo LIKE '%$query%' OR cantDetallePeriodo LIKE '%$query%' OR umDetallePeriodo LIKE '%$query%' ) ");
+          "SELECT * FROM ActividadesOE WHERE idPeriodo = '$idPeriodo' AND (total LIKE '%$query%' OR nombreActividad LIKE '%$query%' OR descripcionDetallePeriodo LIKE '%$query%' OR cantDetallePeriodo LIKE '%$query%' OR umDetallePeriodo LIKE '%$query%' ) ");
 
       if (maps.isNotEmpty) list = ActividadesOEModel.fromJsonList(maps);
       return list;
@@ -46,5 +46,13 @@ class ActividadesOEDatabase {
       e;
       return [];
     }
+  }
+
+  delete() async {
+    final db = await dbprovider.database;
+
+    final res = await db.rawDelete("DELETE FROM ActividadesOE");
+
+    return res;
   }
 }

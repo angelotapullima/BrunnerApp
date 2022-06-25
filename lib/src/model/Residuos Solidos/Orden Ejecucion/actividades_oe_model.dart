@@ -1,6 +1,6 @@
 class ActividadesOEModel {
   String? idDetallePeriodo;
-  String? idCliente;
+  String? idPeriodo;
   String? total;
   String? nombreActividad;
   String? descripcionDetallePeriodo;
@@ -9,7 +9,7 @@ class ActividadesOEModel {
 
   ActividadesOEModel({
     this.idDetallePeriodo,
-    this.idCliente,
+    this.idPeriodo,
     this.total,
     this.nombreActividad,
     this.descripcionDetallePeriodo,
@@ -21,7 +21,7 @@ class ActividadesOEModel {
 
   Map<String, dynamic> toJson() => {
         'idDetallePeriodo': idDetallePeriodo,
-        'idCliente': idCliente,
+        'idPeriodo': idPeriodo,
         'total': total,
         'nombreActividad': nombreActividad,
         'descripcionDetallePeriodo': descripcionDetallePeriodo,
@@ -31,7 +31,7 @@ class ActividadesOEModel {
 
   factory ActividadesOEModel.fromJson(Map<String, dynamic> json) => ActividadesOEModel(
         idDetallePeriodo: json["idDetallePeriodo"],
-        idCliente: json["idCliente"],
+        idPeriodo: json["idPeriodo"],
         total: json["total"],
         nombreActividad: json["nombreActividad"],
         descripcionDetallePeriodo: json["descripcionDetallePeriodo"],

@@ -46,4 +46,12 @@ class ClientesOEDatabase {
       return [];
     }
   }
+
+  delete() async {
+    final db = await dbprovider.database;
+
+    final res = await db.rawDelete("DELETE FROM ClientesOE");
+
+    return res;
+  }
 }

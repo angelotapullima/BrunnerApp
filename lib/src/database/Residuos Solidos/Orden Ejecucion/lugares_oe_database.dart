@@ -19,11 +19,11 @@ class LugaresOEDatabase {
     }
   }
 
-  Future<List<LugaresOEModel>> getLugaresOEByIdCliente(String idCliente) async {
+  Future<List<LugaresOEModel>> getLugaresOEByidPeriodo(String idPeriodo) async {
     try {
       final Database db = await dbprovider.getDatabase();
       List<LugaresOEModel> list = [];
-      List<Map> maps = await db.rawQuery("SELECT * FROM LugaresOE WHERE idCliente = '$idCliente'");
+      List<Map> maps = await db.rawQuery("SELECT * FROM LugaresOE WHERE idPeriodo = '$idPeriodo'");
 
       if (maps.isNotEmpty) list = LugaresOEModel.fromJsonList(maps);
       return list;
@@ -31,5 +31,13 @@ class LugaresOEDatabase {
       e;
       return [];
     }
+  }
+
+  delete() async {
+    final db = await dbprovider.database;
+
+    final res = await db.rawDelete("DELETE FROM LugaresOE");
+
+    return res;
   }
 }

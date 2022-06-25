@@ -87,9 +87,13 @@ class EjecucionServicioBloc {
   void getDataSelec(String idCliente) async {
     _contactosController.sink.add(await _api.contactosDB.getContactosOEByIdCliente(idCliente));
     _codigosController.sink.add(await _api.codigosDB.getCodigosOEByIdCliente(idCliente));
-    _lugaresController.sink.add(await _api.lugaresDB.getLugaresOEByIdCliente(idCliente));
-    _actividadesController.sink.add(await _api.actividadesDB.getActividadesOEByIdCliente(idCliente));
+
     //await _api.tipoDocDB.updateHabilitarAll();
+  }
+
+  void getDataByidPeriodo(String idPeriodo) async {
+    _lugaresController.sink.add(await _api.lugaresDB.getLugaresOEByidPeriodo(idPeriodo));
+    _actividadesController.sink.add(await _api.actividadesDB.getActividadesOEByidPeriodo(idPeriodo));
   }
 
   void changeSelectTipoDoc(String idTipoDoc, String valueCheck) async {
@@ -105,11 +109,11 @@ class EjecucionServicioBloc {
     }
   }
 
-  void searchActividadesContractuales(String query, String idCliente) async {
+  void searchActividadesContractualesQuery(String query, String idPeriodo) async {
     if (query.isNotEmpty) {
-      _actividadesController.sink.add(await _api.actividadesDB.getActividadesOEByIdCliente(idCliente));
+      _actividadesController.sink.add(await _api.actividadesDB.getActividadesOEByidPeriodo(idPeriodo));
     } else {
-      _actividadesController.sink.add(await _api.actividadesDB.getActividadesOEByQueryANDIdCliente(query, idCliente));
+      _actividadesController.sink.add(await _api.actividadesDB.getActividadesOEByQueryANDidPeriodo(query, idPeriodo));
     }
   }
 }

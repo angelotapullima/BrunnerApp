@@ -75,7 +75,7 @@ class _ResultOEState extends State<ResultOE> {
     idLugar = '';
     idResponsable = '';
     idContacto = '';
-    _controller.clearActiviades();
+    _controller.clearActividades();
   }
 
   @override
@@ -177,7 +177,7 @@ class _ResultOEState extends State<ResultOE> {
                   readOnly: true,
                   ontap: () {
                     FocusScope.of(context).unfocus();
-                    if (idCliente != '') {
+                    if (idCod != '') {
                       _seleccionar(context, ejecucionServicioBloc, 'Seleccionar', _streamLugares);
                     }
                   },
@@ -342,14 +342,14 @@ class _ResultOEState extends State<ResultOE> {
                   readOnly: true,
                   ontap: () {
                     FocusScope.of(context).unfocus();
-                    if (idCliente != '') {
-                      ejecucionServicioBloc.searchActividadesContractuales('', idCliente);
+                    if (idCod != '') {
+                      ejecucionServicioBloc.searchActividadesContractualesQuery('', idCod);
                       Navigator.push(
                         context,
                         PageRouteBuilder(
                           pageBuilder: (context, animation, secondaryAnimation) {
                             return ActividadesContractualesSelect(
-                              idCliente: idCliente,
+                              idPeriodo: idCod,
                               onChanged: (actividad) {
                                 _controller.saveActividad(actividad);
                               },
@@ -764,6 +764,11 @@ class _ResultOEState extends State<ResultOE> {
                 _codigoController.text = item.periodoCod.toString().trim();
                 idCod = item.idCod.toString().trim();
 
+                _lugarController.clear();
+                idLugar = '';
+                _controller.clearActividades();
+                stream.getDataByidPeriodo(idCod);
+
                 Navigator.pop(context);
               },
               child: Card(
@@ -1014,7 +1019,7 @@ class ControllerActividades extends ChangeNotifier {
     notifyListeners();
   }
 
-  void clearActiviades() {
+  void clearActividades() {
     actividades.clear();
     notifyListeners();
   }

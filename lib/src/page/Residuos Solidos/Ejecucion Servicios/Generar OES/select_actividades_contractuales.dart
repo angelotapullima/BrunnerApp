@@ -6,9 +6,9 @@ import 'package:new_brunner_app/src/util/utils.dart';
 import 'package:new_brunner_app/src/widget/text_field.dart';
 
 class ActividadesContractualesSelect extends StatefulWidget {
-  const ActividadesContractualesSelect({Key? key, required this.onChanged, required this.idCliente}) : super(key: key);
+  const ActividadesContractualesSelect({Key? key, required this.onChanged, required this.idPeriodo}) : super(key: key);
   final ValueChanged<ActividadesOEModel>? onChanged;
-  final String idCliente;
+  final String idPeriodo;
 
   @override
   State<ActividadesContractualesSelect> createState() => _ActividadesContractualesSelectState();
@@ -41,7 +41,7 @@ class _ActividadesContractualesSelectState extends State<ActividadesContractuale
               child: TextField(
                 controller: searchController,
                 onChanged: (query) {
-                  searchBloc.searchActividadesContractuales(query.trim(), widget.idCliente);
+                  searchBloc.searchActividadesContractualesQuery(query.trim(), widget.idPeriodo);
                 },
                 textAlign: TextAlign.left,
                 style: TextStyle(
@@ -225,7 +225,7 @@ class _ActividadesContractualesSelectState extends State<ActividadesContractuale
                                     if (_observacionesController.text.isEmpty) {
                                       final actividadModel = ActividadesOEModel();
                                       actividadModel.idDetallePeriodo = actividad.idDetallePeriodo;
-                                      actividadModel.idCliente = actividad.idCliente;
+                                      actividadModel.idPeriodo = actividad.idPeriodo;
                                       actividadModel.total = actividad.total;
                                       actividadModel.nombreActividad = actividad.nombreActividad;
                                       actividadModel.descripcionDetallePeriodo = actividad.descripcionDetallePeriodo;
@@ -241,7 +241,7 @@ class _ActividadesContractualesSelectState extends State<ActividadesContractuale
                                       if (min <= max) {
                                         final actividadModel = ActividadesOEModel();
                                         actividadModel.idDetallePeriodo = actividad.idDetallePeriodo;
-                                        actividadModel.idCliente = actividad.idCliente;
+                                        actividadModel.idPeriodo = actividad.idPeriodo;
                                         actividadModel.total = actividad.total;
                                         actividadModel.nombreActividad = actividad.nombreActividad;
                                         actividadModel.descripcionDetallePeriodo = actividad.descripcionDetallePeriodo;

@@ -156,6 +156,12 @@ class EjecucionServicioApi {
       if (resp.statusCode == 200) {
         final decodedData = json.decode(resp.body);
 
+        await clientesDB.delete();
+        await contactosDB.delete();
+        await codigosDB.delete();
+        await lugaresDB.delete();
+        await actividadesDB.delete();
+
         final List<ClientesOEModel> lista = [];
 
         for (var i = 0; i < decodedData["datos_clientes"].length; i++) {
@@ -191,33 +197,33 @@ class EjecucionServicioApi {
             codigo.periodoCod = dato["periodoc_codigo"];
 
             await codigosDB.insertarCodigoOE(codigo);
-          }
 
-          //Insertar Lugares
-          for (var x = 0; x < data["lugares"].length; x++) {
-            var dato = data["lugares"][x];
-            final lugar = LugaresOEModel();
-            lugar.idLugarEjecucion = dato["id_clientelugar_ejecucion"];
-            lugar.idCliente = data["id_cliente"];
-            lugar.establecimientoLugar = dato["cliente_lugar_establecimiento"];
-            lugar.idLugar = dato["id_cliente_lugar"];
+            //Insertar Lugares
+            for (var i = 0; i < dato["lugares"].length; i++) {
+              var datos = dato["lugares"][i];
+              final lugar = LugaresOEModel();
+              lugar.idLugarEjecucion = datos["id_clientelugar_ejecucion"];
+              lugar.idPeriodo = dato["id_periodoc"];
+              lugar.establecimientoLugar = datos["cliente_lugar_establecimiento"];
+              lugar.idLugar = datos["id_cliente_lugar"];
 
-            await lugaresDB.insertarLugarOE(lugar);
-          }
+              await lugaresDB.insertarLugarOE(lugar);
+            }
 
-          //Insertar Actividades
-          for (var x = 0; x < data["actividades"].length; x++) {
-            var dato = data["actividades"][x];
-            final actividad = ActividadesOEModel();
-            actividad.idDetallePeriodo = dato["id_detalle_periodoc"];
-            actividad.idCliente = data["id_cliente"];
-            actividad.total = dato["total"];
-            actividad.nombreActividad = dato["actividad_nombre"];
-            actividad.descripcionDetallePeriodo = dato["detalle_periodoc_descripcion"];
-            actividad.cantDetallePeriodo = dato["detalle_periodoc_cant"];
-            actividad.umDetallePeriodo = dato["detalle_periodoc_um"];
+            //Insertar Actividades
+            for (var r = 0; r < dato["actividades"].length; r++) {
+              var datos = dato["actividades"][r];
+              final actividad = ActividadesOEModel();
+              actividad.idDetallePeriodo = datos["id_detalle_periodoc"];
+              actividad.idPeriodo = dato["id_periodoc"];
+              actividad.total = datos["total"];
+              actividad.nombreActividad = datos["actividad_nombre"];
+              actividad.descripcionDetallePeriodo = datos["detalle_periodoc_descripcion"];
+              actividad.cantDetallePeriodo = datos["detalle_periodoc_cant"];
+              actividad.umDetallePeriodo = datos["detalle_periodoc_um"];
 
-            await actividadesDB.insertarActividadOE(actividad);
+              await actividadesDB.insertarActividadOE(actividad);
+            }
           }
         }
 

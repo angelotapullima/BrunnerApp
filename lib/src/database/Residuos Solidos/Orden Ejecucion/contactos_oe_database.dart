@@ -32,4 +32,12 @@ class ContactosOEDatabase {
       return [];
     }
   }
+
+  delete() async {
+    final db = await dbprovider.database;
+
+    final res = await db.rawDelete("DELETE FROM ContactosOE");
+
+    return res;
+  }
 }

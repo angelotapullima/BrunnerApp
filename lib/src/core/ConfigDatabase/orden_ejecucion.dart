@@ -20,13 +20,13 @@ class OrdenEjecucionDB {
 
   static const String lugaresOETableSql = 'CREATE TABLE LugaresOE('
       ' idLugarEjecucion TEXT PRIMARY KEY,'
-      ' idCliente TEXT,'
+      ' idPeriodo TEXT,'
       ' establecimientoLugar TEXT,'
       ' idLugar TEXT)';
 
   static const String actividadesOETableSql = 'CREATE TABLE ActividadesOE('
       ' idDetallePeriodo TEXT PRIMARY KEY,'
-      ' idCliente TEXT,'
+      ' idPeriodo TEXT,'
       ' total TEXT,'
       ' nombreActividad TEXT,'
       ' descripcionDetallePeriodo TEXT,'

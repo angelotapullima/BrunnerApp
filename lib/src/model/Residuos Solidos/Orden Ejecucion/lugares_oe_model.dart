@@ -1,12 +1,12 @@
 class LugaresOEModel {
   String? idLugarEjecucion;
-  String? idCliente;
+  String? idPeriodo;
   String? establecimientoLugar;
   String? idLugar;
 
   LugaresOEModel({
     this.idLugarEjecucion,
-    this.idCliente,
+    this.idPeriodo,
     this.establecimientoLugar,
     this.idLugar,
   });
@@ -15,14 +15,14 @@ class LugaresOEModel {
 
   Map<String, dynamic> toJson() => {
         'idLugarEjecucion': idLugarEjecucion,
-        'idCliente': idCliente,
+        'idPeriodo': idPeriodo,
         'establecimientoLugar': establecimientoLugar,
         'idLugar': idLugar,
       };
 
   factory LugaresOEModel.fromJson(Map<String, dynamic> json) => LugaresOEModel(
         idLugarEjecucion: json["idLugarEjecucion"],
-        idCliente: json["idCliente"],
+        idPeriodo: json["idPeriodo"],
         establecimientoLugar: json["establecimientoLugar"],
         idLugar: json["idLugar"],
       );
