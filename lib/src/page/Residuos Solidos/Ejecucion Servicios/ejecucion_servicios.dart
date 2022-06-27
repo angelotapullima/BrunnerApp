@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/page/Home/menu_widget.dart';
 import 'package:new_brunner_app/src/page/Residuos%20Solidos/Ejecucion%20Servicios/Generar%20OES/generar_orden_ejecucion_servicio.dart';
+import 'package:new_brunner_app/src/page/Residuos%20Solidos/Ejecucion%20Servicios/Generar%20POS/generar_pos.dart';
 import 'package:new_brunner_app/src/widget/option_widget.dart';
 
 class EjecucionServicios extends StatelessWidget {
@@ -51,16 +52,18 @@ class EjecucionServicios extends StatelessWidget {
             titulo: 'Generar Parte Operativo del Servicio (POS)',
             descripcion: '',
             icon: Icons.edit_note,
-            color: Color(0XFFA569BD),
+            color: Colors.green,
             ontap: () {
-              // Navigator.push(
-              //   context,
-              //   PageRouteBuilder(
-              //     pageBuilder: (context, animation, secondaryAnimation) {
-              //       return const ConsultaInformacionEjecucionServicios();
-              //     },
-              //   ),
-              // );
+              final posBloc = ProviderBloc.pos(context);
+              posBloc.getDataFiltro();
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) {
+                    return const GenerarPOS();
+                  },
+                ),
+              );
             },
           ),
           SizedBox(height: ScreenUtil().setWidth(30)),

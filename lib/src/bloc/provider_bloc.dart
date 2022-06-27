@@ -8,6 +8,7 @@ import 'package:new_brunner_app/src/bloc/mantenimiento_correctivo_bloc.dart';
 import 'package:new_brunner_app/src/bloc/modulos_bloc.dart';
 import 'package:new_brunner_app/src/bloc/orden_habilitacion_bloc.dart';
 import 'package:new_brunner_app/src/bloc/personas_bloc.dart';
+import 'package:new_brunner_app/src/bloc/pos_bloc.dart';
 import 'package:new_brunner_app/src/bloc/vehiculo_bloc.dart';
 
 class ProviderBloc extends InheritedWidget {
@@ -29,6 +30,7 @@ class ProviderBloc extends InheritedWidget {
   final logisticaOPBloc = LogisticaOPBloc();
   //Residuos Solidos
   final ejecucionServicioBloc = EjecucionServicioBloc();
+  final parteOperativoServicioBloc = POSBloc();
 
   ProviderBloc({Key? key, required Widget child}) : super(key: key, child: child);
 
@@ -73,5 +75,9 @@ class ProviderBloc extends InheritedWidget {
 
   static EjecucionServicioBloc ejecucionServicio(BuildContext context) {
     return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.ejecucionServicioBloc;
+  }
+
+  static POSBloc pos(BuildContext context) {
+    return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.parteOperativoServicioBloc;
   }
 }
