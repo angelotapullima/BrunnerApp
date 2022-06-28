@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
-import 'package:new_brunner_app/src/model/Residuos%20Solidos/Orden%20Ejecucion/actividades_oe_model.dart';
+import 'package:new_brunner_app/src/model/Residuos%20Solidos/Ejecucion%20Servicio/actividades_oe_model.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
 import 'package:new_brunner_app/src/widget/text_field.dart';
 

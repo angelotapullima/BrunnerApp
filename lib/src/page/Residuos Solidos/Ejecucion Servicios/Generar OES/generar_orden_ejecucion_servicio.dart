@@ -6,7 +6,7 @@ import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/model/Empresa/departamento_model.dart';
 import 'package:new_brunner_app/src/model/Empresa/empresas_model.dart';
 import 'package:new_brunner_app/src/model/Empresa/sede_model.dart';
-import 'package:new_brunner_app/src/model/Residuos%20Solidos/Orden%20Ejecucion/clientes_oe_model.dart';
+import 'package:new_brunner_app/src/model/Residuos%20Solidos/Ejecucion%20Servicio/clientes_oe_model.dart';
 import 'package:new_brunner_app/src/page/Residuos%20Solidos/Ejecucion%20Servicios/Generar%20OES/result_oe.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
 import 'package:new_brunner_app/src/widget/show_loading.dart';

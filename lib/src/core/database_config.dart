@@ -2,7 +2,7 @@ import 'package:new_brunner_app/src/core/ConfigDatabase/empresa_db.dart';
 import 'package:new_brunner_app/src/core/ConfigDatabase/logistica_db.dart';
 import 'package:new_brunner_app/src/core/ConfigDatabase/mantenimiento_db.dart';
 import 'package:new_brunner_app/src/core/ConfigDatabase/modulos_db.dart';
-import 'package:new_brunner_app/src/core/ConfigDatabase/orden_ejecucion.dart';
+import 'package:new_brunner_app/src/core/ConfigDatabase/orden_ejecucion_db.dart';
 import 'package:new_brunner_app/src/core/ConfigDatabase/vehiculos_db.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -51,7 +51,9 @@ class DatabaseHelper {
       db.execute(OrdenEjecucionDB.codigosOETableSql);
       db.execute(OrdenEjecucionDB.lugaresOETableSql);
       db.execute(OrdenEjecucionDB.actividadesOETableSql);
-
+      db.execute(OrdenEjecucionDB.ordenEjecucionTableSql);
+      db.execute(OrdenEjecucionDB.personalOETableSql);
+      db.execute(OrdenEjecucionDB.unidadesOETableSql);
       //
     }, version: 1, onDowngrade: onDatabaseDowngradeDelete);
   }

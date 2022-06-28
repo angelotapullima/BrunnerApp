@@ -3,11 +3,11 @@ import 'package:new_brunner_app/src/model/Empresa/departamento_model.dart';
 import 'package:new_brunner_app/src/model/Empresa/empresas_model.dart';
 import 'package:new_brunner_app/src/model/Empresa/sede_model.dart';
 import 'package:new_brunner_app/src/model/Empresa/tipo_doc_model.dart';
-import 'package:new_brunner_app/src/model/Residuos%20Solidos/Orden%20Ejecucion/actividades_oe_model.dart';
-import 'package:new_brunner_app/src/model/Residuos%20Solidos/Orden%20Ejecucion/clientes_oe_model.dart';
-import 'package:new_brunner_app/src/model/Residuos%20Solidos/Orden%20Ejecucion/codigos_ue_model.dart';
-import 'package:new_brunner_app/src/model/Residuos%20Solidos/Orden%20Ejecucion/contactos_oe_model.dart';
-import 'package:new_brunner_app/src/model/Residuos%20Solidos/Orden%20Ejecucion/lugares_oe_model.dart';
+import 'package:new_brunner_app/src/model/Residuos%20Solidos/Ejecucion%20Servicio/actividades_oe_model.dart';
+import 'package:new_brunner_app/src/model/Residuos%20Solidos/Ejecucion%20Servicio/clientes_oe_model.dart';
+import 'package:new_brunner_app/src/model/Residuos%20Solidos/Ejecucion%20Servicio/codigos_ue_model.dart';
+import 'package:new_brunner_app/src/model/Residuos%20Solidos/Ejecucion%20Servicio/contactos_oe_model.dart';
+import 'package:new_brunner_app/src/model/Residuos%20Solidos/Ejecucion%20Servicio/lugares_oe_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 class EjecucionServicioBloc {

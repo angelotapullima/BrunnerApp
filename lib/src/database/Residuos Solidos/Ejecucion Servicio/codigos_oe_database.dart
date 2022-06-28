@@ -1,5 +1,5 @@
 import 'package:new_brunner_app/src/core/database_config.dart';
-import 'package:new_brunner_app/src/model/Residuos%20Solidos/Orden%20Ejecucion/codigos_ue_model.dart';
+import 'package:new_brunner_app/src/model/Residuos%20Solidos/Ejecucion%20Servicio/codigos_ue_model.dart';
 import 'package:sqflite/sqlite_api.dart';
 
 class CodigosOEDatabase {

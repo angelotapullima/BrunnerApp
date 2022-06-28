@@ -8,21 +8,21 @@ import 'package:new_brunner_app/src/database/Empresa/departamento_database.dart'
 import 'package:new_brunner_app/src/database/Empresa/empresas_database.dart';
 import 'package:new_brunner_app/src/database/Empresa/sede_database.dart';
 import 'package:new_brunner_app/src/database/Empresa/tipo_doc_database.dart';
-import 'package:new_brunner_app/src/database/Residuos%20Solidos/Orden%20Ejecucion/actividades_oe_database.dart';
-import 'package:new_brunner_app/src/database/Residuos%20Solidos/Orden%20Ejecucion/clientes_oe_database.dart';
-import 'package:new_brunner_app/src/database/Residuos%20Solidos/Orden%20Ejecucion/codigos_oe_database.dart';
-import 'package:new_brunner_app/src/database/Residuos%20Solidos/Orden%20Ejecucion/contactos_oe_database.dart';
-import 'package:new_brunner_app/src/database/Residuos%20Solidos/Orden%20Ejecucion/lugares_oe_database.dart';
+import 'package:new_brunner_app/src/database/Residuos%20Solidos/Ejecucion%20Servicio/actividades_oe_database.dart';
+import 'package:new_brunner_app/src/database/Residuos%20Solidos/Ejecucion%20Servicio/clientes_oe_database.dart';
+import 'package:new_brunner_app/src/database/Residuos%20Solidos/Ejecucion%20Servicio/codigos_oe_database.dart';
+import 'package:new_brunner_app/src/database/Residuos%20Solidos/Ejecucion%20Servicio/contactos_oe_database.dart';
+import 'package:new_brunner_app/src/database/Residuos%20Solidos/Ejecucion%20Servicio/lugares_oe_database.dart';
 import 'package:new_brunner_app/src/model/Empresa/clientes_model.dart';
 import 'package:new_brunner_app/src/model/Empresa/departamento_model.dart';
 import 'package:new_brunner_app/src/model/Empresa/empresas_model.dart';
 import 'package:new_brunner_app/src/model/Empresa/sede_model.dart';
 import 'package:new_brunner_app/src/model/Empresa/tipo_doc_model.dart';
-import 'package:new_brunner_app/src/model/Residuos%20Solidos/Orden%20Ejecucion/actividades_oe_model.dart';
-import 'package:new_brunner_app/src/model/Residuos%20Solidos/Orden%20Ejecucion/clientes_oe_model.dart';
-import 'package:new_brunner_app/src/model/Residuos%20Solidos/Orden%20Ejecucion/codigos_ue_model.dart';
-import 'package:new_brunner_app/src/model/Residuos%20Solidos/Orden%20Ejecucion/contactos_oe_model.dart';
-import 'package:new_brunner_app/src/model/Residuos%20Solidos/Orden%20Ejecucion/lugares_oe_model.dart';
+import 'package:new_brunner_app/src/model/Residuos%20Solidos/Ejecucion%20Servicio/actividades_oe_model.dart';
+import 'package:new_brunner_app/src/model/Residuos%20Solidos/Ejecucion%20Servicio/clientes_oe_model.dart';
+import 'package:new_brunner_app/src/model/Residuos%20Solidos/Ejecucion%20Servicio/codigos_ue_model.dart';
+import 'package:new_brunner_app/src/model/Residuos%20Solidos/Ejecucion%20Servicio/contactos_oe_model.dart';
+import 'package:new_brunner_app/src/model/Residuos%20Solidos/Ejecucion%20Servicio/lugares_oe_model.dart';
 
 class EjecucionServicioApi {
   final empresaDB = EmpresasDatabase();
@@ -170,6 +170,7 @@ class EjecucionServicioApi {
           cliente.idCliente = data["id_cliente"];
           cliente.id = '$idEmpresa$idDepartamento$idSede';
           cliente.nombreCliente = data["cliente_nombre"];
+          cliente.logoCliente = '';
           lista.add(cliente);
           await clientesDB.insertarClienteOE(cliente);
 
