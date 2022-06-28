@@ -6,7 +6,10 @@ import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/model/Empresa/departamento_model.dart';
 import 'package:new_brunner_app/src/model/Empresa/empresas_model.dart';
 import 'package:new_brunner_app/src/model/Empresa/sede_model.dart';
+import 'package:new_brunner_app/src/model/Residuos%20Solidos/Ejecucion%20Servicio/clientes_oe_model.dart';
+import 'package:new_brunner_app/src/page/Residuos%20Solidos/Ejecucion%20Servicios/Generar%20POS/result_pos.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
+import 'package:new_brunner_app/src/widget/show_loading.dart';
 import 'package:new_brunner_app/src/widget/text_field.dart';
 
 class GenerarPOS extends StatefulWidget {
@@ -37,6 +40,7 @@ class _GenerarPOSState extends State<GenerarPOS> {
 
   @override
   Widget build(BuildContext context) {
+    final posBloc = ProviderBloc.pos(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -59,86 +63,85 @@ class _GenerarPOSState extends State<GenerarPOS> {
           ),
         ],
       ),
-      // body: StreamBuilder<bool>(
-      //   stream: posBloc.cargandoStream,
-      //   builder: (_, c) {
-      //     if (c.hasData && !c.data!) {
-      //       return StreamBuilder<List<ClientesOEModel>?>(
-      //         stream: posBloc.clientesStream,
-      //         builder: (_, snapshot) {
-      //           if (snapshot.hasData) {
-      //             if (snapshot.data!.isNotEmpty) {
-      //               return ResultOE(
-      //                 idEmpresa: idEmpresa,
-      //                 idDepartamento: idDepartamento,
-      //                 idSede: idSede,
-      //                 //id: '$idEmpresa$idDepartamento$idSede',
-      //               );
-      //             } else {
-      //               return Padding(
-      //                 padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16)),
-      //                 child: Column(
-      //                   mainAxisAlignment: MainAxisAlignment.center,
-      //                   children: [
-      //                     Text('Sin datos encontrados, para los datos ingresados'),
-      //                     InkWell(
-      //                       onTap: () async {
-      //                         filtroSearch();
-      //                       },
-      //                       child: Container(
-      //                         width: double.infinity,
-      //                         margin: const EdgeInsets.all(8),
-      //                         padding: const EdgeInsets.all(8),
-      //                         decoration: BoxDecoration(
-      //                           borderRadius: BorderRadius.circular(20),
-      //                           color: Colors.green,
-      //                           boxShadow: [
-      //                             BoxShadow(
-      //                               color: Colors.black.withOpacity(0.2),
-      //                               spreadRadius: 3,
-      //                               blurRadius: 8,
-      //                               offset: const Offset(0, 3), // changes position of shadow
-      //                             ),
-      //                           ],
-      //                         ),
-      //                         child: Center(
-      //                           child: Text(
-      //                             'Buscar',
-      //                             style: TextStyle(
-      //                               color: Colors.white,
-      //                               fontSize: ScreenUtil().setSp(20),
-      //                               fontWeight: FontWeight.w600,
-      //                             ),
-      //                           ),
-      //                         ),
-      //                       ),
-      //                     ),
-      //                   ],
-      //                 ),
-      //               );
-      //             }
-      //           } else {
-      //             return ShowLoadding(
-      //               active: true,
-      //               h: double.infinity,
-      //               w: double.infinity,
-      //               fondo: Colors.transparent,
-      //               colorText: Colors.black,
-      //             );
-      //           }
-      //         },
-      //       );
-      //     } else {
-      //       return ShowLoadding(
-      //         active: true,
-      //         h: double.infinity,
-      //         w: double.infinity,
-      //         fondo: Colors.transparent,
-      //         colorText: Colors.black,
-      //       );
-      //     }
-      //   },
-      // ),
+      body: StreamBuilder<bool>(
+        stream: posBloc.cargandoStream,
+        builder: (_, c) {
+          if (c.hasData && !c.data!) {
+            return StreamBuilder<List<ClientesOEModel>?>(
+              stream: posBloc.clientesStream,
+              builder: (_, snapshot) {
+                if (snapshot.hasData) {
+                  if (snapshot.data!.isNotEmpty) {
+                    return ResultPOS(
+                      idEmpresa: idEmpresa,
+                      idDepartamento: idDepartamento,
+                      idSede: idSede,
+                    );
+                  } else {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16)),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('No existen información para los datos ingresados'),
+                          InkWell(
+                            onTap: () async {
+                              filtroSearch();
+                            },
+                            child: Container(
+                              width: double.infinity,
+                              margin: const EdgeInsets.all(8),
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.green,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.2),
+                                    spreadRadius: 3,
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 3), // changes position of shadow
+                                  ),
+                                ],
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Buscar',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: ScreenUtil().setSp(20),
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                } else {
+                  return ShowLoadding(
+                    active: true,
+                    h: double.infinity,
+                    w: double.infinity,
+                    fondo: Colors.transparent,
+                    colorText: Colors.black,
+                  );
+                }
+              },
+            );
+          } else {
+            return ShowLoadding(
+              active: true,
+              h: double.infinity,
+              w: double.infinity,
+              fondo: Colors.transparent,
+              colorText: Colors.black,
+            );
+          }
+        },
+      ),
     );
   }
 
@@ -300,8 +303,8 @@ class _GenerarPOSState extends State<GenerarPOS> {
                                     idSede != '' &&
                                     _fechaServicioController.text.isNotEmpty &&
                                     _fechaFinController.text.isNotEmpty) {
-                                  //parteOperativoBloc.getActividadesClientes(idEmpresa, idDepartamento, idSede);
-                                  //Navigator.pop(context);
+                                  parteOperativoBloc.getOEClientes(idEmpresa, idDepartamento, idSede);
+                                  Navigator.pop(context);
                                 } else {
                                   showToast2('Seleccione los 5 filtros', Colors.redAccent);
                                 }
