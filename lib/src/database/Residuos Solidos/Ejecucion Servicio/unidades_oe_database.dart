@@ -33,6 +33,20 @@ class UnidadesOEDatabase {
     }
   }
 
+  Future<List<UnidadesOEModel>> getUnidadesOEByQuery(String id, String query) async {
+    try {
+      final Database db = await dbprovider.getDatabase();
+      List<UnidadesOEModel> list = [];
+      List<Map> maps = await db.rawQuery("SELECT * FROM UnidadesOE WHERE id = '$id' AND placaVehiculo LIKE '%$query%' ");
+
+      if (maps.isNotEmpty) list = UnidadesOEModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      e;
+      return [];
+    }
+  }
+
   delete() async {
     final db = await dbprovider.database;
 

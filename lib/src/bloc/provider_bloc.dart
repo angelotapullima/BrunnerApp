@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:new_brunner_app/src/bloc/checklist_bloc.dart';
+import 'package:new_brunner_app/src/bloc/clientes_oe_search_bloc.dart';
 import 'package:new_brunner_app/src/bloc/consulta_inspeccion_bloc.dart';
 import 'package:new_brunner_app/src/bloc/data_user_bloc.dart';
 import 'package:new_brunner_app/src/bloc/ejecucion_servicio_bloc.dart';
@@ -31,6 +32,7 @@ class ProviderBloc extends InheritedWidget {
   //Residuos Solidos
   final ejecucionServicioBloc = EjecucionServicioBloc();
   final parteOperativoServicioBloc = POSBloc();
+  final clientesSearchBloc = ClientesOESearchBloc();
 
   ProviderBloc({Key? key, required Widget child}) : super(key: key, child: child);
 
@@ -79,5 +81,9 @@ class ProviderBloc extends InheritedWidget {
 
   static POSBloc pos(BuildContext context) {
     return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.parteOperativoServicioBloc;
+  }
+
+  static ClientesOESearchBloc searchClientes(BuildContext context) {
+    return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.clientesSearchBloc;
   }
 }

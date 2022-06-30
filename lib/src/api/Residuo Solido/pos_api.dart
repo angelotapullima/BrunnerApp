@@ -7,7 +7,6 @@ import 'package:new_brunner_app/src/database/Residuos%20Solidos/Ejecucion%20Serv
 import 'package:new_brunner_app/src/database/Residuos%20Solidos/Ejecucion%20Servicio/orden_ejecucion_database.dart';
 import 'package:new_brunner_app/src/database/Residuos%20Solidos/Ejecucion%20Servicio/personal_oe_database.dart';
 import 'package:new_brunner_app/src/database/Residuos%20Solidos/Ejecucion%20Servicio/unidades_oe_database.dart';
-import 'package:new_brunner_app/src/model/Empresa/clientes_model.dart';
 import 'package:new_brunner_app/src/model/Residuos%20Solidos/Ejecucion%20Servicio/clientes_oe_model.dart';
 import 'package:new_brunner_app/src/model/Residuos%20Solidos/Ejecucion%20Servicio/orden_ejecucion_model.dart';
 import 'package:new_brunner_app/src/model/Residuos%20Solidos/Ejecucion%20Servicio/personal_oe_model.dart';
@@ -36,6 +35,10 @@ class POSApi {
       );
 
       if (resp.statusCode == 200) {
+        await clientesDB.delete();
+        await oeDB.delete();
+        await personalOEDB.delete();
+        await unidadesOEDB.delete();
         final decodedData = json.decode(resp.body);
 
         final List<ClientesOEModel> lista = [];
@@ -45,13 +48,14 @@ class POSApi {
           var data = decodedData["datos_clientes"][i];
           final cliente = ClientesOEModel();
           cliente.idCliente = data["id_cliente"];
+          cliente.id = '${idEmpresa}${idDepartamento}${idSede}';
           cliente.nombreCliente = data["cliente_nombre"];
           cliente.logoCliente = data["cliente_logo"];
           lista.add(cliente);
           await clientesDB.insertarClienteOE(cliente);
 
           //Insertar Ordenes de Ejecucion
-          for (var x = 0; x < data["oes"]; x++) {
+          for (var x = 0; x < data["oes"].length; x++) {
             var oes = data["oes"][x];
             final oe = OrdenEjecucionModel();
 
@@ -77,6 +81,8 @@ class POSApi {
             oe.enviadoFacturacion = oes["enviado_facturacion"];
             oe.idLugarOE = oes["id_lugar_ejecucion"];
             oe.condicionOE = oes["ejecucion_condicion"];
+            oe.codigoPeriodo = oes["periodoc_codigo"];
+            oe.lugarPeriodo = oes["cliente_lugar_establecimiento"];
 
             await oeDB.insertarOE(oe);
           }

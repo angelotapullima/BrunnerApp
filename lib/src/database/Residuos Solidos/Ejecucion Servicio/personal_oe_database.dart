@@ -33,6 +33,20 @@ class PersonalOEDatabase {
     }
   }
 
+  Future<List<PersonalOEModel>> getPersonalsOEByQuery(String id, String query) async {
+    try {
+      final Database db = await dbprovider.getDatabase();
+      List<PersonalOEModel> list = [];
+      List<Map> maps = await db.rawQuery("SELECT * FROM PersonalOE WHERE id = '$id' AND nombre LIKE '%$query%' ");
+
+      if (maps.isNotEmpty) list = PersonalOEModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      e;
+      return [];
+    }
+  }
+
   delete() async {
     final db = await dbprovider.database;
 

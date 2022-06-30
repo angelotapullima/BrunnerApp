@@ -4,6 +4,7 @@ import 'package:new_brunner_app/src/model/Empresa/departamento_model.dart';
 import 'package:new_brunner_app/src/model/Empresa/empresas_model.dart';
 import 'package:new_brunner_app/src/model/Empresa/sede_model.dart';
 import 'package:new_brunner_app/src/model/Residuos%20Solidos/Ejecucion%20Servicio/clientes_oe_model.dart';
+import 'package:new_brunner_app/src/model/Residuos%20Solidos/Ejecucion%20Servicio/orden_ejecucion_model.dart';
 import 'package:new_brunner_app/src/model/Residuos%20Solidos/Ejecucion%20Servicio/personal_oe_model.dart';
 import 'package:new_brunner_app/src/model/Residuos%20Solidos/Ejecucion%20Servicio/unidades_oe_model.dart';
 import 'package:rxdart/rxdart.dart';
@@ -35,6 +36,9 @@ class POSBloc {
   final _personalController = BehaviorSubject<List<PersonalOEModel>>();
   Stream<List<PersonalOEModel>> get personalStream => _personalController.stream;
 
+  final _oeController = BehaviorSubject<List<OrdenEjecucionModel>>();
+  Stream<List<OrdenEjecucionModel>> get oesStream => _oeController.stream;
+
   void dispose() {
     _empresasController.close();
     _departamentosController.close();
@@ -43,6 +47,7 @@ class POSBloc {
     _clientesController.close();
     _unidadesController.close();
     _personalController.close();
+    _oeController.close();
   }
 
   void getDataFiltro() async {
@@ -62,5 +67,29 @@ class POSBloc {
     _unidadesController.sink.add(await _api.unidadesOEDB.getUnidadesOEByid('${idEmpresa}${idDepartamento}${idSede}'));
     _personalController.sink.add(await _api.personalOEDB.getPersonalOEByid('${idEmpresa}${idDepartamento}${idSede}'));
     _cargandoController.sink.add(false);
+  }
+
+  void searchUnidades(String id, String query) async {
+    if (query.isNotEmpty) {
+      _unidadesController.sink.add(await _api.unidadesOEDB.getUnidadesOEByQuery(id, query));
+    } else {
+      _unidadesController.sink.add(await _api.unidadesOEDB.getUnidadesOEByid(id));
+    }
+  }
+
+  void searchOES(String idCliente, String query) async {
+    if (query.isNotEmpty) {
+      _oeController.sink.add(await _api.oeDB.getOEByQuery(idCliente, query));
+    } else {
+      _oeController.sink.add(await _api.oeDB.getOEByidCliente(idCliente));
+    }
+  }
+
+  void searchPersonal(String id, String query) async {
+    if (query.isNotEmpty) {
+      _personalController.sink.add(await _api.personalOEDB.getPersonalsOEByQuery(id, query));
+    } else {
+      _personalController.sink.add(await _api.personalOEDB.getPersonalOEByid(id));
+    }
   }
 }

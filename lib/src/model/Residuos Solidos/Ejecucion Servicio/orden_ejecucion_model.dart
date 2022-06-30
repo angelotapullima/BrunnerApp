@@ -21,6 +21,8 @@ class OrdenEjecucionModel {
   String? enviadoFacturacion;
   String? idLugarOE;
   String? condicionOE;
+  String? codigoPeriodo;
+  String? lugarPeriodo;
 
   OrdenEjecucionModel({
     this.idOE,
@@ -45,6 +47,8 @@ class OrdenEjecucionModel {
     this.enviadoFacturacion,
     this.idLugarOE,
     this.condicionOE,
+    this.codigoPeriodo,
+    this.lugarPeriodo,
   });
 
   static List<OrdenEjecucionModel> fromJsonList(List<dynamic> json) => json.map((i) => OrdenEjecucionModel.fromJson(i)).toList();
@@ -72,6 +76,8 @@ class OrdenEjecucionModel {
         'enviadoFacturacion': enviadoFacturacion,
         'idLugarOE': idLugarOE,
         'condicionOE': condicionOE,
+        'codigoPeriodo': codigoPeriodo,
+        'lugarPeriodo': lugarPeriodo,
       };
 
   factory OrdenEjecucionModel.fromJson(Map<String, dynamic> json) => OrdenEjecucionModel(
@@ -97,5 +103,7 @@ class OrdenEjecucionModel {
         enviadoFacturacion: json["enviadoFacturacion"],
         idLugarOE: json["idLugarOE"],
         condicionOE: json["condicionOE"],
+        codigoPeriodo: json["codigoPeriodo"],
+        lugarPeriodo: json["lugarPeriodo"],
       );
 }

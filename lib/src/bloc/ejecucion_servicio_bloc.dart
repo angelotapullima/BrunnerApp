@@ -30,9 +30,6 @@ class EjecucionServicioBloc {
   final _clientesController = BehaviorSubject<List<ClientesOEModel>?>();
   Stream<List<ClientesOEModel>?> get clientesStream => _clientesController.stream;
 
-  final _clientesSearchController = BehaviorSubject<List<ClientesOEModel>>();
-  Stream<List<ClientesOEModel>> get clientesSearchStream => _clientesSearchController.stream;
-
   final _contactosController = BehaviorSubject<List<ContactosOEModel>>();
   Stream<List<ContactosOEModel>> get contactosStream => _contactosController.stream;
 
@@ -58,7 +55,6 @@ class EjecucionServicioBloc {
     _codigosController.close();
     _lugaresController.close();
     _actividadesController.close();
-    _clientesSearchController.close();
     _tipoDocController.close();
   }
 
@@ -99,14 +95,6 @@ class EjecucionServicioBloc {
   void changeSelectTipoDoc(String idTipoDoc, String valueCheck) async {
     await _api.tipoDocDB.updateHabilitarCheck(idTipoDoc, valueCheck);
     _tipoDocController.sink.add(await _api.tipoDocDB.getTiposDoc());
-  }
-
-  void sarchClientesByQuery(String query, String id) async {
-    if (query.isEmpty) {
-      _clientesSearchController.sink.add(await _api.clientesDB.getClientesOE(id));
-    } else {
-      _clientesSearchController.sink.add(await _api.clientesDB.getClientesOEByQuery(query, id));
-    }
   }
 
   void searchActividadesContractualesQuery(String query, String idPeriodo) async {

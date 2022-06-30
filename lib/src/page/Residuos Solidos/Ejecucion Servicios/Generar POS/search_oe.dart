@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
-import 'package:new_brunner_app/src/model/Residuos%20Solidos/Ejecucion%20Servicio/clientes_oe_model.dart';
+import 'package:new_brunner_app/src/model/Residuos%20Solidos/Ejecucion%20Servicio/orden_ejecucion_model.dart';
 
-class ClienteSearch extends StatefulWidget {
-  const ClienteSearch({Key? key, required this.onChanged, required this.id}) : super(key: key);
-  final ValueChanged<ClientesOEModel>? onChanged;
+class OESearch extends StatefulWidget {
+  const OESearch({Key? key, required this.onChanged, required this.id}) : super(key: key);
+  final ValueChanged<OrdenEjecucionModel>? onChanged;
   final String id;
 
   @override
-  State<ClienteSearch> createState() => _ClienteSearchState();
+  State<OESearch> createState() => _OESearchState();
 }
 
-class _ClienteSearchState extends State<ClienteSearch> {
+class _OESearchState extends State<OESearch> {
   final searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final searchBloc = ProviderBloc.searchClientes(context);
+    final searchBloc = ProviderBloc.pos(context);
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -39,7 +39,7 @@ class _ClienteSearchState extends State<ClienteSearch> {
               child: TextField(
                 controller: searchController,
                 onChanged: (query) {
-                  searchBloc.sarchClientesByQuery(query.trim(), widget.id);
+                  searchBloc.searchOES(widget.id, query.trim());
                 },
                 textAlign: TextAlign.left,
                 style: TextStyle(
@@ -49,7 +49,7 @@ class _ClienteSearchState extends State<ClienteSearch> {
                 decoration: InputDecoration(
                   suffixIcon: const Icon(Icons.search),
                   label: Text(
-                    'Cliente',
+                    'N° OES',
                     style: TextStyle(
                       fontSize: ScreenUtil().setSp(12),
                       fontWeight: FontWeight.w400,
@@ -63,8 +63,8 @@ class _ClienteSearchState extends State<ClienteSearch> {
               height: ScreenUtil().setHeight(10),
             ),
             Expanded(
-              child: StreamBuilder<List<ClientesOEModel>>(
-                stream: searchBloc.clientesSearchStream,
+              child: StreamBuilder<List<OrdenEjecucionModel>>(
+                stream: searchBloc.oesStream,
                 builder: (context, snapshot) {
                   if (snapshot.hasData && snapshot.data!.isNotEmpty) {
                     return ListView.builder(
@@ -90,11 +90,11 @@ class _ClienteSearchState extends State<ClienteSearch> {
                             );
                           }
                           index = index - 1;
-                          var cliente = snapshot.data![index];
+                          var oe = snapshot.data![index];
                           return InkWell(
                             onTap: () {
                               Navigator.pop(context);
-                              widget.onChanged!(cliente);
+                              widget.onChanged!(oe);
                             },
                             child: Padding(
                               padding: EdgeInsets.symmetric(
@@ -105,7 +105,7 @@ class _ClienteSearchState extends State<ClienteSearch> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    '${cliente.nombreCliente}',
+                                    '${oe.numeroOE}',
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.w400,
@@ -120,7 +120,7 @@ class _ClienteSearchState extends State<ClienteSearch> {
                         });
                   } else {
                     return const Center(
-                      child: Text('Sin clientes...'),
+                      child: Text('Sin OES...'),
                     );
                   }
                 },

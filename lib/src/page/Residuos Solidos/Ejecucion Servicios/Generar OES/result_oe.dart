@@ -110,7 +110,8 @@ class _ResultOEState extends State<ResultOE> {
                   readOnly: true,
                   ontap: () {
                     FocusScope.of(context).unfocus();
-                    ejecucionServicioBloc.sarchClientesByQuery('', '${widget.idEmpresa}${widget.idDepartamento}${widget.idSede}');
+                    final clientesSearch = ProviderBloc.searchClientes(context);
+                    clientesSearch.sarchClientesByQuery('', '${widget.idEmpresa}${widget.idDepartamento}${widget.idSede}');
                     Navigator.push(
                       context,
                       PageRouteBuilder(

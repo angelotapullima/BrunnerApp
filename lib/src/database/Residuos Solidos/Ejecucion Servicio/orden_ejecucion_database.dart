@@ -33,6 +33,20 @@ class OrdenEjecucionDatabase {
     }
   }
 
+  Future<List<OrdenEjecucionModel>> getOEByQuery(String idCliente, String query) async {
+    try {
+      final Database db = await dbprovider.getDatabase();
+      List<OrdenEjecucionModel> list = [];
+      List<Map> maps = await db.rawQuery("SELECT * FROM OrdenEjecucion WHERE idCliente = '$idCliente' AND  numeroOE LIKE '%$query%'");
+
+      if (maps.isNotEmpty) list = OrdenEjecucionModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      e;
+      return [];
+    }
+  }
+
   delete() async {
     final db = await dbprovider.database;
 

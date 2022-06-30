@@ -1,14 +1,22 @@
+import 'package:new_brunner_app/src/model/Residuos%20Solidos/Ejecucion%20Servicio/orden_ejecucion_model.dart';
+
 class ClientesOEModel {
   String? idCliente;
   String? id;
   String? nombreCliente;
   String? logoCliente;
 
+  //No en db
+  OrdenEjecucionModel? oe;
+  String? descripcion;
+
   ClientesOEModel({
     this.idCliente,
     this.id,
     this.nombreCliente,
     this.logoCliente,
+    this.oe,
+    this.descripcion,
   });
 
   static List<ClientesOEModel> fromJsonList(List<dynamic> json) => json.map((i) => ClientesOEModel.fromJson(i)).toList();
