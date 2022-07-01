@@ -49,7 +49,7 @@ class _PersonalSearchState extends State<PersonalSearch> {
                 decoration: InputDecoration(
                   suffixIcon: const Icon(Icons.search),
                   label: Text(
-                    'Unidad',
+                    'Personal',
                     style: TextStyle(
                       fontSize: ScreenUtil().setSp(12),
                       fontWeight: FontWeight.w400,
@@ -120,7 +120,7 @@ class _PersonalSearchState extends State<PersonalSearch> {
                         });
                   } else {
                     return const Center(
-                      child: Text('Sin Unidades...'),
+                      child: Text('Sin Personal...'),
                     );
                   }
                 },

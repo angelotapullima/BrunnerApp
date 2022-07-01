@@ -105,7 +105,7 @@ class POSApi {
           var data = decodedData["array_operador"][i];
           final persona = PersonalOEModel();
 
-          persona.idPersona = data["id_vehiculo"];
+          persona.idPersona = data["id_person"];
           persona.id = '${idEmpresa}${idDepartamento}${idSede}';
           persona.nombre = data["nombre"];
           persona.dni = data["datos_person"][0]["person_dni"];
@@ -126,6 +126,49 @@ class POSApi {
       }
     } catch (e) {
       return null;
+    }
+  }
+
+  Future<int> saverPOS(
+    String idEmpresa,
+    String idDepartamento,
+    String idSede,
+    String fechaIncio,
+    String fechaFin,
+    String idUnidad,
+    String observacion,
+    String clientes,
+    String personal,
+  ) async {
+    try {
+      String? token = await Preferences.readData('token');
+
+      final url = Uri.parse('$apiBaseURL/api/Ejecucion/guardar_parte_operativo');
+      final resp = await http.post(
+        url,
+        body: {
+          'app': 'true',
+          'tn': token,
+          'id_empresa': idEmpresa,
+          'id_departamento': idDepartamento,
+          'id_sede': idSede,
+          'fecha_servicio': fechaIncio,
+          'fecha_fin': fechaFin,
+          'unidad': idUnidad,
+          'pos_observacion': observacion,
+          'contenido': clientes,
+          'documento_personal': personal,
+        },
+      );
+
+      if (resp.statusCode == 200) {
+        final decodedData = json.decode(resp.body);
+        print(decodedData);
+      }
+
+      return 2;
+    } catch (e) {
+      return 2;
     }
   }
 }

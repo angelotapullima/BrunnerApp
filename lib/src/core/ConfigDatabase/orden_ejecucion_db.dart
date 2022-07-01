@@ -58,6 +58,8 @@ class OrdenEjecucionDB {
       ' idLugarOE TEXT,'
       ' codigoPeriodo TEXT,'
       ' lugarPeriodo TEXT,'
+      ' clienteLugar TEXT,'
+      ' fechaPeriodo TEXT,'
       ' condicionOE TEXT)';
 
   static const String personalOETableSql = 'CREATE TABLE PersonalOE('
