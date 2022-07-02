@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:new_brunner_app/src/api/Residuo%20Solido/pos_api.dart';
 
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/core/routes_constanst.dart';
@@ -13,13 +14,18 @@ import 'package:new_brunner_app/src/page/Residuos%20Solidos/Ejecucion%20Servicio
 import 'package:new_brunner_app/src/page/Residuos%20Solidos/Ejecucion%20Servicios/Generar%20POS/search_unidad_oe.dart';
 import 'package:new_brunner_app/src/page/search_clientes.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
+import 'package:new_brunner_app/src/widget/show_loading.dart';
 import 'package:new_brunner_app/src/widget/text_field.dart';
 
 class ResultPOS extends StatefulWidget {
-  const ResultPOS({Key? key, required this.idEmpresa, required this.idDepartamento, required this.idSede}) : super(key: key);
+  const ResultPOS(
+      {Key? key, required this.idEmpresa, required this.idDepartamento, required this.idSede, required this.fechaIncio, required this.fechaFin})
+      : super(key: key);
   final String idEmpresa;
   final String idDepartamento;
   final String idSede;
+  final String fechaIncio;
+  final String fechaFin;
 
   @override
   State<ResultPOS> createState() => _ResultPOSState();
@@ -35,321 +41,357 @@ class _ResultPOSState extends State<ResultPOS> {
   @override
   Widget build(BuildContext context) {
     final posBloc = ProviderBloc.pos(context);
-    return SingleChildScrollView(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16)),
-        child: Column(
-          children: [
-            SizedBox(
-              height: ScreenUtil().setHeight(20),
-            ),
-            TextFieldSelect(
-              label: 'Unidad',
-              hingText: 'Seleccionar',
-              controller: _unidadController,
-              widget: Icon(
-                Icons.keyboard_arrow_down,
-                color: Colors.green,
-              ),
-              icon: true,
-              readOnly: true,
-              ontap: () {
-                FocusScope.of(context).unfocus();
-                posBloc.searchUnidades('${widget.idEmpresa}${widget.idDepartamento}${widget.idSede}', '');
-                Navigator.push(
-                  context,
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) {
-                      return UnidadSearch(
-                        id: '${widget.idEmpresa}${widget.idDepartamento}${widget.idSede}',
-                        onChanged: (unidad) {
-                          idUnidad = unidad.idVehiculo.toString();
-                          _unidadController.text = unidad.placaVehiculo ?? '';
-                        },
-                      );
-                    },
-                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                      var begin = const Offset(0.0, 1.0);
-                      var end = Offset.zero;
-                      var curve = Curves.ease;
-
-                      var tween = Tween(begin: begin, end: end).chain(
-                        CurveTween(curve: curve),
-                      );
-
-                      return SlideTransition(
-                        position: animation.drive(tween),
-                        child: child,
-                      );
-                    },
-                  ),
-                );
-              },
-            ),
-            SizedBox(
-              height: ScreenUtil().setHeight(15),
-            ),
-            AnimatedBuilder(
-              animation: _controller,
-              builder: (_, f) {
-                return (_controller.oes.isEmpty)
-                    ? Text(
-                        'INFORMACIÓN DEL CLIENTE',
-                        style: TextStyle(fontWeight: FontWeight.w500),
-                      )
-                    : ExpansionTile(
-                        initiallyExpanded: true,
-                        maintainState: true,
-                        title: Text(
-                          'INFORMACIÓN DEL CLIENTE',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        children: _controller.oes.map((item) => _oeAgregada(item)).toList(),
-                      );
-              },
-            ),
-            SizedBox(
-              height: ScreenUtil().setHeight(15),
-            ),
-            TextFieldSelect(
-              label: 'Cliente',
-              hingText: 'Seleccionar',
-              controller: _clienteController,
-              widget: Icon(
-                Icons.keyboard_arrow_down,
-                color: Colors.green,
-              ),
-              icon: true,
-              readOnly: true,
-              ontap: () {
-                FocusScope.of(context).unfocus();
-                final clientesSearch = ProviderBloc.searchClientes(context);
-                clientesSearch.sarchClientesByQuery('', '${widget.idEmpresa}${widget.idDepartamento}${widget.idSede}');
-                Navigator.push(
-                  context,
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) {
-                      return ClienteSearch(
-                        id: '${widget.idEmpresa}${widget.idDepartamento}${widget.idSede}',
-                        onChanged: (cliente) {
-                          saveClienteOE(cliente);
-                        },
-                      );
-                    },
-                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                      var begin = const Offset(0.0, 1.0);
-                      var end = Offset.zero;
-                      var curve = Curves.ease;
-
-                      var tween = Tween(begin: begin, end: end).chain(
-                        CurveTween(curve: curve),
-                      );
-
-                      return SlideTransition(
-                        position: animation.drive(tween),
-                        child: child,
-                      );
-                    },
-                  ),
-                );
-              },
-            ),
-            SizedBox(
-              height: ScreenUtil().setHeight(15),
-            ),
-            AnimatedBuilder(
-              animation: _controller,
-              builder: (_, f) {
-                return (_controller.personal.isEmpty)
-                    ? Text(
-                        'INFORMACIÓN DEL PERSONAL',
-                        style: TextStyle(fontWeight: FontWeight.w500),
-                      )
-                    : ExpansionTile(
-                        initiallyExpanded: true,
-                        maintainState: true,
-                        title: Text(
-                          'INFORMACIÓN DEL PERSONAL',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        children: _controller.personal.map((item) => _personaAgregada(item)).toList(),
-                      );
-              },
-            ),
-            SizedBox(
-              height: ScreenUtil().setHeight(15),
-            ),
-            TextFieldSelect(
-              label: 'Personal',
-              hingText: 'Seleccionar',
-              controller: _personalController,
-              widget: Icon(
-                Icons.keyboard_arrow_down,
-                color: Colors.green,
-              ),
-              icon: true,
-              readOnly: true,
-              ontap: () {
-                FocusScope.of(context).unfocus();
-                posBloc.searchPersonal('${widget.idEmpresa}${widget.idDepartamento}${widget.idSede}', '');
-                Navigator.push(
-                  context,
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) {
-                      return PersonalSearch(
-                        id: '${widget.idEmpresa}${widget.idDepartamento}${widget.idSede}',
-                        onChanged: (persona) {
-                          savePersonalOE(persona);
-                        },
-                      );
-                    },
-                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                      var begin = const Offset(0.0, 1.0);
-                      var end = Offset.zero;
-                      var curve = Curves.ease;
-
-                      var tween = Tween(begin: begin, end: end).chain(
-                        CurveTween(curve: curve),
-                      );
-
-                      return SlideTransition(
-                        position: animation.drive(tween),
-                        child: child,
-                      );
-                    },
-                  ),
-                );
-              },
-            ),
-            SizedBox(
-              height: ScreenUtil().setHeight(10),
-            ),
-            Divider(),
-            SizedBox(
-              height: ScreenUtil().setHeight(10),
-            ),
-            Row(
+    return Stack(
+      children: [
+        SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16)),
+            child: Column(
               children: [
-                Text(
-                  'CONDICIONES ESPECIALES / OBSERVACIONES',
-                  style: TextStyle(fontWeight: FontWeight.w500),
+                SizedBox(
+                  height: ScreenUtil().setHeight(20),
                 ),
-              ],
-            ),
-            SizedBox(
-              height: ScreenUtil().setHeight(10),
-            ),
-            TextFieldSelect(
-              label: '',
-              hingText: '',
-              controller: _condicionesController,
-              widget: Icon(
-                Icons.edit,
-                color: Colors.green,
-              ),
-              icon: true,
-              readOnly: false,
-            ),
-            SizedBox(
-              height: ScreenUtil().setHeight(15),
-            ),
-            InkWell(
-              onTap: () async {
-                if (idUnidad != '') {
-                  if (_controller.oes.isNotEmpty) {
-                    if (_controller.personal.isNotEmpty) {
-                      String clientes = '';
-                      for (var i = 0; i < _controller.oes.length; i++) {
-                        var oe = _controller.oes[i];
-                        clientes +=
-                            '${oe.oe!.idOE}-.-.${oe.oe!.numeroOE}-.-.${oe.idCliente}-.-.${oe.nombreCliente}-.-.${oe.oe!.codigoPeriodo}-.-.${oe.oe!.fechaOE}-.-.${oe.oe!.lugarPeriodo}-.-.${oe.logoCliente}-.-.${oe.descripcion}/./.';
-                      }
-                    } else {
-                      showToast2('Debe seleccionar por lo menos a un personal', Colors.redAccent);
-                    }
-                  } else {
-                    showToast2('Debe seleccionar por lo menos un cliente', Colors.redAccent);
-                  }
-                } else {
-                  showToast2('Debe seleccionar una unidad', Colors.redAccent);
-                }
-              },
-              child: Container(
-                width: double.infinity,
-                margin: const EdgeInsets.all(8),
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.green,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      spreadRadius: 3,
-                      blurRadius: 8,
-                      offset: const Offset(0, 3), // changes position of shadow
+                TextFieldSelect(
+                  label: 'Unidad',
+                  hingText: 'Seleccionar',
+                  controller: _unidadController,
+                  widget: Icon(
+                    Icons.keyboard_arrow_down,
+                    color: Colors.green,
+                  ),
+                  icon: true,
+                  readOnly: true,
+                  ontap: () {
+                    FocusScope.of(context).unfocus();
+                    posBloc.searchUnidades('${widget.idEmpresa}${widget.idDepartamento}${widget.idSede}', '');
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) {
+                          return UnidadSearch(
+                            id: '${widget.idEmpresa}${widget.idDepartamento}${widget.idSede}',
+                            onChanged: (unidad) {
+                              idUnidad = unidad.idVehiculo.toString();
+                              _unidadController.text = unidad.placaVehiculo ?? '';
+                            },
+                          );
+                        },
+                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                          var begin = const Offset(0.0, 1.0);
+                          var end = Offset.zero;
+                          var curve = Curves.ease;
+
+                          var tween = Tween(begin: begin, end: end).chain(
+                            CurveTween(curve: curve),
+                          );
+
+                          return SlideTransition(
+                            position: animation.drive(tween),
+                            child: child,
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
+                SizedBox(
+                  height: ScreenUtil().setHeight(15),
+                ),
+                AnimatedBuilder(
+                  animation: _controller,
+                  builder: (_, f) {
+                    return (_controller.oes.isEmpty)
+                        ? Text(
+                            'INFORMACIÓN DEL CLIENTE',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          )
+                        : ExpansionTile(
+                            initiallyExpanded: true,
+                            maintainState: true,
+                            title: Text(
+                              'INFORMACIÓN DEL CLIENTE',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            children: _controller.oes.map((item) => _oeAgregada(item)).toList(),
+                          );
+                  },
+                ),
+                SizedBox(
+                  height: ScreenUtil().setHeight(15),
+                ),
+                TextFieldSelect(
+                  label: 'Cliente',
+                  hingText: 'Seleccionar',
+                  controller: _clienteController,
+                  widget: Icon(
+                    Icons.keyboard_arrow_down,
+                    color: Colors.green,
+                  ),
+                  icon: true,
+                  readOnly: true,
+                  ontap: () {
+                    FocusScope.of(context).unfocus();
+                    final clientesSearch = ProviderBloc.searchClientes(context);
+                    clientesSearch.sarchClientesByQuery('', '${widget.idEmpresa}${widget.idDepartamento}${widget.idSede}');
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) {
+                          return ClienteSearch(
+                            id: '${widget.idEmpresa}${widget.idDepartamento}${widget.idSede}',
+                            onChanged: (cliente) {
+                              saveClienteOE(cliente);
+                            },
+                          );
+                        },
+                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                          var begin = const Offset(0.0, 1.0);
+                          var end = Offset.zero;
+                          var curve = Curves.ease;
+
+                          var tween = Tween(begin: begin, end: end).chain(
+                            CurveTween(curve: curve),
+                          );
+
+                          return SlideTransition(
+                            position: animation.drive(tween),
+                            child: child,
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
+                SizedBox(
+                  height: ScreenUtil().setHeight(15),
+                ),
+                AnimatedBuilder(
+                  animation: _controller,
+                  builder: (_, f) {
+                    return (_controller.personal.isEmpty)
+                        ? Text(
+                            'INFORMACIÓN DEL PERSONAL',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          )
+                        : ExpansionTile(
+                            initiallyExpanded: true,
+                            maintainState: true,
+                            title: Text(
+                              'INFORMACIÓN DEL PERSONAL',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            children: _controller.personal.map((item) => _personaAgregada(item)).toList(),
+                          );
+                  },
+                ),
+                SizedBox(
+                  height: ScreenUtil().setHeight(15),
+                ),
+                TextFieldSelect(
+                  label: 'Personal',
+                  hingText: 'Seleccionar',
+                  controller: _personalController,
+                  widget: Icon(
+                    Icons.keyboard_arrow_down,
+                    color: Colors.green,
+                  ),
+                  icon: true,
+                  readOnly: true,
+                  ontap: () {
+                    FocusScope.of(context).unfocus();
+                    posBloc.searchPersonal('${widget.idEmpresa}${widget.idDepartamento}${widget.idSede}', '');
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) {
+                          return PersonalSearch(
+                            id: '${widget.idEmpresa}${widget.idDepartamento}${widget.idSede}',
+                            onChanged: (persona) {
+                              savePersonalOE(persona);
+                            },
+                          );
+                        },
+                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                          var begin = const Offset(0.0, 1.0);
+                          var end = Offset.zero;
+                          var curve = Curves.ease;
+
+                          var tween = Tween(begin: begin, end: end).chain(
+                            CurveTween(curve: curve),
+                          );
+
+                          return SlideTransition(
+                            position: animation.drive(tween),
+                            child: child,
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
+                SizedBox(
+                  height: ScreenUtil().setHeight(10),
+                ),
+                Divider(),
+                SizedBox(
+                  height: ScreenUtil().setHeight(10),
+                ),
+                Row(
+                  children: [
+                    Text(
+                      'CONDICIONES ESPECIALES / OBSERVACIONES',
+                      style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                   ],
                 ),
-                child: Center(
-                  child: Text(
-                    'Guardar',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: ScreenUtil().setSp(20),
-                      fontWeight: FontWeight.w600,
+                SizedBox(
+                  height: ScreenUtil().setHeight(10),
+                ),
+                TextFieldSelect(
+                  label: '',
+                  hingText: '',
+                  controller: _condicionesController,
+                  widget: Icon(
+                    Icons.edit,
+                    color: Colors.green,
+                  ),
+                  icon: true,
+                  readOnly: false,
+                ),
+                SizedBox(
+                  height: ScreenUtil().setHeight(15),
+                ),
+                InkWell(
+                  onTap: () async {
+                    if (idUnidad != '') {
+                      if (_controller.oes.isNotEmpty) {
+                        if (_controller.personal.isNotEmpty) {
+                          String clientes = '';
+                          String personal = '';
+                          for (var i = 0; i < _controller.oes.length; i++) {
+                            var oe = _controller.oes[i];
+                            clientes +=
+                                '${oe.oe!.idOE}-.-.${oe.oe!.numeroOE}-.-.${oe.idCliente}-.-.${oe.nombreCliente}-.-.${oe.oe!.codigoPeriodo}-.-.${oe.oe!.fechaPeriodo}-.-.${oe.oe?.lugarPeriodo ?? oe.oe?.clienteLugar}-.-.${oe.logoCliente}-.-.${oe.descripcion}/./.';
+                          }
+
+                          for (var i = 0; i < _controller.personal.length; i++) {
+                            var per = _controller.personal[i];
+                            personal +=
+                                '${per.idPersona}-.-.${per.nombre}-.-.${per.cargo}-.-.${per.idCargo}-.-.${per.dni}-.-.${per.fechaPeriodo}-.-.${per.image}-.-.${per.valueAsistencia}-.-.${per.asistenciaProyectada}/./.';
+                          }
+                          _controller.changeCargando(true);
+                          final _api = POSApi();
+                          final res = await _api.saverPOS(widget.idEmpresa, widget.idDepartamento, widget.idSede, widget.fechaIncio, widget.fechaFin,
+                              idUnidad, _condicionesController.text, clientes, personal);
+                          if (res == 1) {
+                            Navigator.pop(context);
+                            showToast2('POS generado correctamente', Colors.green);
+                          } else if (res == 200) {
+                            showToast2('Problemas con la conexión, Inténtelo nuevamente', Colors.redAccent);
+                          } else {
+                            showToast2('Ocurrió un error, Inténtelo nuevamente', Colors.redAccent);
+                          }
+                          _controller.changeCargando(false);
+                        } else {
+                          showToast2('Debe seleccionar por lo menos a un personal', Colors.redAccent);
+                        }
+                      } else {
+                        showToast2('Debe seleccionar por lo menos un cliente', Colors.redAccent);
+                      }
+                    } else {
+                      showToast2('Debe seleccionar una unidad', Colors.redAccent);
+                    }
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.green,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          spreadRadius: 3,
+                          blurRadius: 8,
+                          offset: const Offset(0, 3), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Text(
+                        'Guardar',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: ScreenUtil().setSp(20),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
-            SizedBox(
-              height: ScreenUtil().setHeight(5),
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.pop(context);
-                posBloc.getDataFiltro();
-                Navigator.push(
-                  context,
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) {
-                      return const GenerarPOS();
-                    },
-                  ),
-                );
-              },
-              child: Container(
-                width: double.infinity,
-                margin: const EdgeInsets.all(8),
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.transparent,
+                SizedBox(
+                  height: ScreenUtil().setHeight(5),
                 ),
-                child: Center(
-                  child: Text(
-                    'Regresar',
-                    style: TextStyle(
-                      color: Colors.redAccent,
-                      fontSize: ScreenUtil().setSp(20),
-                      fontWeight: FontWeight.w600,
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                    posBloc.getDataFiltro();
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) {
+                          return const GenerarPOS();
+                        },
+                      ),
+                    );
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.transparent,
+                    ),
+                    child: Center(
+                      child: Text(
+                        'Regresar',
+                        style: TextStyle(
+                          color: Colors.redAccent,
+                          fontSize: ScreenUtil().setSp(20),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
+                SizedBox(
+                  height: ScreenUtil().setHeight(50),
+                ),
+              ],
             ),
-            SizedBox(
-              height: ScreenUtil().setHeight(50),
-            ),
-          ],
+          ),
         ),
-      ),
+        AnimatedBuilder(
+          animation: _controller,
+          builder: (context, snapshot) {
+            return ShowLoadding(
+              active: _controller.cargando,
+              h: double.infinity,
+              w: double.infinity,
+              fondo: Colors.black.withOpacity(.3),
+              colorText: Colors.black,
+            );
+          },
+        ),
+      ],
     );
   }
 
@@ -437,7 +479,7 @@ class _ResultPOSState extends State<ResultPOS> {
                         Align(
                           alignment: Alignment.centerRight,
                           child: Text(
-                            '${obtenerFecha(item.oe!.fechaOE.toString())}',
+                            '${obtenerFecha(item.oe!.fechaPeriodo.toString())}',
                             style: TextStyle(
                               color: Colors.grey,
                               fontSize: ScreenUtil().setSp(10),
@@ -448,7 +490,8 @@ class _ResultPOSState extends State<ResultPOS> {
                           height: ScreenUtil().setHeight(5),
                         ),
                         fileData('Cliente', item.nombreCliente ?? '', 10, 12, FontWeight.w500, FontWeight.w500, TextAlign.start),
-                        fileData('Lugar Ejecución', item.oe!.lugarPeriodo ?? '', 10, 12, FontWeight.w600, FontWeight.w400, TextAlign.start),
+                        fileData('Lugar Ejecución', item.oe!.lugarPeriodo ?? item.oe!.clienteLugar ?? '', 10, 12, FontWeight.w600, FontWeight.w400,
+                            TextAlign.start),
                         fileData('Descripción Particular', item.descripcion ?? '', 10, 12, FontWeight.w600, FontWeight.w400, TextAlign.start),
                       ],
                     ),
@@ -718,8 +761,8 @@ class _ResultPOSState extends State<ResultPOS> {
                                           orden = oe;
                                           _oeController.text = oe.numeroOE ?? '';
                                           _condigoContractualController.text = oe.codigoPeriodo ?? '';
-                                          _fechaController.text = oe.fechaOE ?? '';
-                                          _lugarController.text = oe.lugarPeriodo ?? '';
+                                          _fechaController.text = oe.fechaPeriodo ?? '';
+                                          _lugarController.text = oe.lugarPeriodo ?? oe.clienteLugar ?? '';
                                         },
                                       );
                                     },

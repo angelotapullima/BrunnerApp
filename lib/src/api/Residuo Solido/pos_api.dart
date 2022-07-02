@@ -82,7 +82,9 @@ class POSApi {
             oe.idLugarOE = oes["id_lugar_ejecucion"];
             oe.condicionOE = oes["ejecucion_condicion"];
             oe.codigoPeriodo = oes["periodoc_codigo"];
-            oe.lugarPeriodo = oes["cliente_lugar_establecimiento"];
+            oe.lugarPeriodo = oes["periodoc_lugar"];
+            oe.clienteLugar = oes["cliente_lugar_establecimiento"];
+            oe.fechaPeriodo = oes["periodoc_fechafin"];
 
             await oeDB.insertarOE(oe);
           }
@@ -142,16 +144,18 @@ class POSApi {
   ) async {
     try {
       String? token = await Preferences.readData('token');
+      String? idUser = await Preferences.readData('id_user');
 
       final url = Uri.parse('$apiBaseURL/api/Ejecucion/guardar_parte_operativo');
       final resp = await http.post(
         url,
         body: {
+          'id_user': idUser,
           'app': 'true',
           'tn': token,
-          'id_empresa': idEmpresa,
-          'id_departamento': idDepartamento,
-          'id_sede': idSede,
+          'id_empresa_': idEmpresa,
+          'id_departamento_': idDepartamento,
+          'id_sede_': idSede,
           'fecha_servicio': fechaIncio,
           'fecha_fin': fechaFin,
           'unidad': idUnidad,
@@ -163,10 +167,10 @@ class POSApi {
 
       if (resp.statusCode == 200) {
         final decodedData = json.decode(resp.body);
-        print(decodedData);
+        return decodedData;
+      } else {
+        return 200;
       }
-
-      return 2;
     } catch (e) {
       return 2;
     }
