@@ -1,3 +1,4 @@
+import 'package:new_brunner_app/src/core/ConfigDatabase/consulta_oe_db.dart';
 import 'package:new_brunner_app/src/core/ConfigDatabase/empresa_db.dart';
 import 'package:new_brunner_app/src/core/ConfigDatabase/logistica_db.dart';
 import 'package:new_brunner_app/src/core/ConfigDatabase/mantenimiento_db.dart';
@@ -54,6 +55,8 @@ class DatabaseHelper {
       db.execute(OrdenEjecucionDB.ordenEjecucionTableSql);
       db.execute(OrdenEjecucionDB.personalOETableSql);
       db.execute(OrdenEjecucionDB.unidadesOETableSql);
+      db.execute(ConsultaOEDB.oesTableSql);
+      db.execute(ConsultaOEDB.posTableSql);
       //
     }, version: 1, onDowngrade: onDatabaseDowngradeDelete);
   }
