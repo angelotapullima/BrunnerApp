@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/page/Home/menu_widget.dart';
+import 'package:new_brunner_app/src/page/Residuos%20Solidos/Ejecucion%20Servicios/Consulta%20Info%20OE/consulta_informacion_oe.dart';
 import 'package:new_brunner_app/src/page/Residuos%20Solidos/Ejecucion%20Servicios/Generar%20OES/generar_orden_ejecucion_servicio.dart';
 import 'package:new_brunner_app/src/page/Residuos%20Solidos/Ejecucion%20Servicios/Generar%20POS/generar_pos.dart';
 import 'package:new_brunner_app/src/widget/option_widget.dart';
@@ -72,7 +73,16 @@ class EjecucionServicios extends StatelessWidget {
             descripcion: 'Ver Órdenes de Ejecución de Servicios, POS y Gestión de Combustible',
             icon: Icons.search,
             color: Color(0XFF85929E),
-            ontap: () {},
+            ontap: () {
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) {
+                    return const ConsultaInformacionOE();
+                  },
+                ),
+              );
+            },
           ),
         ],
       ),
