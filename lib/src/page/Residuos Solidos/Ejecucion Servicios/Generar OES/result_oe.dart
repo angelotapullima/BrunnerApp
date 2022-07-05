@@ -9,6 +9,7 @@ import 'package:new_brunner_app/src/model/Residuos%20Solidos/Ejecucion%20Servici
 import 'package:new_brunner_app/src/model/Residuos%20Solidos/Ejecucion%20Servicio/codigos_ue_model.dart';
 import 'package:new_brunner_app/src/model/Residuos%20Solidos/Ejecucion%20Servicio/contactos_oe_model.dart';
 import 'package:new_brunner_app/src/model/Residuos%20Solidos/Ejecucion%20Servicio/lugares_oe_model.dart';
+import 'package:new_brunner_app/src/page/Residuos%20Solidos/Ejecucion%20Servicios/Consulta%20Info%20OE/OES/pendientes_oe.dart';
 import 'package:new_brunner_app/src/page/Residuos%20Solidos/Ejecucion%20Servicios/Generar%20OES/generar_orden_ejecucion_servicio.dart';
 import 'package:new_brunner_app/src/page/Residuos%20Solidos/Ejecucion%20Servicios/Generar%20OES/select_actividades_contractuales.dart';
 import 'package:new_brunner_app/src/page/search_clientes.dart';
@@ -507,6 +508,16 @@ class _ResultOEState extends State<ResultOE> {
                                             if (res == 1) {
                                               showToast2('Orden de Ejecución Generada', Colors.green);
                                               Navigator.pop(context);
+                                              final _consultaOEBloc = ProviderBloc.consultaOE(context);
+                                              _consultaOEBloc.getOESPendientes();
+                                              Navigator.push(
+                                                context,
+                                                PageRouteBuilder(
+                                                  pageBuilder: (context, animation, secondaryAnimation) {
+                                                    return const PendientesOES();
+                                                  },
+                                                ),
+                                              );
                                             } else {
                                               showToast2('Ocurrió un error, inténtelo nuevamente', Colors.redAccent);
                                             }

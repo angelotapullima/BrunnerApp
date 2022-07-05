@@ -8,6 +8,7 @@ import 'package:new_brunner_app/src/core/routes_constanst.dart';
 import 'package:new_brunner_app/src/model/Residuos%20Solidos/Ejecucion%20Servicio/clientes_oe_model.dart';
 import 'package:new_brunner_app/src/model/Residuos%20Solidos/Ejecucion%20Servicio/orden_ejecucion_model.dart';
 import 'package:new_brunner_app/src/model/Residuos%20Solidos/Ejecucion%20Servicio/personal_oe_model.dart';
+import 'package:new_brunner_app/src/page/Residuos%20Solidos/Ejecucion%20Servicios/Consulta%20Info%20OE/POS/pendientes_pos.dart';
 import 'package:new_brunner_app/src/page/Residuos%20Solidos/Ejecucion%20Servicios/Generar%20POS/generar_pos.dart';
 import 'package:new_brunner_app/src/page/Residuos%20Solidos/Ejecucion%20Servicios/Generar%20POS/search_oe.dart';
 import 'package:new_brunner_app/src/page/Residuos%20Solidos/Ejecucion%20Servicios/Generar%20POS/search_personal.dart';
@@ -290,8 +291,18 @@ class _ResultPOSState extends State<ResultPOS> {
                           final res = await _api.saverPOS(widget.idEmpresa, widget.idDepartamento, widget.idSede, widget.fechaIncio, widget.fechaFin,
                               idUnidad, _condicionesController.text, clientes, personal);
                           if (res == 1) {
-                            Navigator.pop(context);
                             showToast2('POS generado correctamente', Colors.green);
+                            Navigator.pop(context);
+                            final _consultaOEBloc = ProviderBloc.consultaOE(context);
+                            _consultaOEBloc.getPOSPendientes();
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                pageBuilder: (context, animation, secondaryAnimation) {
+                                  return const PendientesPOS();
+                                },
+                              ),
+                            );
                           } else if (res == 200) {
                             showToast2('Problemas con la conexión, Inténtelo nuevamente', Colors.redAccent);
                           } else {

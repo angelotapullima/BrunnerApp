@@ -99,44 +99,6 @@ class EjecucionServicioApi {
     }
   }
 
-  Future<List<ClientesModel>?> getActividadesORDEJEC(String idEmpresa, String idDepartamento, String idSede) async {
-    try {
-      String? token = await Preferences.readData('token');
-
-      final url = Uri.parse('$apiBaseURL/api/Ejecucion/buscar_actividades_clientes');
-      final resp = await http.post(
-        url,
-        body: {
-          'app': 'true',
-          'tn': token,
-          'id_empresa': idEmpresa,
-          'id_departamento': idDepartamento,
-          'id_sede': idSede,
-        },
-      );
-
-      if (resp.statusCode == 200) {
-        final decodedData = json.decode(resp.body);
-
-        final List<ClientesModel> lista = [];
-
-        for (var i = 0; i < decodedData["result"].length; i++) {
-          var data = decodedData["result"][i];
-          final cliente = ClientesModel();
-          cliente.idCliente = data["id_cliente"];
-          cliente.nombreCliente = data["cliente_nombre"];
-          lista.add(cliente);
-        }
-
-        return lista;
-      } else {
-        return [];
-      }
-    } catch (e) {
-      return null;
-    }
-  }
-
   Future<List<ClientesOEModel>?> getClientesORDEJEC(String idEmpresa, String idDepartamento, String idSede) async {
     try {
       String? token = await Preferences.readData('token');
@@ -245,6 +207,7 @@ class EjecucionServicioApi {
         return [];
       }
     } catch (e) {
+      print(e);
       return null;
     }
   }

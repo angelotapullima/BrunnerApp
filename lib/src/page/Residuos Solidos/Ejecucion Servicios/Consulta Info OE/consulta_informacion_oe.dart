@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/page/Logistica/Orden%20Pedido/Consulta%20Informacion/Ordenes%20Pedido%20Lista/detalle_oden_pedido.dart';
 import 'package:new_brunner_app/src/page/Residuos%20Solidos/Ejecucion%20Servicios/Consulta%20Info%20OE/OES/pendientes_oe.dart';
 import 'package:new_brunner_app/src/page/Residuos%20Solidos/Ejecucion%20Servicios/Consulta%20Info%20OE/POS/pendientes_pos.dart';
@@ -15,6 +16,7 @@ class _ConsultaInformacionOEState extends State<ConsultaInformacionOE> {
   final _controller = ControllerExpanded();
   @override
   Widget build(BuildContext context) {
+    final _consultaOEBloc = ProviderBloc.consultaOE(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0XFF85929E),
@@ -55,6 +57,7 @@ class _ConsultaInformacionOEState extends State<ConsultaInformacionOE> {
                           icon: Icons.edit_note,
                           color: Colors.orangeAccent,
                           ontap: () {
+                            _consultaOEBloc.getOESPendientes();
                             Navigator.push(
                               context,
                               PageRouteBuilder(
@@ -89,6 +92,7 @@ class _ConsultaInformacionOEState extends State<ConsultaInformacionOE> {
                           icon: Icons.edit_note,
                           color: Colors.orangeAccent,
                           ontap: () {
+                            _consultaOEBloc.getPOSPendientes();
                             Navigator.push(
                               context,
                               PageRouteBuilder(

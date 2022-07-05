@@ -38,6 +38,7 @@ class EjecucionServicios extends StatelessWidget {
             ontap: () {
               final ejecucionServicioBloc = ProviderBloc.ejecucionServicio(context);
               ejecucionServicioBloc.getDataFiltro();
+              ejecucionServicioBloc.clearData();
               Navigator.push(
                 context,
                 PageRouteBuilder(
@@ -57,6 +58,7 @@ class EjecucionServicios extends StatelessWidget {
             ontap: () {
               final posBloc = ProviderBloc.pos(context);
               posBloc.getDataFiltro();
+              posBloc.clearData();
               Navigator.push(
                 context,
                 PageRouteBuilder(

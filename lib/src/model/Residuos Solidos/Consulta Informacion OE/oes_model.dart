@@ -14,6 +14,8 @@ class OESModel {
   String? nombreDepartamento;
   String? idSede;
   String? nombreSede;
+  String? rucCliente;
+  String? clienteNombre;
 
   OESModel({
     this.idEjecucion,
@@ -31,6 +33,8 @@ class OESModel {
     this.nombreDepartamento,
     this.idSede,
     this.nombreSede,
+    this.rucCliente,
+    this.clienteNombre,
   });
 
   static List<OESModel> fromJsonList(List<dynamic> json) => json.map((i) => OESModel.fromJson(i)).toList();
@@ -51,6 +55,8 @@ class OESModel {
         'nombreDepartamento': nombreDepartamento,
         'idSede': idSede,
         'nombreSede': nombreSede,
+        'rucCliente': rucCliente,
+        'clienteNombre': clienteNombre,
       };
 
   factory OESModel.fromJson(Map<String, dynamic> json) => OESModel(
@@ -69,5 +75,7 @@ class OESModel {
         nombreDepartamento: json["nombreDepartamento"],
         idSede: json["idSede"],
         nombreSede: json["nombreSede"],
+        rucCliente: json["rucCliente"],
+        clienteNombre: json["clienteNombre"],
       );
 }

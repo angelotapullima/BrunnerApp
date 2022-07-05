@@ -50,6 +50,10 @@ class POSBloc {
     _oeController.close();
   }
 
+  void clearData() {
+    _clientesController.sink.add(null);
+  }
+
   void getDataFiltro() async {
     _empresasController.sink.add(await _apiES.empresaDB.getEmpresas());
     _departamentosController.sink.add(await _apiES.departamentoDB.getDepartamentos());

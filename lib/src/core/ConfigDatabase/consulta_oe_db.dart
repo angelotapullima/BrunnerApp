@@ -14,6 +14,8 @@ class ConsultaOEDB {
       ' idDepartamento TEXT,'
       ' nombreDepartamento TEXT,'
       ' idSede TEXT,'
+      ' rucCliente TEXT,'
+      ' clienteNombre TEXT,'
       ' nombreSede TEXT)';
 
   static const String posTableSql = 'CREATE TABLE POS('

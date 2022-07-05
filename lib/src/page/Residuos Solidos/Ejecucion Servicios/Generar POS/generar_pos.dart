@@ -128,10 +128,10 @@ class _GenerarPOSState extends State<GenerarPOS> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          'Existen problemas con la conexión a Internet, inténtelo nuevamente',
-                          textAlign: TextAlign.center,
-                        ),
+                        // Text(
+                        //   'Existen problemas con la conexión a Internet, inténtelo nuevamente',
+                        //   textAlign: TextAlign.center,
+                        // ),
                         InkWell(
                           onTap: () async {
                             filtroSearch();
