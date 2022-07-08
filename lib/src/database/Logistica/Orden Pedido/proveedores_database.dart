@@ -1,5 +1,5 @@
 import 'package:new_brunner_app/src/core/database_config.dart';
-import 'package:new_brunner_app/src/model/Logistica/proveedores_model.dart';
+import 'package:new_brunner_app/src/model/Logistica/Orden%20Pedido/proveedores_model.dart';
 import 'package:sqflite/sqlite_api.dart';
 
 class ProveedoresDatabase {

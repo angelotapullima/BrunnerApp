@@ -1,6 +1,6 @@
 import 'package:new_brunner_app/src/core/database_config.dart';
 import 'package:new_brunner_app/src/core/preferences.dart';
-import 'package:new_brunner_app/src/model/Logistica/orden_pedido_model.dart';
+import 'package:new_brunner_app/src/model/Logistica/Orden%20Pedido/orden_pedido_model.dart';
 import 'package:sqflite/sqlite_api.dart';
 
 class OrdenPedidoDatabase {

@@ -1,6 +1,6 @@
-import 'package:new_brunner_app/src/model/Logistica/detalle_op_model.dart';
 import 'package:new_brunner_app/src/model/Empresa/empresas_model.dart';
-import 'package:new_brunner_app/src/model/Logistica/proveedores_model.dart';
+import 'package:new_brunner_app/src/model/Logistica/Orden%20Pedido/detalle_op_model.dart';
+import 'package:new_brunner_app/src/model/Logistica/Orden%20Pedido/proveedores_model.dart';
 
 class OrdenPedidoModel {
   String? idOP;

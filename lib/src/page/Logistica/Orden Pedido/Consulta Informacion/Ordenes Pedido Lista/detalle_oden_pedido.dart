@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:new_brunner_app/src/api/Logistica/logistica_api.dart';
+import 'package:new_brunner_app/src/api/Logistica/orden_pedido_api.dart';
 import 'package:new_brunner_app/src/api/pdf_api.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/core/routes_constanst.dart';
-import 'package:new_brunner_app/src/model/Logistica/detalle_op_model.dart';
-import 'package:new_brunner_app/src/model/Logistica/orden_pedido_model.dart';
+import 'package:new_brunner_app/src/model/Logistica/Orden%20Pedido/detalle_op_model.dart';
+import 'package:new_brunner_app/src/model/Logistica/Orden%20Pedido/orden_pedido_model.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
 import 'package:new_brunner_app/src/widget/show_loading.dart';
 

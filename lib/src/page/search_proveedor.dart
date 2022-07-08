@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
-import 'package:new_brunner_app/src/model/Logistica/proveedores_model.dart';
+import 'package:new_brunner_app/src/model/Logistica/Orden%20Pedido/proveedores_model.dart';
 
 class ProveedorSearch extends StatefulWidget {
   const ProveedorSearch({Key? key, required this.onChanged}) : super(key: key);
