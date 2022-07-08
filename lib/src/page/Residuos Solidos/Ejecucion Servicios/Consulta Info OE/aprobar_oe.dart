@@ -113,7 +113,7 @@ class _AprobarOEState extends State<AprobarOE> {
                           _controller.changeCargando(false);
                         },
                         child: Text(
-                          'Eliminar',
+                          'Aprobar',
                           style: TextStyle(
                             color: Colors.green,
                             fontWeight: FontWeight.w600,

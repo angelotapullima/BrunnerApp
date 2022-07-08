@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:new_brunner_app/src/bloc/consulta_oe_bloc.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/model/Residuos%20Solidos/Consulta%20Informacion%20OE/pos_model.dart';
+import 'package:new_brunner_app/src/page/Residuos%20Solidos/Ejecucion%20Servicios/Consulta%20Info%20OE/aprobar_oe.dart';
+import 'package:new_brunner_app/src/page/Residuos%20Solidos/Ejecucion%20Servicios/Consulta%20Info%20OE/eliminar_oe.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
 import 'package:new_brunner_app/src/widget/show_loading.dart';
+import 'package:new_brunner_app/src/widget/widget_all.dart';
 
 class PendientesPOS extends StatelessWidget {
   const PendientesPOS({Key? key}) : super(key: key);
@@ -45,7 +49,7 @@ class PendientesPOS extends StatelessWidget {
                       child: Column(
                         children: snapshot.data!.asMap().entries.map((item) {
                           int idx = item.key;
-                          return _posItem(context, item.value, idx + 1);
+                          return _posItem(context, item.value, idx + 1, _consultaOEBloc);
                         }).toList(),
                       ),
                     );
@@ -79,9 +83,91 @@ class PendientesPOS extends StatelessWidget {
     );
   }
 
-  Widget _posItem(BuildContext context, POSModel item, int number) {
-    return InkWell(
-      onTap: () {},
+  Widget _posItem(BuildContext context, POSModel item, int number, ConsultaOEBloc bloc) {
+    return PopupMenuButton(
+      onSelected: (value) {
+        switch (value) {
+          case 0:
+            break;
+          case 3:
+            //Aprobar POS
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                opaque: false,
+                pageBuilder: (context, animation, secondaryAnimation) {
+                  return AprobarOE(
+                    modulo: 'pos',
+                    id: item.idPOS.toString(),
+                    onChanged: (val) {
+                      if (val == 1) {
+                        bloc.getOESPendientes();
+                      }
+                    },
+                  );
+                },
+                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                  var begin = const Offset(0.0, 1.0);
+                  var end = Offset.zero;
+                  var curve = Curves.ease;
+
+                  var tween = Tween(begin: begin, end: end).chain(
+                    CurveTween(curve: curve),
+                  );
+
+                  return SlideTransition(
+                    position: animation.drive(tween),
+                    child: child,
+                  );
+                },
+              ),
+            );
+            break;
+          case 4:
+            //Eliminar POS
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                opaque: false,
+                pageBuilder: (context, animation, secondaryAnimation) {
+                  return EliminarOE(
+                    modulo: 'pos',
+                    id: item.idPOS.toString(),
+                    estado: '1',
+                    onChanged: (val) {
+                      if (val == 1) {
+                        bloc.getOESPendientes();
+                      }
+                    },
+                  );
+                },
+                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                  var begin = const Offset(0.0, 1.0);
+                  var end = Offset.zero;
+                  var curve = Curves.ease;
+
+                  var tween = Tween(begin: begin, end: end).chain(
+                    CurveTween(curve: curve),
+                  );
+
+                  return SlideTransition(
+                    position: animation.drive(tween),
+                    child: child,
+                  );
+                },
+              ),
+            );
+            break;
+          default:
+            break;
+        }
+      },
+      itemBuilder: (context) => [
+        //options(Icons.remove_red_eye, Colors.blueGrey, 'Visualizar', Colors.black, 1),
+        //options(Icons.edit, Colors.green, 'Editar', Colors.black, 2),
+        options(Icons.check, Colors.blue, 'Aprobar', Colors.black, 3),
+        options(Icons.close, Colors.redAccent, 'Eliminar', Colors.redAccent, 4),
+      ],
       child: Container(
         margin: EdgeInsets.symmetric(
           horizontal: ScreenUtil().setWidth(16),

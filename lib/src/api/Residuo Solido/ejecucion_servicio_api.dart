@@ -13,7 +13,6 @@ import 'package:new_brunner_app/src/database/Residuos%20Solidos/Ejecucion%20Serv
 import 'package:new_brunner_app/src/database/Residuos%20Solidos/Ejecucion%20Servicio/codigos_oe_database.dart';
 import 'package:new_brunner_app/src/database/Residuos%20Solidos/Ejecucion%20Servicio/contactos_oe_database.dart';
 import 'package:new_brunner_app/src/database/Residuos%20Solidos/Ejecucion%20Servicio/lugares_oe_database.dart';
-import 'package:new_brunner_app/src/model/Empresa/clientes_model.dart';
 import 'package:new_brunner_app/src/model/Empresa/departamento_model.dart';
 import 'package:new_brunner_app/src/model/Empresa/empresas_model.dart';
 import 'package:new_brunner_app/src/model/Empresa/sede_model.dart';

@@ -86,6 +86,7 @@ class _ConsultaInformacionOEState extends State<ConsultaInformacionOE> {
                           titulo: 'POS Generadas',
                           icon: Icons.file_open,
                           color: Colors.green,
+                          ontap: () {},
                         ),
                         option(
                           titulo: 'POS Pendientes de Aprobación',
