@@ -42,9 +42,14 @@ class DatabaseHelper {
       db.execute(EmpresaDB.tipoDocTableSql);
 
       //Logistica
+      //--> Orden Pedido
       db.execute(LogisticaDB.proveedoresTableSql);
       db.execute(LogisticaDB.ordenPedidoTableSql);
       db.execute(LogisticaDB.detalleOrdenPedidoTableSql);
+
+      //--> Almacen
+      db.execute(LogisticaDB.recursosAlmacenTableSql);
+      db.execute(LogisticaDB.dniPersonalAlmacenTableSql);
 
       //Residuos Solidos - Orden Ejecucion
       db.execute(OrdenEjecucionDB.clientesOETableSql);

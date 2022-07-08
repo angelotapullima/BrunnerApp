@@ -60,4 +60,28 @@ class LogisticaDB {
       ' tipoNombreRecurso TEXT,'
       ' nroSI TEXT,'
       ' logisticaNombreRecurso TEXT)';
+
+  static const String recursosAlmacenTableSql = 'CREATE TABLE RecursosAlmacen('
+      ' idAlmacen TEXT PRIMARY KEY,'
+      ' idSede TEXT,'
+      ' idRecursoLogistica TEXT,'
+      ' idTipoRecurso TEXT,'
+      ' unidadAlmacen TEXT,'
+      ' stockAlmacen TEXT,'
+      ' descripcionAlmacen TEXT,'
+      ' ubicacionAlmacen TEXT,'
+      ' idClaseLogistica TEXT,'
+      ' nombreRecurso TEXT,'
+      ' unidadRecurso TEXT,'
+      ' idTipoLogistica TEXT,'
+      ' nombreClaseLogistica TEXT,'
+      ' nombreTipoLogistica TEXT,'
+      ' nombreTipoRecurso TEXT,'
+      ' estadoTipoRecurso TEXT)';
+
+  static const String dniPersonalAlmacenTableSql = 'CREATE TABLE DNIPersonalAlmacen('
+      ' dni TEXT PRIMARY KEY,'
+      ' name TEXT,'
+      ' surname TEXT,'
+      ' surmane2 TEXT)';
 }
