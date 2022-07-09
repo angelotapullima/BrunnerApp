@@ -34,6 +34,21 @@ class PersonalDNIDatabase {
     }
   }
 
+  Future<List<PersonalDNIModel>> getPersonByQuery(String query) async {
+    try {
+      final Database db = await dbprovider.getDatabase();
+      List<PersonalDNIModel> list = [];
+      List<Map> maps =
+          await db.rawQuery("SELECT * FROM DNIPersonalAlmacen WHERE name LIKE '%$query%' OR surname LIKE '$query%' OR surname2 LIKE '%$query%'");
+
+      if (maps.isNotEmpty) list = PersonalDNIModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      e;
+      return [];
+    }
+  }
+
   deletePersons() async {
     final db = await dbprovider.database;
 

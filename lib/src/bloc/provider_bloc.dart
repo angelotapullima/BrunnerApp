@@ -5,6 +5,7 @@ import 'package:new_brunner_app/src/bloc/consulta_inspeccion_bloc.dart';
 import 'package:new_brunner_app/src/bloc/consulta_oe_bloc.dart';
 import 'package:new_brunner_app/src/bloc/data_user_bloc.dart';
 import 'package:new_brunner_app/src/bloc/ejecucion_servicio_bloc.dart';
+import 'package:new_brunner_app/src/bloc/logistica_almacen_bloc.dart';
 import 'package:new_brunner_app/src/bloc/logistica_op_bloc.dart';
 import 'package:new_brunner_app/src/bloc/mantenimiento_correctivo_bloc.dart';
 import 'package:new_brunner_app/src/bloc/modulos_bloc.dart';
@@ -30,6 +31,7 @@ class ProviderBloc extends InheritedWidget {
   final ordenHabilitacionBloc = OrdenHabilitacionCorrectivaBloc();
   //Logistica
   final logisticaOPBloc = LogisticaOPBloc();
+  final logisticaAlmacen = LogisticaAlmacenBloc();
   //Residuos Solidos
   final ejecucionServicioBloc = EjecucionServicioBloc();
   final parteOperativoServicioBloc = POSBloc();
@@ -91,5 +93,9 @@ class ProviderBloc extends InheritedWidget {
 
   static ConsultaOEBloc consultaOE(BuildContext context) {
     return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.consultaOEBloc;
+  }
+
+  static LogisticaAlmacenBloc almacen(BuildContext context) {
+    return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.logisticaAlmacen;
   }
 }

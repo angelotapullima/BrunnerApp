@@ -34,10 +34,25 @@ class RecursosAlmacenDatabase {
     }
   }
 
-  deleteRecurso(String idOP) async {
+  Future<List<RecursosAlmacenModel>> getRecursosAlmacenByIDSedeANDQuery(String idSede, String query) async {
+    try {
+      final Database db = await dbprovider.getDatabase();
+      List<RecursosAlmacenModel> list = [];
+      List<Map> maps = await db.rawQuery(
+          "SELECT * FROM RecursosAlmacen WHERE idSede='$idSede' AND (nombreClaseLogistica LIKE '%$query%' OR nombreRecurso LIKE '%$query%' OR stockAlmacen LIKE '%$query%' OR unidadRecurso LIKE '%$query%' OR nombreTipoRecurso LIKE '%$query%')");
+
+      if (maps.isNotEmpty) list = RecursosAlmacenModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      e;
+      return [];
+    }
+  }
+
+  deleteRecurso(String idSede) async {
     final db = await dbprovider.database;
 
-    final res = await db.rawDelete("DELETE FROM RecursosAlmacen WHERE idOP='$idOP'");
+    final res = await db.rawDelete("DELETE FROM RecursosAlmacen WHERE idSede='$idSede'");
 
     return res;
   }

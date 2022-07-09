@@ -4,6 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/ejecucion_servicio_bloc.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/model/Empresa/sede_model.dart';
+import 'package:new_brunner_app/src/page/Logistica/Almacen/Notas%20Productos/salida.dart';
+import 'package:new_brunner_app/src/util/utils.dart';
+import 'package:new_brunner_app/src/widget/show_loading.dart';
 import 'package:new_brunner_app/src/widget/text_field.dart';
 
 class NotasProductos extends StatefulWidget {
@@ -35,6 +38,7 @@ class _NotasProductosState extends State<NotasProductos> {
 
   @override
   Widget build(BuildContext context) {
+    final almacenBloc = ProviderBloc.almacen(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0XFF148F77),
@@ -58,123 +62,70 @@ class _NotasProductosState extends State<NotasProductos> {
           ),
         ],
       ),
-      // body: StreamBuilder<bool>(
-      //   stream: ejecucionServicioBloc.cargandoStream,
-      //   builder: (_, c) {
-      //     if (c.hasData && !c.data!) {
-      //       return StreamBuilder<List<ClientesOEModel>?>(
-      //         stream: ejecucionServicioBloc.clientesStream,
-      //         builder: (_, snapshot) {
-      //           if (snapshot.hasData) {
-      //             if (snapshot.data!.isNotEmpty) {
-      //               return ResultOE(
-      //                 idEmpresa: idEmpresa,
-      //                 idDepartamento: idDepartamento,
-      //                 idSede: idSede,
-      //                 //id: '$idEmpresa$idDepartamento$idSede',
-      //               );
-      //             } else {
-      //               return Padding(
-      //                 padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16)),
-      //                 child: Column(
-      //                   mainAxisAlignment: MainAxisAlignment.center,
-      //                   children: [
-      //                     Text('No existen Periodos Contractuales activos, para los datos ingresados'),
-      //                     InkWell(
-      //                       onTap: () async {
-      //                         filtroSearch();
-      //                       },
-      //                       child: Container(
-      //                         width: double.infinity,
-      //                         margin: const EdgeInsets.all(8),
-      //                         padding: const EdgeInsets.all(8),
-      //                         decoration: BoxDecoration(
-      //                           borderRadius: BorderRadius.circular(20),
-      //                           color: Colors.green,
-      //                           boxShadow: [
-      //                             BoxShadow(
-      //                               color: Colors.black.withOpacity(0.2),
-      //                               spreadRadius: 3,
-      //                               blurRadius: 8,
-      //                               offset: const Offset(0, 3), // changes position of shadow
-      //                             ),
-      //                           ],
-      //                         ),
-      //                         child: Center(
-      //                           child: Text(
-      //                             'Buscar',
-      //                             style: TextStyle(
-      //                               color: Colors.white,
-      //                               fontSize: ScreenUtil().setSp(20),
-      //                               fontWeight: FontWeight.w600,
-      //                             ),
-      //                           ),
-      //                         ),
-      //                       ),
-      //                     ),
-      //                   ],
-      //                 ),
-      //               );
-      //             }
-      //           } else {
-      //             return Padding(
-      //               padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16)),
-      //               child: Column(
-      //                 mainAxisAlignment: MainAxisAlignment.center,
-      //                 children: [
-      //                   // Text(
-      //                   //   'Existen problemas con la conexión a Internet, inténtelo nuevamente',
-      //                   //   textAlign: TextAlign.center,
-      //                   // ),
-      //                   InkWell(
-      //                     onTap: () async {
-      //                       filtroSearch();
-      //                     },
-      //                     child: Container(
-      //                       width: double.infinity,
-      //                       margin: const EdgeInsets.all(8),
-      //                       padding: const EdgeInsets.all(8),
-      //                       decoration: BoxDecoration(
-      //                         borderRadius: BorderRadius.circular(20),
-      //                         color: Colors.green,
-      //                         boxShadow: [
-      //                           BoxShadow(
-      //                             color: Colors.black.withOpacity(0.2),
-      //                             spreadRadius: 3,
-      //                             blurRadius: 8,
-      //                             offset: const Offset(0, 3), // changes position of shadow
-      //                           ),
-      //                         ],
-      //                       ),
-      //                       child: Center(
-      //                         child: Text(
-      //                           'Buscar',
-      //                           style: TextStyle(
-      //                             color: Colors.white,
-      //                             fontSize: ScreenUtil().setSp(20),
-      //                             fontWeight: FontWeight.w600,
-      //                           ),
-      //                         ),
-      //                       ),
-      //                     ),
-      //                   ),
-      //                 ],
-      //               ),
-      //             );
-      //           }
-      //         },
-      //       );
-      //     } else {
-      //       return ShowLoadding(
-      //         active: true,
-      //         h: double.infinity,
-      //         w: double.infinity,
-      //         fondo: Colors.transparent,
-      //         colorText: Colors.black,
-      //       );
-      //     }
-      //   },
-      // ),
+      body: StreamBuilder<int>(
+        stream: almacenBloc.respStream,
+        builder: (_, c) {
+          if (c.hasData && c.data! != 2 && c.data! != 10) {
+            if (c.data! == 1) {
+              return (idTipo == '1')
+                  ? Text('Hay datos')
+                  : Salida(
+                      idSede: idSede,
+                    );
+            } else {
+              return Padding(
+                padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16)),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Sin resultados, inténtenlo nuevamente'),
+                    InkWell(
+                      onTap: () async {
+                        filtroSearch();
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        margin: const EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.green,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              spreadRadius: 3,
+                              blurRadius: 8,
+                              offset: const Offset(0, 3), // changes position of shadow
+                            ),
+                          ],
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Buscar',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: ScreenUtil().setSp(20),
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+          } else {
+            return ShowLoadding(
+              active: true,
+              h: double.infinity,
+              w: double.infinity,
+              fondo: Colors.transparent,
+              colorText: Colors.black,
+            );
+          }
+        },
+      ),
     );
   }
 
@@ -276,7 +227,24 @@ class _NotasProductosState extends State<NotasProductos> {
                               height: ScreenUtil().setHeight(10),
                             ),
                             InkWell(
-                              onTap: () async {},
+                              onTap: () async {
+                                if (idSede != '') {
+                                  if (idTipo != '') {
+                                    final almacenBloc = ProviderBloc.almacen(context);
+
+                                    if (idTipo == '1') {
+                                    } else {
+                                      almacenBloc.getDataSalidaAlmacen(idSede);
+                                    }
+
+                                    Navigator.pop(context);
+                                  } else {
+                                    showToast2('Debe seleccionar un tipo de registro', Colors.redAccent);
+                                  }
+                                } else {
+                                  showToast2('Debe seleccionar una sede', Colors.redAccent);
+                                }
+                              },
                               child: Container(
                                 width: double.infinity,
                                 margin: const EdgeInsets.all(8),

@@ -2,12 +2,12 @@ class PersonalDNIModel {
   String? dni;
   String? name;
   String? surname;
-  String? surmane2;
+  String? surname2;
   PersonalDNIModel({
     this.dni,
     this.name,
     this.surname,
-    this.surmane2,
+    this.surname2,
   });
 
   static List<PersonalDNIModel> fromJsonList(List<dynamic> json) => json.map((i) => PersonalDNIModel.fromJson(i)).toList();
@@ -16,12 +16,12 @@ class PersonalDNIModel {
         'dni': dni,
         'name': name,
         'surname': surname,
-        'surmane2': surmane2,
+        'surname2': surname2,
       };
   factory PersonalDNIModel.fromJson(Map<String, dynamic> json) => PersonalDNIModel(
         dni: json["dni"],
         name: json["name"],
         surname: json["surname"],
-        surmane2: json["surmane2"],
+        surname2: json["surname2"],
       );
 }

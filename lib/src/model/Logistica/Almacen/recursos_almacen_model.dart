@@ -15,6 +15,8 @@ class RecursosAlmacenModel {
   String? nombreTipoLogistica;
   String? nombreTipoRecurso;
   String? estadoTipoRecurso;
+  //No en DB
+  String? cantidad;
 
   RecursosAlmacenModel({
     this.idAlmacen,
@@ -33,6 +35,7 @@ class RecursosAlmacenModel {
     this.nombreTipoLogistica,
     this.nombreTipoRecurso,
     this.estadoTipoRecurso,
+    this.cantidad,
   });
 
   static List<RecursosAlmacenModel> fromJsonList(List<dynamic> json) => json.map((i) => RecursosAlmacenModel.fromJson(i)).toList();

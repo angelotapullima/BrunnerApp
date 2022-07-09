@@ -83,5 +83,5 @@ class LogisticaDB {
       ' dni TEXT PRIMARY KEY,'
       ' name TEXT,'
       ' surname TEXT,'
-      ' surmane2 TEXT)';
+      ' surname2 TEXT)';
 }

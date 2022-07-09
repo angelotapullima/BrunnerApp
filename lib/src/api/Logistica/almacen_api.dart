@@ -27,7 +27,9 @@ class AlmacenApi {
       );
 
       if (resp.statusCode == 200) {
+        await recursosDB.deleteRecurso(idSede);
         final decodedData = json.decode(resp.body);
+        print(decodedData);
 
         for (var i = 0; i < decodedData["result"]["recursos"].length; i++) {
           var r = decodedData["result"]["recursos"][i];
@@ -56,6 +58,7 @@ class AlmacenApi {
         return 3;
       }
     } catch (e) {
+      print(e);
       return 2;
     }
   }
@@ -74,20 +77,64 @@ class AlmacenApi {
       );
 
       if (resp.statusCode == 200) {
+        await personsDB.deletePersons();
         final decodedData = json.decode(resp.body);
 
-        for (var i = 0; i < decodedData["result"]["personas"]; i++) {
+        for (var i = 0; i < decodedData["result"]["personas"].length; i++) {
           var p = decodedData["result"]["personas"][i];
           final person = PersonalDNIModel();
           person.name = p["person_name"];
           person.surname = p["person_surname"];
-          person.surmane2 = p["person_surname2"];
+          person.surname2 = p["person_surname2"];
           person.dni = p["person_dni"];
 
           await personsDB.insertarPerson(person);
         }
       }
       return 1;
+    } catch (e) {
+      return 2;
+    }
+  }
+
+  Future<int> generarOrden({
+    required String idSede,
+    required String idAlmacenDestino,
+    required String tipoRegistro,
+    required String dniSolicitante,
+    required String nombreSolicitante,
+    String? comentarios,
+    required String datos,
+  }) async {
+    try {
+      String? token = await Preferences.readData('token');
+      String? idUser = await Preferences.readData('id_user');
+
+      final url = Uri.parse('$apiBaseURL/api/Almacen/generar_orden_app');
+      final resp = await http.post(
+        url,
+        body: {
+          'app': 'true',
+          'tn': token,
+          'id_user': idUser,
+          'id_sede': idSede,
+          'id_almacen_destino': idAlmacenDestino,
+          'tipo_registro': tipoRegistro,
+          'almacen_log_dni_solicitante': dniSolicitante,
+          'almacen_log_nombre_solicitante': nombreSolicitante,
+          'almacen_log_comentarios': comentarios,
+          'almacen_log_datos': datos,
+        },
+      );
+
+      if (resp.statusCode == 200) {
+        await personsDB.deletePersons();
+        final decodedData = json.decode(resp.body);
+        print(decodedData);
+        return decodedData["result"]["code"];
+      } else {
+        return 2;
+      }
     } catch (e) {
       return 2;
     }
