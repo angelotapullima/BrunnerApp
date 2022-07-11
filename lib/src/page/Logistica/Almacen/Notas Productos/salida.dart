@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:new_brunner_app/src/api/Logistica/almacen_api.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/model/Logistica/Almacen/recursos_almacen_model.dart';
+import 'package:new_brunner_app/src/page/Logistica/Almacen/Notas%20Productos/confirmar.dart';
 import 'package:new_brunner_app/src/page/Logistica/Almacen/Notas%20Productos/search_persons.dart';
 import 'package:new_brunner_app/src/page/Logistica/Almacen/Notas%20Productos/search_recursos.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
-import 'package:new_brunner_app/src/widget/show_loading.dart';
 import 'package:new_brunner_app/src/widget/text_field.dart';
 
 class Salida extends StatefulWidget {
@@ -26,258 +25,262 @@ class _SalidaState extends State<Salida> {
   @override
   Widget build(BuildContext context) {
     final almacenBloc = ProviderBloc.almacen(context);
-    return Stack(
-      children: [
-        SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16), vertical: ScreenUtil().setHeight(10)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextFieldSelect(
-                  label: 'Documento del Registro',
-                  hingText: '',
-                  controller: _documentoController,
-                  widget: Icon(
-                    Icons.edit_note,
-                    color: Colors.green,
-                  ),
-                  icon: true,
-                  readOnly: false,
-                ),
-                SizedBox(
-                  height: ScreenUtil().setHeight(10),
-                ),
-                Divider(),
-                SizedBox(
-                  height: ScreenUtil().setHeight(5),
-                ),
-                Text(
-                  'Persona',
-                  style: TextStyle(
-                    fontSize: ScreenUtil().setSp(16),
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                SizedBox(
-                  height: ScreenUtil().setHeight(20),
-                ),
-                TextFieldSelect(
-                  label: 'DNI',
-                  hingText: 'Seleccionar persona',
-                  controller: _dniController,
-                  widget: Icon(
-                    Icons.keyboard_arrow_down,
-                    color: Colors.green,
-                  ),
-                  icon: true,
-                  readOnly: true,
-                  ontap: () {
-                    FocusScope.of(context).unfocus();
-                    almacenBloc.searchPersons('');
-                    Navigator.push(
-                      context,
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) {
-                          return SearchPersonsAlmacen(
-                            onChanged: (person) {
-                              _dniController.text = person.dni ?? '';
-                              _personaController.text = '${person.name} ${person.surname} ${person.surname2}';
-                            },
-                          );
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16), vertical: ScreenUtil().setHeight(10)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextFieldSelect(
+              label: 'Documento del Registro',
+              hingText: '',
+              controller: _documentoController,
+              widget: Icon(
+                Icons.edit_note,
+                color: Colors.green,
+              ),
+              icon: true,
+              readOnly: false,
+            ),
+            SizedBox(
+              height: ScreenUtil().setHeight(10),
+            ),
+            Divider(),
+            SizedBox(
+              height: ScreenUtil().setHeight(5),
+            ),
+            Text(
+              'Persona',
+              style: TextStyle(
+                fontSize: ScreenUtil().setSp(16),
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            SizedBox(
+              height: ScreenUtil().setHeight(20),
+            ),
+            TextFieldSelect(
+              label: 'DNI',
+              hingText: 'Seleccionar persona',
+              controller: _dniController,
+              widget: Icon(
+                Icons.keyboard_arrow_down,
+                color: Colors.green,
+              ),
+              icon: true,
+              readOnly: true,
+              ontap: () {
+                FocusScope.of(context).unfocus();
+                almacenBloc.searchPersons('');
+                Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) {
+                      return SearchPersonsAlmacen(
+                        onChanged: (person) {
+                          _dniController.text = person.dni ?? '';
+                          _personaController.text = '${person.name} ${person.surname} ${person.surname2}';
                         },
-                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                          var begin = const Offset(0.0, 1.0);
-                          var end = Offset.zero;
-                          var curve = Curves.ease;
+                      );
+                    },
+                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                      var begin = const Offset(0.0, 1.0);
+                      var end = Offset.zero;
+                      var curve = Curves.ease;
 
-                          var tween = Tween(begin: begin, end: end).chain(
-                            CurveTween(curve: curve),
-                          );
+                      var tween = Tween(begin: begin, end: end).chain(
+                        CurveTween(curve: curve),
+                      );
 
-                          return SlideTransition(
-                            position: animation.drive(tween),
-                            child: child,
-                          );
-                        },
-                      ),
-                    );
-                  },
-                ),
-                SizedBox(
-                  height: ScreenUtil().setHeight(15),
-                ),
-                TextFieldSelect(
-                  label: 'Nombre Completo',
-                  hingText: '',
-                  controller: _personaController,
-                  icon: false,
-                  readOnly: true,
-                ),
-                SizedBox(
-                  height: ScreenUtil().setHeight(10),
-                ),
-                Divider(),
-                SizedBox(
-                  height: ScreenUtil().setHeight(5),
-                ),
-                AnimatedBuilder(
-                  animation: _controller,
-                  builder: (_, f) {
-                    return (_controller.recursos.isEmpty)
-                        ? Text(
-                            'Información Registrada',
-                            style: TextStyle(
-                              fontSize: ScreenUtil().setSp(16),
-                              fontWeight: FontWeight.w500,
-                            ),
-                          )
-                        : ExpansionTile(
-                            initiallyExpanded: true,
-                            maintainState: true,
-                            title: Text(
-                              'Información Registrada',
-                              style: TextStyle(
-                                fontSize: ScreenUtil().setSp(16),
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            children: _controller.recursos.map((item) => _recursoAgregado(item)).toList(),
-                          );
-                  },
-                ),
-                SizedBox(
-                  height: ScreenUtil().setHeight(20),
-                ),
-                TextFieldSelect(
-                  label: 'Recursos en Almacén',
-                  hingText: 'Seleccionar recurso',
-                  controller: _recursoController,
-                  widget: Icon(
-                    Icons.keyboard_arrow_down,
-                    color: Colors.green,
+                      return SlideTransition(
+                        position: animation.drive(tween),
+                        child: child,
+                      );
+                    },
                   ),
-                  icon: true,
-                  readOnly: true,
-                  ontap: () {
-                    FocusScope.of(context).unfocus();
-                    almacenBloc.searchRecurso(widget.idSede, '');
-                    Navigator.push(
-                      context,
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) {
-                          return SearchRecursosAlmacen(
-                            onChanged: (recurso) {
-                              saveRecurso(recurso);
-                            },
-                          );
+                );
+              },
+            ),
+            SizedBox(
+              height: ScreenUtil().setHeight(15),
+            ),
+            TextFieldSelect(
+              label: 'Nombre Completo',
+              hingText: '',
+              controller: _personaController,
+              icon: false,
+              readOnly: true,
+            ),
+            SizedBox(
+              height: ScreenUtil().setHeight(10),
+            ),
+            Divider(),
+            SizedBox(
+              height: ScreenUtil().setHeight(5),
+            ),
+            AnimatedBuilder(
+              animation: _controller,
+              builder: (_, f) {
+                return (_controller.recursos.isEmpty)
+                    ? Text(
+                        'Información Registrada',
+                        style: TextStyle(
+                          fontSize: ScreenUtil().setSp(16),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      )
+                    : ExpansionTile(
+                        initiallyExpanded: true,
+                        maintainState: true,
+                        title: Text(
+                          'Información Registrada',
+                          style: TextStyle(
+                            fontSize: ScreenUtil().setSp(16),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        children: _controller.recursos.map((item) => _recursoAgregado(item)).toList(),
+                      );
+              },
+            ),
+            SizedBox(
+              height: ScreenUtil().setHeight(20),
+            ),
+            TextFieldSelect(
+              label: 'Recursos en Almacén',
+              hingText: 'Seleccionar recurso',
+              controller: _recursoController,
+              widget: Icon(
+                Icons.keyboard_arrow_down,
+                color: Colors.green,
+              ),
+              icon: true,
+              readOnly: true,
+              ontap: () {
+                FocusScope.of(context).unfocus();
+                almacenBloc.searchRecurso(widget.idSede, '');
+                Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) {
+                      return SearchRecursosAlmacen(
+                        onChanged: (recurso) {
+                          saveRecurso(recurso);
                         },
-                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                          var begin = const Offset(0.0, 1.0);
-                          var end = Offset.zero;
-                          var curve = Curves.ease;
+                      );
+                    },
+                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                      var begin = const Offset(0.0, 1.0);
+                      var end = Offset.zero;
+                      var curve = Curves.ease;
 
-                          var tween = Tween(begin: begin, end: end).chain(
-                            CurveTween(curve: curve),
-                          );
+                      var tween = Tween(begin: begin, end: end).chain(
+                        CurveTween(curve: curve),
+                      );
 
-                          return SlideTransition(
-                            position: animation.drive(tween),
-                            child: child,
-                          );
-                        },
-                      ),
-                    );
-                  },
-                ),
-                SizedBox(
-                  height: ScreenUtil().setHeight(20),
-                ),
-                InkWell(
-                  onTap: () async {
-                    if (_dniController.text.isNotEmpty) {
-                      if (_controller.recursos.isNotEmpty) {
-                        _controller.changeCargando(true);
-                        String datos = '';
-                        for (var i = 0; i < _controller.recursos.length; i++) {
-                          var r = _controller.recursos[i];
+                      return SlideTransition(
+                        position: animation.drive(tween),
+                        child: child,
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
+            SizedBox(
+              height: ScreenUtil().setHeight(20),
+            ),
+            InkWell(
+              onTap: () async {
+                if (_documentoController.text.isNotEmpty) {
+                  if (_dniController.text.isNotEmpty) {
+                    if (_controller.recursos.isNotEmpty) {
+                      String datos = '';
+                      for (var i = 0; i < _controller.recursos.length; i++) {
+                        var r = _controller.recursos[i];
+
+                        if (i == _controller.recursos.length - 1) {
+                          datos +=
+                              '${r.idRecursoLogistica}/__/${r.unidadAlmacen}/__/${r.idTipoRecurso}/__/${r.descripcionAlmacen}/__/${r.ubicacionAlmacen}/__/${r.cantidad}';
+                        } else {
                           datos +=
                               '${r.idRecursoLogistica}/__/${r.unidadAlmacen}/__/${r.idTipoRecurso}/__/${r.descripcionAlmacen}/__/${r.ubicacionAlmacen}/__/${r.cantidad}._._.';
                         }
-
-                        print(datos);
-
-                        final _api = AlmacenApi();
-                        final res = await _api.generarOrden(
-                            idSede: widget.idSede,
-                            idAlmacenDestino: '0',
-                            tipoRegistro: '0',
-                            dniSolicitante: _dniController.text,
-                            nombreSolicitante: _personaController.text,
-                            comentarios: _documentoController.text,
-                            datos: datos);
-
-                        if (res == 1) {
-                          showToast2('Registro Generado correctamente', Colors.green);
-                          Navigator.pop(context);
-                        } else {
-                          showToast2('Ocurrió un error, inténtelo nuevamente', Colors.redAccent);
-                        }
-                        _controller.changeCargando(false);
-                      } else {
-                        showToast2('Debe seleccionar resursos', Colors.redAccent);
                       }
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          opaque: false,
+                          pageBuilder: (context, animation, secondaryAnimation) {
+                            return Confirmar(
+                                idSede: widget.idSede,
+                                idAlmacenDestino: '0',
+                                tipoRegistro: '0',
+                                dniSolicitante: _dniController.text,
+                                nombreSolicitante: _personaController.text,
+                                comentarios: _documentoController.text,
+                                datos: datos);
+                          },
+                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                            var begin = const Offset(0.0, 1.0);
+                            var end = Offset.zero;
+                            var curve = Curves.ease;
+
+                            var tween = Tween(begin: begin, end: end).chain(
+                              CurveTween(curve: curve),
+                            );
+
+                            return SlideTransition(
+                              position: animation.drive(tween),
+                              child: child,
+                            );
+                          },
+                        ),
+                      );
                     } else {
-                      showToast2('Debe seleccionar a una Persona', Colors.redAccent);
+                      showToast2('Debe seleccionar resursos', Colors.redAccent);
                     }
-                  },
-                  child: Container(
-                    width: double.infinity,
-                    margin: const EdgeInsets.all(8),
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Color(0XFF148F77),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          spreadRadius: 3,
-                          blurRadius: 8,
-                          offset: const Offset(0, 3), // changes position of shadow
-                        ),
-                      ],
+                  } else {
+                    showToast2('Debe seleccionar a una Persona', Colors.redAccent);
+                  }
+                } else {
+                  showToast2('Campo Documento de Registro requerido', Colors.redAccent);
+                }
+              },
+              child: Container(
+                width: double.infinity,
+                margin: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Color(0XFF148F77),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      spreadRadius: 3,
+                      blurRadius: 8,
+                      offset: const Offset(0, 3), // changes position of shadow
                     ),
-                    child: Center(
-                      child: Text(
-                        'Generar Registro',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: ScreenUtil().setSp(20),
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                  ],
+                ),
+                child: Center(
+                  child: Text(
+                    'Generar Registro',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: ScreenUtil().setSp(20),
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: ScreenUtil().setHeight(50),
-                ),
-              ],
+              ),
             ),
-          ),
+            SizedBox(
+              height: ScreenUtil().setHeight(50),
+            ),
+          ],
         ),
-        AnimatedBuilder(
-            animation: _controller,
-            builder: (_, m) {
-              return ShowLoadding(
-                active: _controller.cargando,
-                h: double.infinity,
-                w: double.infinity,
-                fondo: Colors.black.withOpacity(0.2),
-                colorText: Colors.black,
-              );
-            }),
-      ],
+      ),
     );
   }
 

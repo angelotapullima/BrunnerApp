@@ -29,7 +29,6 @@ class AlmacenApi {
       if (resp.statusCode == 200) {
         await recursosDB.deleteRecurso(idSede);
         final decodedData = json.decode(resp.body);
-        print(decodedData);
 
         for (var i = 0; i < decodedData["result"]["recursos"].length; i++) {
           var r = decodedData["result"]["recursos"][i];
@@ -58,7 +57,6 @@ class AlmacenApi {
         return 3;
       }
     } catch (e) {
-      print(e);
       return 2;
     }
   }
@@ -130,7 +128,6 @@ class AlmacenApi {
       if (resp.statusCode == 200) {
         await personsDB.deletePersons();
         final decodedData = json.decode(resp.body);
-        print(decodedData);
         return decodedData["result"]["code"];
       } else {
         return 2;
