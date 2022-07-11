@@ -84,4 +84,11 @@ class LogisticaDB {
       ' name TEXT,'
       ' surname TEXT,'
       ' surname2 TEXT)';
+
+  static const String recursoLogisticaTableSql = 'CREATE TABLE RecursoLogistica('
+      ' idRecursoLogistica TEXT PRIMARY KEY,'
+      ' idSede TEXT,'
+      ' nombreClaseLogistica TEXT,'
+      ' nombreRecursoLogistica TEXT,'
+      ' cantidadAlmacen TEXT)';
 }

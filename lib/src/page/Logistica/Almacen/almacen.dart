@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/page/Home/menu_widget.dart';
 import 'package:new_brunner_app/src/page/Logistica/Almacen/Notas%20Productos/notas_productos.dart';
 import 'package:new_brunner_app/src/widget/option_widget.dart';
@@ -9,6 +10,7 @@ class Almacen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final almacenBloc = ProviderBloc.almacen(context);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -33,6 +35,7 @@ class Almacen extends StatelessWidget {
             icon: Icons.edit_note,
             color: Color(0XFF148F77),
             ontap: () {
+              almacenBloc.updateResp(100);
               Navigator.push(
                 context,
                 PageRouteBuilder(

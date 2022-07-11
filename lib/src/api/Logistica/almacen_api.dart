@@ -4,13 +4,17 @@ import 'package:http/http.dart' as http;
 import 'package:new_brunner_app/src/core/preferences.dart';
 import 'package:new_brunner_app/src/core/routes_constanst.dart';
 import 'package:new_brunner_app/src/database/Logistica/Almacen/personal_dni_database.dart';
+import 'package:new_brunner_app/src/database/Logistica/Almacen/recurso_logistica_database.dart';
 import 'package:new_brunner_app/src/database/Logistica/Almacen/recursos_almacen_database.dart';
+import 'package:new_brunner_app/src/model/Logistica/Almacen/detalle_recurso_logistica_model.dart';
 import 'package:new_brunner_app/src/model/Logistica/Almacen/personal_dni_model.dart';
+import 'package:new_brunner_app/src/model/Logistica/Almacen/recurso_logistica_model.dart';
 import 'package:new_brunner_app/src/model/Logistica/Almacen/recursos_almacen_model.dart';
 
 class AlmacenApi {
   final recursosDB = RecursosAlmacenDatabase();
   final personsDB = PersonalDNIDatabase();
+  final recuLogisticaDB = RecursoLogisticaDatabase();
 
   Future<int> getRecursosDisponibles(String idSede) async {
     try {
@@ -134,6 +138,94 @@ class AlmacenApi {
       }
     } catch (e) {
       return 2;
+    }
+  }
+
+  Future<int> getRecursosIngreso(String idSede, String val) async {
+    try {
+      String? token = await Preferences.readData('token');
+
+      final url = Uri.parse('$apiBaseURL/api/Almacen/buscar_recursos_app');
+      final resp = await http.post(
+        url,
+        body: {
+          'app': 'true',
+          'tn': token,
+          'id_sede': idSede,
+          'recurso_buscar': val,
+        },
+      );
+
+      if (resp.statusCode == 200) {
+        await recuLogisticaDB.deleteRecurso(idSede);
+        final decodedData = json.decode(resp.body);
+
+        for (var i = 0; i < decodedData["result"]["recurso"].length; i++) {
+          var datito = decodedData["result"]["recurso"][i];
+          final recurso = RecursoLogisticaModel();
+          recurso.idRecursoLogistica = datito["id_logistica_recurso"];
+          recurso.idSede = idSede;
+          recurso.nombreClaseLogistica = datito["logistica_clase_nombre"];
+          recurso.nombreRecursoLogistica = datito["logistica_recurso_nombre"];
+          recurso.cantidadAlmacen = datito["cantidad_almacen"];
+
+          await recuLogisticaDB.insertarRecurso(recurso);
+        }
+        return decodedData["result"]["code"];
+      } else {
+        return 10;
+      }
+    } catch (e) {
+      return 10;
+    }
+  }
+
+  Future<List<DetalleRecursoLogisticaModel>> getDetalleRecurso(String idRecursoLogistica) async {
+    try {
+      String? token = await Preferences.readData('token');
+
+      final url = Uri.parse('$apiBaseURL/api/Almacen/buscar_detalle_recursos_app');
+      final resp = await http.post(
+        url,
+        body: {
+          'app': 'true',
+          'tn': token,
+          'id_logistica_recurso': idRecursoLogistica,
+        },
+      );
+
+      if (resp.statusCode == 200) {
+        final decodedData = json.decode(resp.body);
+        if (decodedData["result"]["code"] == 1) {
+          final List<DetallesRLModel> listD = [];
+
+          for (var i = 0; i < decodedData["result"]["detalles"].length; i++) {
+            var details = decodedData["result"]["detalles"][i];
+            final detalle = DetallesRLModel();
+            detalle.idTipoRecurso = details["id_recurso_tipo"];
+            detalle.nombreTipoRecurso = details["recurso_tipo_nombre"];
+            listD.add(detalle);
+          }
+
+          if (listD.isNotEmpty) {
+            final List<DetalleRecursoLogisticaModel> listita = [
+              DetalleRecursoLogisticaModel(
+                unidad: decodedData["result"]["unidad"]["logistica_recurso_unidad"],
+                listDetalles: listD,
+              ),
+            ];
+            return listita;
+          } else {
+            return [];
+          }
+        } else {
+          return [];
+        }
+      } else {
+        return [];
+      }
+    } catch (e) {
+      return [];
     }
   }
 }

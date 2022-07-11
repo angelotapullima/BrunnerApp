@@ -164,6 +164,7 @@ class _SalidaState extends State<Salida> {
                   PageRouteBuilder(
                     pageBuilder: (context, animation, secondaryAnimation) {
                       return SearchRecursosAlmacen(
+                        idSede: widget.idSede,
                         onChanged: (recurso) {
                           saveRecurso(recurso);
                         },
@@ -416,10 +417,6 @@ class _SalidaState extends State<Salida> {
                               label: 'U.M.',
                               hingText: '',
                               controller: _unidadController,
-                              widget: Icon(
-                                Icons.keyboard_arrow_down,
-                                color: Colors.green,
-                              ),
                               icon: false,
                               readOnly: true,
                             ),

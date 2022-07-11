@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/ejecucion_servicio_bloc.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/model/Empresa/sede_model.dart';
+import 'package:new_brunner_app/src/page/Logistica/Almacen/Notas%20Productos/ingreso.dart';
 import 'package:new_brunner_app/src/page/Logistica/Almacen/Notas%20Productos/salida.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
 import 'package:new_brunner_app/src/widget/show_loading.dart';
@@ -65,14 +66,59 @@ class _NotasProductosState extends State<NotasProductos> {
       body: StreamBuilder<int>(
         stream: almacenBloc.respStream,
         builder: (_, c) {
-          if (c.hasData && c.data! != 2 && c.data! != 10) {
+          if (c.hasData && c.data! != 10) {
             if (c.data! == 1) {
               return (idTipo == '1')
-                  ? Text('Hay datos')
+                  ? Ingreso(
+                      idSede: idSede,
+                    )
                   : Salida(
                       idSede: idSede,
                     );
             } else {
+              if (c.data! == 100) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16)),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      InkWell(
+                        onTap: () async {
+                          filtroSearch();
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          margin: const EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.green,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                spreadRadius: 3,
+                                blurRadius: 8,
+                                offset: const Offset(0, 3), // changes position of shadow
+                              ),
+                            ],
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Buscar',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: ScreenUtil().setSp(20),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
               return Padding(
                 padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16)),
                 child: Column(
@@ -233,6 +279,7 @@ class _NotasProductosState extends State<NotasProductos> {
                                     final almacenBloc = ProviderBloc.almacen(context);
 
                                     if (idTipo == '1') {
+                                      almacenBloc.updateResp(1);
                                     } else {
                                       almacenBloc.getDataSalidaAlmacen(idSede);
                                     }

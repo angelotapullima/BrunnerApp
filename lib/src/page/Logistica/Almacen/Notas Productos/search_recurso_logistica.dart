@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
-import 'package:new_brunner_app/src/model/Logistica/Almacen/recursos_almacen_model.dart';
+import 'package:new_brunner_app/src/model/Logistica/Almacen/recurso_logistica_model.dart';
 
-class SearchRecursosAlmacen extends StatefulWidget {
-  const SearchRecursosAlmacen({Key? key, required this.onChanged, required this.idSede}) : super(key: key);
+class SearchRecursoLogistica extends StatefulWidget {
+  const SearchRecursoLogistica({Key? key, required this.onChanged, required this.idSede}) : super(key: key);
   final String idSede;
-  final ValueChanged<RecursosAlmacenModel>? onChanged;
+  final ValueChanged<RecursoLogisticaModel>? onChanged;
 
   @override
-  State<SearchRecursosAlmacen> createState() => _SearchRecursosAlmacenState();
+  State<SearchRecursoLogistica> createState() => _SearchRecursoLogisticaState();
 }
 
-class _SearchRecursosAlmacenState extends State<SearchRecursosAlmacen> {
+class _SearchRecursoLogisticaState extends State<SearchRecursoLogistica> {
   final searchController = TextEditingController();
 
   @override
@@ -39,7 +39,7 @@ class _SearchRecursosAlmacenState extends State<SearchRecursosAlmacen> {
               child: TextField(
                 controller: searchController,
                 onChanged: (query) {
-                  searchBloc.searchRecurso(widget.idSede, query.trim());
+                  searchBloc.searchRecursoIngreso(widget.idSede, query.trim());
                 },
                 textAlign: TextAlign.left,
                 style: TextStyle(
@@ -63,8 +63,8 @@ class _SearchRecursosAlmacenState extends State<SearchRecursosAlmacen> {
               height: ScreenUtil().setHeight(10),
             ),
             Expanded(
-              child: StreamBuilder<List<RecursosAlmacenModel>>(
-                stream: searchBloc.recursosStream,
+              child: StreamBuilder<List<RecursoLogisticaModel>>(
+                stream: searchBloc.recuLogicticaStream,
                 builder: (context, snapshot) {
                   if (snapshot.hasData && snapshot.data!.isNotEmpty) {
                     return ListView.builder(
@@ -105,7 +105,7 @@ class _SearchRecursosAlmacenState extends State<SearchRecursosAlmacen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    '${recurso.nombreClaseLogistica} | ${recurso.nombreRecurso} | ${recurso.stockAlmacen} ${recurso.unidadRecurso} ${recurso.nombreTipoRecurso}',
+                                    '${recurso.nombreClaseLogistica} | ${recurso.nombreRecursoLogistica} | ${recurso.cantidadAlmacen}',
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.w400,
@@ -120,7 +120,7 @@ class _SearchRecursosAlmacenState extends State<SearchRecursosAlmacen> {
                         });
                   } else {
                     return const Center(
-                      child: Text('Sin Recursos disponibles en almacen...'),
+                      child: Text('No existen Recursos con el nombre ingresado...'),
                     );
                   }
                 },
