@@ -6,6 +6,7 @@ import 'package:new_brunner_app/src/bloc/logistica_almacen_bloc.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/model/Logistica/Almacen/detalle_recurso_logistica_model.dart';
 import 'package:new_brunner_app/src/model/Logistica/Almacen/recurso_logistica_model.dart';
+import 'package:new_brunner_app/src/page/Logistica/Almacen/Notas%20Productos/confirmar.dart';
 import 'package:new_brunner_app/src/page/Logistica/Almacen/Notas%20Productos/search_recurso_logistica.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
 import 'package:new_brunner_app/src/widget/show_loading.dart';
@@ -22,6 +23,7 @@ class Ingreso extends StatefulWidget {
 class _IngresoState extends State<Ingreso> {
   final _searchController = TextEditingController();
   final _recursoController = TextEditingController();
+  final _documentoController = TextEditingController();
 
   final _controller = IngresoController();
   @override
@@ -112,6 +114,9 @@ class _IngresoState extends State<Ingreso> {
                   ),
                 ),
                 selectRecurso(almacenBloc),
+                SizedBox(
+                  height: ScreenUtil().setHeight(50),
+                ),
               ],
             ),
           ),
@@ -141,6 +146,21 @@ class _IngresoState extends State<Ingreso> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(
+                  height: ScreenUtil().setHeight(10),
+                ),
+                Divider(),
+                TextFieldSelect(
+                  label: 'Documento del Registro',
+                  hingText: '',
+                  controller: _documentoController,
+                  widget: Icon(
+                    Icons.edit_note,
+                    color: Colors.green,
+                  ),
+                  icon: true,
+                  readOnly: false,
+                ),
                 SizedBox(
                   height: ScreenUtil().setHeight(10),
                 ),
@@ -225,6 +245,91 @@ class _IngresoState extends State<Ingreso> {
                       ),
                     );
                   },
+                ),
+                SizedBox(
+                  height: ScreenUtil().setHeight(20),
+                ),
+                InkWell(
+                  onTap: () async {
+                    FocusScope.of(context).unfocus();
+                    if (_controller.recursos.isNotEmpty) {
+                      if (_documentoController.text.isNotEmpty) {
+                        String datos = '';
+                        for (var i = 0; i < _controller.recursos.length; i++) {
+                          var r = _controller.recursos[i];
+
+                          if (i == _controller.recursos.length - 1) {
+                            datos +=
+                                '${r.idRecursoLogistica}/__/${r.unidadAlmacen}/__/${r.idTipoRecurso}/__/${r.descripcionAlmacen}/__/${r.ubicacionAlmacen}/__/${r.cantidad}';
+                          } else {
+                            datos +=
+                                '${r.idRecursoLogistica}/__/${r.unidadAlmacen}/__/${r.idTipoRecurso}/__/${r.descripcionAlmacen}/__/${r.ubicacionAlmacen}/__/${r.cantidad}._._.';
+                          }
+                        }
+                        Navigator.push(
+                          context,
+                          PageRouteBuilder(
+                            opaque: false,
+                            pageBuilder: (context, animation, secondaryAnimation) {
+                              return Confirmar(
+                                  idSede: widget.idSede,
+                                  idAlmacenDestino: '0',
+                                  tipoRegistro: '1',
+                                  dniSolicitante: '',
+                                  nombreSolicitante: '',
+                                  comentarios: _documentoController.text,
+                                  datos: datos);
+                            },
+                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                              var begin = const Offset(0.0, 1.0);
+                              var end = Offset.zero;
+                              var curve = Curves.ease;
+
+                              var tween = Tween(begin: begin, end: end).chain(
+                                CurveTween(curve: curve),
+                              );
+
+                              return SlideTransition(
+                                position: animation.drive(tween),
+                                child: child,
+                              );
+                            },
+                          ),
+                        );
+                      } else {
+                        showToast2('Debe ingresar Documento del Registro', Colors.redAccent);
+                      }
+                    } else {
+                      showToast2('Debe seleccionar resursos', Colors.redAccent);
+                    }
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Color(0XFF148F77),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          spreadRadius: 3,
+                          blurRadius: 8,
+                          offset: const Offset(0, 3), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Text(
+                        'Generar Registro',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: ScreenUtil().setSp(20),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ],
             );

@@ -131,12 +131,15 @@ class AlmacenApi {
 
       if (resp.statusCode == 200) {
         await personsDB.deletePersons();
+
         final decodedData = json.decode(resp.body);
+        print(decodedData);
         return decodedData["result"]["code"];
       } else {
         return 2;
       }
     } catch (e) {
+      print('ERROR $e');
       return 2;
     }
   }
