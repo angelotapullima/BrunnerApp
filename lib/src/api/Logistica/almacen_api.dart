@@ -6,6 +6,7 @@ import 'package:new_brunner_app/src/core/routes_constanst.dart';
 import 'package:new_brunner_app/src/database/Logistica/Almacen/personal_dni_database.dart';
 import 'package:new_brunner_app/src/database/Logistica/Almacen/recurso_logistica_database.dart';
 import 'package:new_brunner_app/src/database/Logistica/Almacen/recursos_almacen_database.dart';
+import 'package:new_brunner_app/src/model/Logistica/Almacen/alertas_salida_model.dart';
 import 'package:new_brunner_app/src/model/Logistica/Almacen/detalle_recurso_logistica_model.dart';
 import 'package:new_brunner_app/src/model/Logistica/Almacen/personal_dni_model.dart';
 import 'package:new_brunner_app/src/model/Logistica/Almacen/recurso_logistica_model.dart';
@@ -224,6 +225,43 @@ class AlmacenApi {
         } else {
           return [];
         }
+      } else {
+        return [];
+      }
+    } catch (e) {
+      return [];
+    }
+  }
+
+  Future<List<AlertaSalidaModel>> getAlertasSalidas(String idAlmacen) async {
+    try {
+      String? token = await Preferences.readData('token');
+
+      final url = Uri.parse('$apiBaseURL/api/Almacen/buscar_detalle_recursos_salida_app');
+      final resp = await http.post(
+        url,
+        body: {
+          'app': 'true',
+          'tn': token,
+          'id_almacen': idAlmacen,
+        },
+      );
+
+      if (resp.statusCode == 200) {
+        final decodedData = json.decode(resp.body);
+        print(decodedData);
+        final List<AlertaSalidaModel> alerts = [];
+        for (var i = 0; i < decodedData["result"]["detalle_salida"].length; i++) {
+          var datas = decodedData["result"]["detalle_salida"][i];
+          final alert = AlertaSalidaModel();
+          alert.comentario = datas["almacen_log_comentarios"];
+          alert.stock = datas["almacen_detalle_stock"];
+          alert.link = datas["link"];
+
+          alerts.add(alert);
+        }
+
+        return alerts;
       } else {
         return [];
       }

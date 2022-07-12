@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:new_brunner_app/src/api/Logistica/almacen_api.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
+import 'package:new_brunner_app/src/core/routes_constanst.dart';
+import 'package:new_brunner_app/src/model/Logistica/Almacen/alertas_salida_model.dart';
 import 'package:new_brunner_app/src/model/Logistica/Almacen/recursos_almacen_model.dart';
 import 'package:new_brunner_app/src/page/Logistica/Almacen/Notas%20Productos/confirmar.dart';
 import 'package:new_brunner_app/src/page/Logistica/Almacen/Notas%20Productos/search_persons.dart';
 import 'package:new_brunner_app/src/page/Logistica/Almacen/Notas%20Productos/search_recursos.dart';
+import 'package:new_brunner_app/src/page/Logistica/Almacen/web_wiew.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
 import 'package:new_brunner_app/src/widget/text_field.dart';
 
@@ -166,6 +170,7 @@ class _SalidaState extends State<Salida> {
                       return SearchRecursosAlmacen(
                         idSede: widget.idSede,
                         onChanged: (recurso) {
+                          mostrarlertas(recurso.idAlmacen ?? '');
                           saveRecurso(recurso);
                         },
                       );
@@ -193,6 +198,7 @@ class _SalidaState extends State<Salida> {
             ),
             InkWell(
               onTap: () async {
+                FocusScope.of(context).unfocus();
                 if (_documentoController.text.isNotEmpty) {
                   if (_dniController.text.isNotEmpty) {
                     if (_controller.recursos.isNotEmpty) {
@@ -530,6 +536,85 @@ class _SalidaState extends State<Salida> {
         );
       },
     );
+  }
+
+  void mostrarlertas(String idAlmacen) async {
+    final _api = AlmacenApi();
+    final res = await _api.getAlertasSalidas(idAlmacen);
+
+    if (res.isNotEmpty) {
+      Widget _alerta(AlertaSalidaModel alert) {
+        return InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) {
+                  return WebPage(
+                    title: alert.comentario ?? '',
+                    url: alert.link ?? '$apiBaseURL',
+                  );
+                },
+              ),
+            );
+          },
+          child: Column(
+            children: [
+              fileData('Descripción de Orden', alert.comentario ?? '', 10, 12, FontWeight.w500, FontWeight.w500, TextAlign.start),
+              fileData('Cantidad', alert.stock ?? '', 10, 12, FontWeight.w500, FontWeight.w500, TextAlign.start),
+              fileData('Orden de Salida', 'Ver', 10, 14, FontWeight.w500, FontWeight.w600, TextAlign.start),
+              Divider(),
+            ],
+          ),
+        );
+      }
+
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            title: Column(
+              children: [
+                Icon(
+                  Icons.error_outline,
+                  color: Colors.orangeAccent,
+                  size: ScreenUtil().setHeight(50),
+                ),
+                SizedBox(height: ScreenUtil().setHeight(10)),
+                Text(
+                  'Producto Pendiente de Salida',
+                ),
+              ],
+            ),
+            content: SizedBox(
+              height: ScreenUtil().setHeight(60) * (res.length + 1),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                    children: res.map((e) => _alerta(e)).toList(),
+                  ),
+                  Spacer(),
+                  Text(
+                    'Tener en cuenta estas observaciones',
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK'))
+            ],
+          );
+        },
+      );
+    }
   }
 }
 

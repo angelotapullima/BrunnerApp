@@ -53,6 +53,8 @@ dependencies:
   open_file: ^3.2.1
   file_picker: ^4.5.1
   font_awesome_flutter: ^10.1.0
+  # qr_code_scanner: ^1.0.0
+  webview_flutter: ^3.0.4
   qr_code_scanner: 
     git:
       url: https://github.com/X-SLAYER/qr_code_scanner.git
