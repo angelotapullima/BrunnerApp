@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/page/Home/menu_widget.dart';
+import 'package:new_brunner_app/src/page/Logistica/Almacen/Consulta%20Informacion/consulta_informacion_almacen.dart';
 import 'package:new_brunner_app/src/page/Logistica/Almacen/Notas%20Productos/notas_productos.dart';
 import 'package:new_brunner_app/src/widget/option_widget.dart';
 
@@ -60,7 +61,16 @@ class Almacen extends StatelessWidget {
             descripcion: 'Ver Información de los Almacenes',
             icon: Icons.search,
             color: Color(0XFF154360),
-            ontap: () {},
+            ontap: () {
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) {
+                    return const ConsultaInformacionAlmacen();
+                  },
+                ),
+              );
+            },
           ),
         ],
       ),
