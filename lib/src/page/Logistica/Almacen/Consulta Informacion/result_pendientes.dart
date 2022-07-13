@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/logistica_almacen_bloc.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
-import 'package:new_brunner_app/src/model/Logistica/Almacen/notas_pendientes_model.dart';
+import 'package:new_brunner_app/src/model/Logistica/Almacen/orden_almacen_model.dart';
+import 'package:new_brunner_app/src/page/Logistica/Almacen/Consulta%20Informacion/detalle_orden.dart';
 import 'package:new_brunner_app/src/page/Logistica/Almacen/Consulta%20Informacion/eliminar_orden.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
 
@@ -14,7 +15,7 @@ class ResultPendientes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final almacenBloc = ProviderBloc.almacen(context);
-    return StreamBuilder<List<NotasPendientesModel>>(
+    return StreamBuilder<List<OrdenAlmacenModel>>(
       stream: almacenBloc.notasPStrean,
       builder: (_, snapshot) {
         if (snapshot.hasData) {
@@ -58,23 +59,24 @@ class ResultPendientes extends StatelessWidget {
     );
   }
 
-  Widget _crearItem(BuildContext context, NotasPendientesModel notaP, int n, LogisticaAlmacenBloc bloc) {
+  Widget _crearItem(BuildContext context, OrdenAlmacenModel notaP, int n, LogisticaAlmacenBloc bloc) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16), vertical: ScreenUtil().setHeight(5)),
       child: PopupMenuButton(
         onSelected: (value) {
           switch (value) {
             case 1:
-              // Navigator.push(
-              //   context,
-              //   PageRouteBuilder(
-              //     pageBuilder: (context, animation, secondaryAnimation) {
-              //       return VisualizarDetalles(
-              //         detalle: detalle,
-              //       );
-              //     },
-              //   ),
-              // );
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) {
+                    return DetalleOrden(
+                      idAlmacenLog: notaP.idAlmacenLog ?? '',
+                      titulo: "OA${notaP.tipoAlmacenLog == '1' ? 'I' : 'S'} ${notaP.codigoAlmacenLog ?? ''}",
+                    );
+                  },
+                ),
+              );
               break;
             case 2:
               //Eliminar POS

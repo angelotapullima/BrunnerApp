@@ -1,4 +1,6 @@
-class NotasPendientesModel {
+import 'package:new_brunner_app/src/model/Logistica/Almacen/productos_orden_model.dart';
+
+class OrdenAlmacenModel {
   String? idAlmacenLog;
   String? idSede;
   String? codigoAlmacenLog;
@@ -19,7 +21,10 @@ class NotasPendientesModel {
   String? destinoAlmacenLog;
   String? nombreSede;
 
-  NotasPendientesModel({
+  //No en DB
+  List<ProductosOrdenModel>? products;
+
+  OrdenAlmacenModel({
     this.idAlmacenLog,
     this.idSede,
     this.codigoAlmacenLog,
@@ -39,9 +44,10 @@ class NotasPendientesModel {
     this.idSIAlmacenLog,
     this.destinoAlmacenLog,
     this.nombreSede,
+    this.products,
   });
 
-  static List<NotasPendientesModel> fromJsonList(List<dynamic> json) => json.map((i) => NotasPendientesModel.fromJson(i)).toList();
+  static List<OrdenAlmacenModel> fromJsonList(List<dynamic> json) => json.map((i) => OrdenAlmacenModel.fromJson(i)).toList();
 
   Map<String, dynamic> toJson() => {
         'idAlmacenLog': idAlmacenLog,
@@ -64,7 +70,7 @@ class NotasPendientesModel {
         'destinoAlmacenLog': destinoAlmacenLog,
         'nombreSede': nombreSede,
       };
-  factory NotasPendientesModel.fromJson(Map<String, dynamic> json) => NotasPendientesModel(
+  factory OrdenAlmacenModel.fromJson(Map<String, dynamic> json) => OrdenAlmacenModel(
         idAlmacenLog: json["idAlmacenLog"],
         idSede: json["idSede"],
         codigoAlmacenLog: json["codigoAlmacenLog"],

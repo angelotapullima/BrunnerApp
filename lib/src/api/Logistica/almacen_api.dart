@@ -3,14 +3,16 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:new_brunner_app/src/core/preferences.dart';
 import 'package:new_brunner_app/src/core/routes_constanst.dart';
-import 'package:new_brunner_app/src/database/Logistica/Almacen/notas_pendientes_database.dart';
+import 'package:new_brunner_app/src/database/Logistica/Almacen/orden_almacen_database.dart';
 import 'package:new_brunner_app/src/database/Logistica/Almacen/personal_dni_database.dart';
+import 'package:new_brunner_app/src/database/Logistica/Almacen/productos_orden_database.dart';
 import 'package:new_brunner_app/src/database/Logistica/Almacen/recurso_logistica_database.dart';
 import 'package:new_brunner_app/src/database/Logistica/Almacen/recursos_almacen_database.dart';
 import 'package:new_brunner_app/src/model/Logistica/Almacen/alertas_salida_model.dart';
 import 'package:new_brunner_app/src/model/Logistica/Almacen/detalle_recurso_logistica_model.dart';
-import 'package:new_brunner_app/src/model/Logistica/Almacen/notas_pendientes_model.dart';
+import 'package:new_brunner_app/src/model/Logistica/Almacen/orden_almacen_model.dart';
 import 'package:new_brunner_app/src/model/Logistica/Almacen/personal_dni_model.dart';
+import 'package:new_brunner_app/src/model/Logistica/Almacen/productos_orden_model.dart';
 import 'package:new_brunner_app/src/model/Logistica/Almacen/recurso_logistica_model.dart';
 import 'package:new_brunner_app/src/model/Logistica/Almacen/recursos_almacen_model.dart';
 
@@ -18,7 +20,8 @@ class AlmacenApi {
   final recursosDB = RecursosAlmacenDatabase();
   final personsDB = PersonalDNIDatabase();
   final recuLogisticaDB = RecursoLogisticaDatabase();
-  final notasPendientesDB = NotasPendientesDatabase();
+  final ordenAlmacenDB = OrdenAlmacenDatabase();
+  final productOrdenDB = ProductosOrdenDatabase();
 
   Future<int> getRecursosDisponibles(String idSede) async {
     try {
@@ -297,11 +300,11 @@ class AlmacenApi {
       if (resp.statusCode == 200) {
         final decodedData = json.decode(resp.body);
 
-        await notasPendientesDB.deleteNotas();
+        await ordenAlmacenDB.deleteNotas();
 
         for (var i = 0; i < decodedData["result"]["ordenes"].length; i++) {
           var datos = decodedData["result"]["ordenes"][i];
-          final notaP = NotasPendientesModel();
+          final notaP = OrdenAlmacenModel();
           notaP.idAlmacenLog = datos["id_almacen_log"];
           notaP.idSede = datos["id_sede"];
           notaP.codigoAlmacenLog = datos["almacen_log_codigo"];
@@ -322,7 +325,7 @@ class AlmacenApi {
           notaP.destinoAlmacenLog = datos["id_almacen_destino"];
           notaP.nombreSede = datos["sede_nombre"];
 
-          await notasPendientesDB.insertarNota(notaP);
+          await ordenAlmacenDB.insertarOrden(notaP);
         }
 
         return 1;
@@ -358,6 +361,80 @@ class AlmacenApi {
       if (resp.statusCode == 200) {
         final decodedData = json.decode(resp.body);
         print(decodedData);
+        return decodedData["result"]["code"];
+      } else {
+        return 2;
+      }
+    } catch (e) {
+      return 2;
+    }
+  }
+
+  Future<int> getDetalleOrden(String idAlmacenLog) async {
+    try {
+      String? token = await Preferences.readData('token');
+
+      final url = Uri.parse('$apiBaseURL/api/Almacen/listar_orden_almacen');
+      final resp = await http.post(
+        url,
+        body: {
+          'app': 'true',
+          'tn': token,
+          'id_almacen_log': idAlmacenLog,
+        },
+      );
+
+      if (resp.statusCode == 200) {
+        final decodedData = json.decode(resp.body);
+        print(decodedData);
+
+        if (decodedData["result"]["code"] == 1) {
+          var datos = decodedData["result"]["orden"];
+          final notaP = OrdenAlmacenModel();
+          notaP.idAlmacenLog = datos["id_almacen_log"];
+          notaP.idSede = datos["id_sede"];
+          notaP.codigoAlmacenLog = datos["almacen_log_codigo"];
+          notaP.tipoAlmacenLog = datos["almacen_log_tipo"];
+          notaP.comentarioAlmacenLog = datos["almacen_log_comentarios"];
+          notaP.dniSoliAlmacenLog = datos["almacen_log_dni_solicitante"];
+          notaP.nombreSoliAlmacenLog = datos["almacen_log_nombre_solicitante"];
+          notaP.fechaAlmacenLog = datos["almacen_log_fecha"];
+          notaP.horaAlmacenLog = datos["almacen_log_hora"];
+          notaP.aprobacionAlmacenLog = datos["almacen_log_aprobacion"];
+          notaP.idUserAprobacion = datos["id_user_aprobacion"];
+          notaP.estadoAlmacenLog = datos["almacen_log_estado"];
+          notaP.entregaAlmacenLog = datos["almacen_log_entrega"];
+          notaP.horaEntregaAlmacenLog = datos["almacen_log_hora_entrega"];
+          notaP.personaEntregaAlmacenLog = datos["almacen_log_persona_entrega"];
+          notaP.idOPAlmacenLog = datos["almacen_log_id_op"];
+          notaP.idSIAlmacenLog = datos["almacen_log_id_si"];
+          notaP.destinoAlmacenLog = datos["id_almacen_destino"];
+          notaP.nombreSede = datos["sede_nombre"];
+
+          await ordenAlmacenDB.insertarOrden(notaP);
+          //Insertar Productos
+          for (var i = 0; i < decodedData["result"]["productos"].length; i++) {
+            var p = decodedData["result"]["productos"][i];
+            final product = ProductosOrdenModel();
+            product.idDetalleAlmacen = p["id_almacen_detalle"];
+            product.idRecursoLogistica = p["id_logistica_recurso"];
+            product.idTipoRecurso = p["id_recurso_tipo"];
+            product.unidadDetalleAlmacen = p["almacen_detalle_unidad"];
+            product.stockDetalleAlmacen = p["almacen_detalle_stock"];
+            product.tipoDetalleAlmacen = p["almacen_detalle_tipo"];
+            product.descripcionDetalleAlmacen = p["almacen_detalle_descripcion"];
+            product.ubicacionDetalleAlmacen = p["almacen_detalle_ubicacion"];
+            product.nombreClaseLogistica = p["logistica_clase_nombre"];
+            product.tipoAlmacenLogistica = p["almacen_log_tipo"];
+            product.nombreTipoRecurso = p["recurso_tipo_nombre"];
+            product.idAlmacenLog = p["id_almacen_log"];
+            product.nombreRecursoLogistica = p["logistica_recurso_nombre"];
+            product.fechaRecursoLog = p["almacen_log_fecha"];
+            product.horaRecursoLog = p["almacen_log_hora"];
+
+            await productOrdenDB.insertarProducto(product);
+          }
+        }
         return decodedData["result"]["code"];
       } else {
         return 2;

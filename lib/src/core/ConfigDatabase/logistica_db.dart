@@ -92,7 +92,7 @@ class LogisticaDB {
       ' nombreRecursoLogistica TEXT,'
       ' cantidadAlmacen TEXT)';
 
-  static const String notasPendientesTableSql = 'CREATE TABLE NotasPendientes('
+  static const String ordenAlmacenTableSql = 'CREATE TABLE OrdenAlmacen('
       ' idAlmacenLog TEXT PRIMARY KEY,'
       ' idSede TEXT,'
       ' codigoAlmacenLog TEXT,'
@@ -112,4 +112,21 @@ class LogisticaDB {
       ' idSIAlmacenLog TEXT,'
       ' destinoAlmacenLog TEXT,'
       ' nombreSede TEXT)';
+
+  static const String productosOrdenTableSql = 'CREATE TABLE ProductosOrden('
+      ' idDetalleAlmacen TEXT PRIMARY KEY,'
+      ' idAlmacenLog TEXT,'
+      ' idRecursoLogistica TEXT,'
+      ' idTipoRecurso TEXT,'
+      ' unidadDetalleAlmacen TEXT,'
+      ' stockDetalleAlmacen TEXT,'
+      ' tipoDetalleAlmacen TEXT,'
+      ' descripcionDetalleAlmacen TEXT,'
+      ' ubicacionDetalleAlmacen TEXT,'
+      ' nombreClaseLogistica TEXT,'
+      ' tipoAlmacenLogistica TEXT,'
+      ' nombreTipoRecurso TEXT,'
+      ' nombreRecursoLogistica TEXT,'
+      ' fechaRecursoLog TEXT,'
+      ' horaRecursoLog TEXT)';
 }

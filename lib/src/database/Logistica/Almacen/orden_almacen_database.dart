@@ -1,17 +1,17 @@
 import 'package:new_brunner_app/src/core/database_config.dart';
-import 'package:new_brunner_app/src/model/Logistica/Almacen/notas_pendientes_model.dart';
+import 'package:new_brunner_app/src/model/Logistica/Almacen/orden_almacen_model.dart';
 
 import 'package:sqflite/sqlite_api.dart';
 
-class NotasPendientesDatabase {
+class OrdenAlmacenDatabase {
   final dbprovider = DatabaseHelper.instance;
 
-  Future<void> insertarNota(NotasPendientesModel notaP) async {
+  Future<void> insertarOrden(OrdenAlmacenModel notaP) async {
     try {
       final Database db = await dbprovider.getDatabase();
 
       await db.insert(
-        'NotasPendientes',
+        'OrdenAlmacen',
         notaP.toJson(),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
@@ -20,13 +20,13 @@ class NotasPendientesDatabase {
     }
   }
 
-  Future<List<NotasPendientesModel>> getNotas() async {
+  Future<List<OrdenAlmacenModel>> getOrdenById(String idAlmacenLog) async {
     try {
       final Database db = await dbprovider.getDatabase();
-      List<NotasPendientesModel> list = [];
-      List<Map> maps = await db.rawQuery("SELECT * FROM NotasPendientes");
+      List<OrdenAlmacenModel> list = [];
+      List<Map> maps = await db.rawQuery("SELECT * FROM OrdenAlmacen WHERE idAlmacenLog='$idAlmacenLog'");
 
-      if (maps.isNotEmpty) list = NotasPendientesModel.fromJsonList(maps);
+      if (maps.isNotEmpty) list = OrdenAlmacenModel.fromJsonList(maps);
       return list;
     } catch (e) {
       e;
@@ -34,9 +34,9 @@ class NotasPendientesDatabase {
     }
   }
 
-  Future<List<NotasPendientesModel>> getNotasPendientesFiltro(String idSede, String tipo) async {
+  Future<List<OrdenAlmacenModel>> getNotasPendientesFiltro(String idSede, String tipo) async {
     try {
-      String initial = "SELECT * FROM NotasPendientes";
+      String initial = "SELECT * FROM OrdenAlmacen";
       String query = '';
       if (idSede.isNotEmpty) {
         query += "idSede='$idSede'";
@@ -50,14 +50,14 @@ class NotasPendientesDatabase {
       }
 
       if (query.isNotEmpty) {
-        initial = "SELECT * FROM NotasPendientes WHERE $query";
+        initial = "SELECT * FROM OrdenAlmacen WHERE $query";
       }
 
       final Database db = await dbprovider.getDatabase();
-      List<NotasPendientesModel> list = [];
+      List<OrdenAlmacenModel> list = [];
       List<Map> maps = await db.rawQuery(initial);
 
-      if (maps.isNotEmpty) list = NotasPendientesModel.fromJsonList(maps);
+      if (maps.isNotEmpty) list = OrdenAlmacenModel.fromJsonList(maps);
       return list;
     } catch (e) {
       e;
@@ -68,7 +68,7 @@ class NotasPendientesDatabase {
   deleteNotas() async {
     final db = await dbprovider.database;
 
-    final res = await db.rawDelete("DELETE FROM NotasPendientes");
+    final res = await db.rawDelete("DELETE FROM OrdenAlmacen");
 
     return res;
   }
