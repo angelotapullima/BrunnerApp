@@ -43,6 +43,7 @@ class LoginApi {
           Preferences.saveData('person_surname', data['p_s']);
           Preferences.saveData('id_rol', data['ru']);
           Preferences.saveData('rol_nombre', data['rn']);
+          Preferences.saveData('id_sede_user', data['se']);
           Preferences.saveData('token', data['tn']);
 
           //Guardar Modulos

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
+import 'package:new_brunner_app/src/page/Logistica/Almacen/Consulta%20Informacion/pendientes_aprobacion.dart';
 import 'package:new_brunner_app/src/page/Logistica/Orden%20Pedido/Consulta%20Informacion/Ordenes%20Pedido%20Lista/detalle_oden_pedido.dart';
 import 'package:new_brunner_app/src/widget/option_widget.dart';
 
@@ -14,6 +16,7 @@ class _ConsultaInformacionAlmacenState extends State<ConsultaInformacionAlmacen>
   final _controller = ControllerExpanded();
   @override
   Widget build(BuildContext context) {
+    final almacenBloc = ProviderBloc.almacen(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0XFF154360),
@@ -50,14 +53,15 @@ class _ConsultaInformacionAlmacenState extends State<ConsultaInformacionAlmacen>
                     icon: Icons.radio_button_unchecked_sharp,
                     color: Colors.orangeAccent,
                     ontap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   PageRouteBuilder(
-                      //     pageBuilder: (context, animation, secondaryAnimation) {
-                      //       return const NotasProductos();
-                      //     },
-                      //   ),
-                      // );
+                      almacenBloc.getNotasPendientes('', '');
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (context, animation, secondaryAnimation) {
+                            return const PendientesAprobacion();
+                          },
+                        ),
+                      );
                     },
                   ),
                 ],

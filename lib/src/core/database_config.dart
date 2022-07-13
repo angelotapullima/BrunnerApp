@@ -51,6 +51,7 @@ class DatabaseHelper {
       db.execute(LogisticaDB.recursosAlmacenTableSql);
       db.execute(LogisticaDB.dniPersonalAlmacenTableSql);
       db.execute(LogisticaDB.recursoLogisticaTableSql);
+      db.execute(LogisticaDB.notasPendientesTableSql);
 
       //Residuos Solidos - Orden Ejecucion
       db.execute(OrdenEjecucionDB.clientesOETableSql);

@@ -91,4 +91,25 @@ class LogisticaDB {
       ' nombreClaseLogistica TEXT,'
       ' nombreRecursoLogistica TEXT,'
       ' cantidadAlmacen TEXT)';
+
+  static const String notasPendientesTableSql = 'CREATE TABLE NotasPendientes('
+      ' idAlmacenLog TEXT PRIMARY KEY,'
+      ' idSede TEXT,'
+      ' codigoAlmacenLog TEXT,'
+      ' tipoAlmacenLog TEXT,'
+      ' comentarioAlmacenLog TEXT,'
+      ' dniSoliAlmacenLog TEXT,'
+      ' nombreSoliAlmacenLog TEXT,'
+      ' fechaAlmacenLog TEXT,'
+      ' horaAlmacenLog TEXT,'
+      ' aprobacionAlmacenLog TEXT,'
+      ' idUserAprobacion TEXT,'
+      ' estadoAlmacenLog TEXT,'
+      ' entregaAlmacenLog TEXT,'
+      ' horaEntregaAlmacenLog TEXT,'
+      ' personaEntregaAlmacenLog TEXT,'
+      ' idOPAlmacenLog TEXT,'
+      ' idSIAlmacenLog TEXT,'
+      ' destinoAlmacenLog TEXT,'
+      ' nombreSede TEXT)';
 }

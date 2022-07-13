@@ -1,4 +1,5 @@
 import 'package:new_brunner_app/src/api/Logistica/almacen_api.dart';
+import 'package:new_brunner_app/src/model/Logistica/Almacen/notas_pendientes_model.dart';
 import 'package:new_brunner_app/src/model/Logistica/Almacen/personal_dni_model.dart';
 import 'package:new_brunner_app/src/model/Logistica/Almacen/recurso_logistica_model.dart';
 import 'package:new_brunner_app/src/model/Logistica/Almacen/recursos_almacen_model.dart';
@@ -16,9 +17,16 @@ class LogisticaAlmacenBloc {
   final _recursosIngresoController = BehaviorSubject<List<RecursoLogisticaModel>>();
   Stream<List<RecursoLogisticaModel>> get recuLogicticaStream => _recursosIngresoController.stream;
 
+  //Notas Pendientes de Aprobacion
+  final _notasPendientesController = BehaviorSubject<List<NotasPendientesModel>>();
+  Stream<List<NotasPendientesModel>> get notasPStrean => _notasPendientesController.stream;
+
   //Respuesta recursos disponibles
-  final _respControlller = BehaviorSubject<int>();
-  Stream<int> get respStream => _respControlller.stream;
+  final _respController = BehaviorSubject<int>();
+  Stream<int> get respStream => _respController.stream;
+
+  final _respPendientesController = BehaviorSubject<int>();
+  Stream<int> get respPendientesStream => _respPendientesController.stream;
 
   //Respuesta recursos disponibles
   final _respRecursoControlller = BehaviorSubject<int>();
@@ -27,16 +35,18 @@ class LogisticaAlmacenBloc {
   dispose() {
     _recursosController.close();
     _personasController.close();
-    _respControlller.close();
+    _respController.close();
     _respRecursoControlller.close();
     _recursosIngresoController.close();
+    _notasPendientesController.close();
+    _respPendientesController.close();
   }
 
   void getDataSalidaAlmacen(String idSede) async {
     _recursosController.sink.add(await _api.recursosDB.getRecursosAlmacenByIDSede(idSede));
 
-    _respControlller.sink.add(10); //Cargando
-    _respControlller.sink.add(await _api.getRecursosDisponibles(idSede));
+    _respController.sink.add(10); //Cargando
+    _respController.sink.add(await _api.getRecursosDisponibles(idSede));
     _recursosController.sink.add(await _api.recursosDB.getRecursosAlmacenByIDSede(idSede));
     _personasController.sink.add(await _api.personsDB.getPersons());
   }
@@ -58,8 +68,12 @@ class LogisticaAlmacenBloc {
   }
 
   void updateResp(int v) async {
-    _respControlller.sink.add(v);
+    _respController.sink.add(v);
     await _api.getPersonas();
+  }
+
+  void updateRespPendientes(int v) async {
+    _respPendientesController.sink.add(v);
   }
 
   void getRecursosIngreso(String idSede, String val) async {
@@ -74,5 +88,14 @@ class LogisticaAlmacenBloc {
     } else {
       _recursosIngresoController.sink.add(await _api.recuLogisticaDB.getRecursosLogisticaByIDSedeANDQuery(idSede, query));
     }
+  }
+
+  //Notas Pendientes Aprobación
+
+  void getNotasPendientes(String idSede, String tipo) async {
+    _notasPendientesController.sink.add(await _api.notasPendientesDB.getNotasPendientesFiltro(idSede, tipo));
+    _respPendientesController.sink.add(10);
+    _respPendientesController.sink.add(await _api.getNotasPendientesAprobacion(idSede, tipo));
+    _notasPendientesController.sink.add(await _api.notasPendientesDB.getNotasPendientesFiltro(idSede, tipo));
   }
 }
