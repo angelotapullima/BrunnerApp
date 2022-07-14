@@ -323,6 +323,7 @@ class AlmacenApi {
           notaP.idSIAlmacenLog = datos["almacen_log_id_si"];
           notaP.destinoAlmacenLog = datos["id_almacen_destino"];
           notaP.nombreSede = datos["sede_nombre"];
+          notaP.nombreUserCreacion = '${datos["person_name"].split(" ").first} ${datos["person_surname"]}';
 
           await ordenAlmacenDB.insertarOrden(notaP);
         }

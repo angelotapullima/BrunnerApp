@@ -56,13 +56,25 @@ class DetalleOrden extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                Text(
-                                  '${obtenerFecha(orden.fechaAlmacenLog.toString())} ${orden.horaAlmacenLog ?? ""}',
-                                  style: TextStyle(
-                                    fontSize: ScreenUtil().setSp(11),
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                Column(
+                                  children: [
+                                    Text(
+                                      'Fecha de Registro:',
+                                      style: TextStyle(
+                                        fontSize: ScreenUtil().setSp(11),
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                    Text(
+                                      '${obtenerFecha(orden.fechaAlmacenLog.toString())} ${orden.horaAlmacenLog ?? ""}',
+                                      style: TextStyle(
+                                        fontSize: ScreenUtil().setSp(11),
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
@@ -70,13 +82,52 @@ class DetalleOrden extends StatelessWidget {
                               height: ScreenUtil().setHeight(10),
                             ),
                             fileData('Sede', orden.nombreSede ?? '', 12, 14, FontWeight.w400, FontWeight.w500, TextAlign.start),
+                            SizedBox(height: ScreenUtil().setHeight(4)),
                             fileData('Tipo de Registro', (orden.tipoAlmacenLog == '0') ? 'Salida' : 'Ingreso', 12, 14, FontWeight.w400,
                                 FontWeight.w500, TextAlign.start),
+                            SizedBox(height: ScreenUtil().setHeight(4)),
+                            (orden.tipoAlmacenLog == '0')
+                                ? fileData('Solicitante', "${orden.dniSoliAlmacenLog ?? ''} - ${orden.nombreSoliAlmacenLog ?? ''}", 12, 14,
+                                    FontWeight.w400, FontWeight.w500, TextAlign.start)
+                                : Container(),
+                            (orden.tipoAlmacenLog == '0') ? SizedBox(height: ScreenUtil().setHeight(4)) : Container(),
+                            (orden.tipoAlmacenLog == '0')
+                                ? fileData('Estado', orden.entregaAlmacenLog == '0' ? 'NO ENTREGADO' : 'Entregado', 12, 14, FontWeight.w400,
+                                    FontWeight.w500, TextAlign.start)
+                                : Container(),
+                            (orden.tipoAlmacenLog == '0') ? SizedBox(height: ScreenUtil().setHeight(4)) : Container(),
                             fileData('Descripción', orden.comentarioAlmacenLog ?? '', 12, 14, FontWeight.w400, FontWeight.w500, TextAlign.start),
+                            SizedBox(height: ScreenUtil().setHeight(4)),
                             fileData('Registrado por', orden.nombreUserCreacion ?? '', 12, 14, FontWeight.w400, FontWeight.w500, TextAlign.start),
                             (orden.estadoAlmacenLog != '0')
-                                ? fileData(
-                                    'Fecha Aprobación', orden.nombreSoliAlmacenLog ?? '', 12, 14, FontWeight.w400, FontWeight.w500, TextAlign.start)
+                                ? Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Column(
+                                        children: [
+                                          SizedBox(
+                                            height: ScreenUtil().setHeight(5),
+                                          ),
+                                          Text(
+                                            'Fecha de Aprobación:',
+                                            style: TextStyle(
+                                              fontSize: ScreenUtil().setSp(11),
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          Text(
+                                            '${obtenerFecha(orden.aprobacionAlmacenLog.toString())} ${orden.aprobacionAlmacenLog?.split(" ").last}',
+                                            style: TextStyle(
+                                              fontSize: ScreenUtil().setSp(11),
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  )
                                 : Container(),
                             SizedBox(
                               height: ScreenUtil().setHeight(20),
