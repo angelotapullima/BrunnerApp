@@ -124,7 +124,7 @@ class _NotasProductosState extends State<NotasProductos> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Sin resultados, inténtenlo nuevamente'),
+                    Text('Sin resultados, inténtelo nuevamente'),
                     InkWell(
                       onTap: () async {
                         filtroSearch();

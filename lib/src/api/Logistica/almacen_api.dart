@@ -140,7 +140,6 @@ class AlmacenApi {
         await personsDB.deletePersons();
 
         final decodedData = json.decode(resp.body);
-        print(decodedData);
         return decodedData["result"]["code"];
       } else {
         return 2;
@@ -388,7 +387,6 @@ class AlmacenApi {
 
       if (resp.statusCode == 200) {
         final decodedData = json.decode(resp.body);
-        print(decodedData);
         return decodedData["result"]["code"];
       } else {
         return 2;
@@ -414,7 +412,6 @@ class AlmacenApi {
 
       if (resp.statusCode == 200) {
         final decodedData = json.decode(resp.body);
-        print(decodedData);
 
         if (decodedData["result"]["code"] == 1) {
           var datos = decodedData["result"]["orden"];
@@ -440,8 +437,6 @@ class AlmacenApi {
           notaP.nombreSede = datos["sede_nombre"];
           notaP.idUserCreacion = '';
           notaP.nombreUserCreacion = '${datos["person_name"].split(" ").first} ${datos["person_surname"]}';
-
-          print(notaP.nombreUserCreacion);
 
           await ordenAlmacenDB.insertarOrden(notaP);
           //Insertar Productos

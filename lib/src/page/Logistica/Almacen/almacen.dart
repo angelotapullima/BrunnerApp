@@ -4,6 +4,7 @@ import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/page/Home/menu_widget.dart';
 import 'package:new_brunner_app/src/page/Logistica/Almacen/Consulta%20Informacion/consulta_informacion_almacen.dart';
 import 'package:new_brunner_app/src/page/Logistica/Almacen/Notas%20Productos/notas_productos.dart';
+import 'package:new_brunner_app/src/page/Logistica/Almacen/Transferencias%20Almacenes/transferencia_almacenes.dart';
 import 'package:new_brunner_app/src/widget/option_widget.dart';
 
 class Almacen extends StatelessWidget {
@@ -53,7 +54,17 @@ class Almacen extends StatelessWidget {
             descripcion: 'Mover Recursos de un almacén a otro',
             icon: Icons.move_down,
             color: Color(0XFF2471A3),
-            ontap: () {},
+            ontap: () {
+              almacenBloc.updateResp(100);
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) {
+                    return const TransferenciaAlmacenes();
+                  },
+                ),
+              );
+            },
           ),
           SizedBox(height: ScreenUtil().setWidth(30)),
           OptionWidget(
