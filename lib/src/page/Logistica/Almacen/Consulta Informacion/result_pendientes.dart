@@ -72,7 +72,9 @@ class ResultPendientes extends StatelessWidget {
                   pageBuilder: (context, animation, secondaryAnimation) {
                     return DetalleOrden(
                       idAlmacenLog: notaP.idAlmacenLog ?? '',
-                      titulo: "OA${notaP.tipoAlmacenLog == '1' ? 'I' : 'S'} ${notaP.codigoAlmacenLog ?? ''}",
+                      titulo: "OA${notaP.tipoAlmacenLog == '1' ? 'I' : 'S'}",
+                      idSede: idSede,
+                      idTipo: tipo,
                     );
                   },
                 ),
@@ -86,7 +88,7 @@ class ResultPendientes extends StatelessWidget {
                   opaque: false,
                   pageBuilder: (context, animation, secondaryAnimation) {
                     return EliminarOrden(
-                      page: 'pos',
+                      page: 'P',
                       id: notaP.idAlmacenLog ?? '',
                       onChanged: (val) {
                         if (val == 1) {
@@ -200,7 +202,7 @@ class ResultPendientes extends StatelessWidget {
                     fileData(
                         'Clase', (notaP.tipoAlmacenLog == '0') ? 'Salida' : 'Ingreso', 10, 13, FontWeight.w500, FontWeight.w400, TextAlign.start),
                     fileData('Descripción', notaP.comentarioAlmacenLog ?? '', 10, 13, FontWeight.w500, FontWeight.w400, TextAlign.start),
-                    fileData('Solicitado por', notaP.nombreSoliAlmacenLog ?? '', 10, 13, FontWeight.w500, FontWeight.w400, TextAlign.start),
+                    fileData('Solicitado por', notaP.nombreUserCreacion ?? '', 10, 13, FontWeight.w500, FontWeight.w400, TextAlign.start),
                   ],
                 ),
               ),

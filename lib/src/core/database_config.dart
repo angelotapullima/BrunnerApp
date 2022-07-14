@@ -16,7 +16,7 @@ class DatabaseHelper {
   Future<Database> get database async => _database ??= await getDatabase();
 
   Future<Database> getDatabase() async {
-    final String path = join(await getDatabasesPath(), 'brunner.db');
+    final String path = join(await getDatabasesPath(), 'brunnerV1.db');
     return openDatabase(path, onCreate: (db, version) {
       //Menu
       db.execute(ModulosDB.modulosTableSql);

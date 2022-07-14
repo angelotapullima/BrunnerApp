@@ -370,6 +370,34 @@ class AlmacenApi {
     }
   }
 
+  Future<int> aprobarOrden(String id) async {
+    try {
+      String? token = await Preferences.readData('token');
+      String? idUser = await Preferences.readData('id_user');
+
+      final url = Uri.parse('$apiBaseURL/api/Almacen/aprobar_orden');
+      final resp = await http.post(
+        url,
+        body: {
+          'app': 'true',
+          'tn': token,
+          'id_user': idUser,
+          'id_almacen_log': id,
+        },
+      );
+
+      if (resp.statusCode == 200) {
+        final decodedData = json.decode(resp.body);
+        print(decodedData);
+        return decodedData["result"]["code"];
+      } else {
+        return 2;
+      }
+    } catch (e) {
+      return 2;
+    }
+  }
+
   Future<int> getDetalleOrden(String idAlmacenLog) async {
     try {
       String? token = await Preferences.readData('token');
@@ -410,6 +438,10 @@ class AlmacenApi {
           notaP.idSIAlmacenLog = datos["almacen_log_id_si"];
           notaP.destinoAlmacenLog = datos["id_almacen_destino"];
           notaP.nombreSede = datos["sede_nombre"];
+          notaP.idUserCreacion = '';
+          notaP.nombreUserCreacion = '${datos["person_name"].split(" ").first} ${datos["person_surname"]}';
+
+          print(notaP.nombreUserCreacion);
 
           await ordenAlmacenDB.insertarOrden(notaP);
           //Insertar Productos

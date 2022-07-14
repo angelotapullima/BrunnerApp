@@ -146,6 +146,8 @@ class LogisticaAlmacenBloc {
       r.idSIAlmacenLog = detalle[0].idSIAlmacenLog;
       r.destinoAlmacenLog = detalle[0].destinoAlmacenLog;
       r.nombreSede = detalle[0].nombreSede;
+      r.nombreUserCreacion = detalle[0].nombreUserCreacion;
+      r.idUserCreacion = detalle[0].idUserCreacion;
       r.products = products;
 
       result.add(r);

@@ -20,6 +20,8 @@ class OrdenAlmacenModel {
   String? idSIAlmacenLog;
   String? destinoAlmacenLog;
   String? nombreSede;
+  String? idUserCreacion;
+  String? nombreUserCreacion;
 
   //No en DB
   List<ProductosOrdenModel>? products;
@@ -45,6 +47,8 @@ class OrdenAlmacenModel {
     this.destinoAlmacenLog,
     this.nombreSede,
     this.products,
+    this.idUserCreacion,
+    this.nombreUserCreacion,
   });
 
   static List<OrdenAlmacenModel> fromJsonList(List<dynamic> json) => json.map((i) => OrdenAlmacenModel.fromJson(i)).toList();
@@ -69,6 +73,8 @@ class OrdenAlmacenModel {
         'idSIAlmacenLog': idSIAlmacenLog,
         'destinoAlmacenLog': destinoAlmacenLog,
         'nombreSede': nombreSede,
+        'idUserCreacion': idUserCreacion,
+        'nombreUserCreacion': nombreUserCreacion,
       };
   factory OrdenAlmacenModel.fromJson(Map<String, dynamic> json) => OrdenAlmacenModel(
         idAlmacenLog: json["idAlmacenLog"],
@@ -90,5 +96,7 @@ class OrdenAlmacenModel {
         idSIAlmacenLog: json["idSIAlmacenLog"],
         destinoAlmacenLog: json["destinoAlmacenLog"],
         nombreSede: json["nombreSede"],
+        idUserCreacion: json["idUserCreacion"],
+        nombreUserCreacion: json["nombreUserCreacion"],
       );
 }

@@ -111,6 +111,8 @@ class LogisticaDB {
       ' idOPAlmacenLog TEXT,'
       ' idSIAlmacenLog TEXT,'
       ' destinoAlmacenLog TEXT,'
+      ' idUserCreacion TEXT,'
+      ' nombreUserCreacion TEXT,'
       ' nombreSede TEXT)';
 
   static const String productosOrdenTableSql = 'CREATE TABLE ProductosOrden('
