@@ -6,7 +6,6 @@ import 'package:new_brunner_app/src/core/routes_constanst.dart';
 import 'package:new_brunner_app/src/model/Logistica/Almacen/alertas_salida_model.dart';
 import 'package:new_brunner_app/src/model/Logistica/Almacen/recursos_almacen_model.dart';
 import 'package:new_brunner_app/src/page/Logistica/Almacen/Notas%20Productos/confirmar.dart';
-import 'package:new_brunner_app/src/page/Logistica/Almacen/Notas%20Productos/search_persons.dart';
 import 'package:new_brunner_app/src/page/Logistica/Almacen/Notas%20Productos/search_recursos.dart';
 import 'package:new_brunner_app/src/page/Logistica/Almacen/web_wiew.dart';
 import 'package:new_brunner_app/src/util/utils.dart';

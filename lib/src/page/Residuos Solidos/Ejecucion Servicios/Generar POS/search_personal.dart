@@ -39,7 +39,7 @@ class _PersonalSearchState extends State<PersonalSearch> {
               child: TextField(
                 controller: searchController,
                 onChanged: (query) {
-                  searchBloc.searchUnidades(widget.id, query.trim());
+                  searchBloc.searchPersonal(widget.id, query.trim());
                 },
                 textAlign: TextAlign.left,
                 style: TextStyle(

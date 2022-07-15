@@ -37,7 +37,7 @@ class PersonalOEDatabase {
     try {
       final Database db = await dbprovider.getDatabase();
       List<PersonalOEModel> list = [];
-      List<Map> maps = await db.rawQuery("SELECT * FROM PersonalOE WHERE id = '$id' AND nombre LIKE '%$query%' ");
+      List<Map> maps = await db.rawQuery("SELECT * FROM PersonalOE WHERE id = '$id' AND nombre LIKE '%$query%'");
 
       if (maps.isNotEmpty) list = PersonalOEModel.fromJsonList(maps);
       return list;

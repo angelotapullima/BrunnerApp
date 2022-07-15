@@ -248,7 +248,7 @@ class OPS extends StatelessWidget {
                     ),
                     Text(
                       op.totalOP.toString(),
-                      style: TextStyle(fontWeight: FontWeight.w500),
+                      style: TextStyle(fontWeight: FontWeight.w600, color: Colors.green),
                     ),
                   ],
                 )
