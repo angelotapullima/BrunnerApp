@@ -22,6 +22,10 @@ class LogisticaAlmacenBloc {
   final _notasPendientesController = BehaviorSubject<List<OrdenAlmacenModel>>();
   Stream<List<OrdenAlmacenModel>> get notasPStrean => _notasPendientesController.stream;
 
+  //Ordenes Generadas
+  final _ordenesGeneradasController = BehaviorSubject<List<OrdenAlmacenModel>>();
+  Stream<List<OrdenAlmacenModel>> get ordenGeneradasStrean => _ordenesGeneradasController.stream;
+
   //Detalle Orden
   final _detalleOrdenController = BehaviorSubject<List<OrdenAlmacenModel>>();
   Stream<List<OrdenAlmacenModel>> get detalleOrdenStrean => _detalleOrdenController.stream;
@@ -32,6 +36,9 @@ class LogisticaAlmacenBloc {
 
   final _respPendientesController = BehaviorSubject<int>();
   Stream<int> get respPendientesStream => _respPendientesController.stream;
+
+  final _respGeneradasController = BehaviorSubject<int>();
+  Stream<int> get respGeneradasStream => _respGeneradasController.stream;
 
   final _respDetalleController = BehaviorSubject<int>();
   Stream<int> get respDetalleStream => _respDetalleController.stream;
@@ -50,6 +57,8 @@ class LogisticaAlmacenBloc {
     _respPendientesController.close();
     _detalleOrdenController.close();
     _respDetalleController.close();
+    _respGeneradasController.close();
+    _ordenesGeneradasController.close();
   }
 
   void getDataSalidaAlmacen(String idSede) async {
@@ -82,8 +91,8 @@ class LogisticaAlmacenBloc {
     await _api.getPersonas();
   }
 
-  void updateRespPendientes(int v) async {
-    _respPendientesController.sink.add(v);
+  void updateRespGeneradas(int v) async {
+    _respGeneradasController.sink.add(v);
   }
 
   void getRecursosIngreso(String idSede, String val) async {
@@ -103,10 +112,17 @@ class LogisticaAlmacenBloc {
   //Notas Pendientes Aprobación
 
   void getNotasPendientes(String idSede, String tipo) async {
-    _notasPendientesController.sink.add(await _api.ordenAlmacenDB.getNotasPendientesFiltro(idSede, tipo));
+    _notasPendientesController.sink.add(await _api.ordenAlmacenDB.getOrdenesPendientesFiltro(idSede, tipo));
     _respPendientesController.sink.add(10);
     _respPendientesController.sink.add(await _api.getNotasPendientesAprobacion(idSede, tipo));
-    _notasPendientesController.sink.add(await _api.ordenAlmacenDB.getNotasPendientesFiltro(idSede, tipo));
+    _notasPendientesController.sink.add(await _api.ordenAlmacenDB.getOrdenesPendientesFiltro(idSede, tipo));
+  }
+
+  void getOrdenesGeneradas(String idSede, String tipo, String entrega, String numero, String inicio, String fin) async {
+    _ordenesGeneradasController.sink.add(await _api.ordenAlmacenDB.getOrdenesGeneradasFiltro(idSede, tipo, entrega, numero));
+    _respGeneradasController.sink.add(10);
+    _respGeneradasController.sink.add(await _api.getOrdenesGeneradas(idSede, tipo, entrega, numero, inicio, fin));
+    _ordenesGeneradasController.sink.add(await _api.ordenAlmacenDB.getOrdenesGeneradasFiltro(idSede, tipo, entrega, numero));
   }
 
   void getDetalleOrden(String idAlmacenLog) async {

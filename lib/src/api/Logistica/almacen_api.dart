@@ -299,7 +299,7 @@ class AlmacenApi {
       if (resp.statusCode == 200) {
         final decodedData = json.decode(resp.body);
 
-        await ordenAlmacenDB.deleteNotas();
+        await ordenAlmacenDB.deleteOrdenes('0');
 
         for (var i = 0; i < decodedData["result"]["ordenes"].length; i++) {
           var datos = decodedData["result"]["ordenes"][i];
@@ -349,6 +349,7 @@ class AlmacenApi {
       String? token = await Preferences.readData('token');
 
       final url = Uri.parse('$apiBaseURL/api/Almacen/$f');
+      print(url);
       final resp = await http.post(
         url,
         body: {
@@ -466,6 +467,68 @@ class AlmacenApi {
         return decodedData["result"]["code"];
       } else {
         return 2;
+      }
+    } catch (e) {
+      return 2;
+    }
+  }
+
+  Future<int> getOrdenesGeneradas(String idSede, String idTipo, String idEntrega, String numero, String inicio, String fin) async {
+    try {
+      String? token = await Preferences.readData('token');
+
+      print('$idSede, $idTipo, $idEntrega, $numero, $inicio, $fin');
+
+      final url = Uri.parse('$apiBaseURL/api/Almacen/listar_ordenes_almacen_app');
+      final resp = await http.post(
+        url,
+        body: {
+          'app': 'true',
+          'tn': token,
+          'id_sede': idSede,
+          'alm_numero': numero,
+          'tipo_registro': idTipo,
+          'entrega': idEntrega,
+          'fecha_inicio': inicio,
+          'fecha_fin': fin,
+        },
+      );
+
+      if (resp.statusCode == 200) {
+        final decodedData = json.decode(resp.body);
+
+        await ordenAlmacenDB.deleteOrdenes('1');
+
+        for (var i = 0; i < decodedData["result"]["ordenes"].length; i++) {
+          var datos = decodedData["result"]["ordenes"][i];
+          final notaP = OrdenAlmacenModel();
+          notaP.idAlmacenLog = datos["id_almacen_log"];
+          notaP.idSede = datos["id_sede"];
+          notaP.codigoAlmacenLog = datos["almacen_log_codigo"];
+          notaP.tipoAlmacenLog = datos["almacen_log_tipo"];
+          notaP.comentarioAlmacenLog = datos["almacen_log_comentarios"];
+          notaP.dniSoliAlmacenLog = datos["almacen_log_dni_solicitante"];
+          notaP.nombreSoliAlmacenLog = datos["almacen_log_nombre_solicitante"];
+          notaP.fechaAlmacenLog = datos["almacen_log_fecha"];
+          notaP.horaAlmacenLog = datos["almacen_log_hora"];
+          notaP.aprobacionAlmacenLog = datos["almacen_log_aprobacion"];
+          notaP.idUserAprobacion = datos["id_user_aprobacion"];
+          notaP.estadoAlmacenLog = datos["almacen_log_estado"];
+          notaP.entregaAlmacenLog = datos["almacen_log_entrega"];
+          notaP.horaEntregaAlmacenLog = datos["almacen_log_hora_entrega"];
+          notaP.personaEntregaAlmacenLog = datos["almacen_log_persona_entrega"];
+          notaP.idOPAlmacenLog = datos["almacen_log_id_op"];
+          notaP.idSIAlmacenLog = datos["almacen_log_id_si"];
+          notaP.destinoAlmacenLog = datos["id_almacen_destino"];
+          notaP.nombreSede = datos["sede_nombre"];
+          notaP.nombreUserCreacion = '${datos["person_name"].split(" ").first} ${datos["person_surname"]}';
+
+          await ordenAlmacenDB.insertarOrden(notaP);
+        }
+
+        return 1;
+      } else {
+        return 3;
       }
     } catch (e) {
       return 2;

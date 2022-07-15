@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
+import 'package:new_brunner_app/src/page/Logistica/Almacen/Consulta%20Informacion/orden_generadas.dart';
 import 'package:new_brunner_app/src/page/Logistica/Almacen/Consulta%20Informacion/pendientes_aprobacion.dart';
 import 'package:new_brunner_app/src/page/Logistica/Orden%20Pedido/Consulta%20Informacion/Ordenes%20Pedido%20Lista/detalle_oden_pedido.dart';
 import 'package:new_brunner_app/src/widget/option_widget.dart';
@@ -44,7 +45,17 @@ class _ConsultaInformacionAlmacenState extends State<ConsultaInformacionAlmacen>
                     descripcion: 'Visualizar Registros Generados',
                     icon: Icons.edit_note,
                     color: Color(0XFF148F77),
-                    ontap: () {},
+                    ontap: () {
+                      almacenBloc.updateRespGeneradas(11);
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (context, animation, secondaryAnimation) {
+                            return const OrdenGeneradas();
+                          },
+                        ),
+                      );
+                    },
                   ),
                   SizedBox(height: ScreenUtil().setWidth(30)),
                   OptionWidget(

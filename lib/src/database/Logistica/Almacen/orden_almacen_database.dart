@@ -34,28 +34,19 @@ class OrdenAlmacenDatabase {
     }
   }
 
-  Future<List<OrdenAlmacenModel>> getNotasPendientesFiltro(String idSede, String tipo) async {
+  Future<List<OrdenAlmacenModel>> getOrdenesPendientesFiltro(String idSede, String tipo) async {
     try {
-      String initial = "SELECT * FROM OrdenAlmacen";
-      String query = '';
+      String query = "SELECT * FROM OrdenAlmacen WHERE estadoAlmacenLog='0'";
       if (idSede.isNotEmpty) {
-        query += "idSede='$idSede'";
+        query += " OR idSede='$idSede'";
       }
       if (tipo.isNotEmpty) {
-        if (query.isNotEmpty) {
-          query += " OR tipoAlmacenLog='$tipo'";
-        } else {
-          query += "tipoAlmacenLog='$tipo'";
-        }
-      }
-
-      if (query.isNotEmpty) {
-        initial = "SELECT * FROM OrdenAlmacen WHERE $query";
+        query += " OR tipoAlmacenLog='$tipo'";
       }
 
       final Database db = await dbprovider.getDatabase();
       List<OrdenAlmacenModel> list = [];
-      List<Map> maps = await db.rawQuery(initial);
+      List<Map> maps = await db.rawQuery(query);
 
       if (maps.isNotEmpty) list = OrdenAlmacenModel.fromJsonList(maps);
       return list;
@@ -65,10 +56,38 @@ class OrdenAlmacenDatabase {
     }
   }
 
-  deleteNotas() async {
+  Future<List<OrdenAlmacenModel>> getOrdenesGeneradasFiltro(String idSede, String tipo, String entrega, String numero) async {
+    try {
+      String query = "SELECT * FROM OrdenAlmacen WHERE estadoAlmacenLog='1'";
+      if (idSede.isNotEmpty) {
+        query += " OR idSede='$idSede'";
+      }
+      if (tipo.isNotEmpty) {
+        query += " OR tipoAlmacenLog='$tipo'";
+      }
+      if (entrega.isNotEmpty) {
+        query += " OR entregaAlmacenLog='$entrega'";
+      }
+      if (numero.isNotEmpty) {
+        query += " OR codigoAlmacenLog='$numero'";
+      }
+
+      final Database db = await dbprovider.getDatabase();
+      List<OrdenAlmacenModel> list = [];
+      List<Map> maps = await db.rawQuery(query);
+
+      if (maps.isNotEmpty) list = OrdenAlmacenModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      e;
+      return [];
+    }
+  }
+
+  deleteOrdenes(String estado) async {
     final db = await dbprovider.database;
 
-    final res = await db.rawDelete("DELETE FROM OrdenAlmacen");
+    final res = await db.rawDelete("DELETE FROM OrdenAlmacen WHERE estadoAlmacenLog='$estado'");
 
     return res;
   }
