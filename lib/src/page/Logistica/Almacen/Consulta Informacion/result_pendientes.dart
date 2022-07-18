@@ -6,56 +6,75 @@ import 'package:new_brunner_app/src/model/Logistica/Almacen/orden_almacen_model.
 import 'package:new_brunner_app/src/page/Logistica/Almacen/Consulta%20Informacion/detalle_orden.dart';
 import 'package:new_brunner_app/src/page/Logistica/Almacen/Consulta%20Informacion/eliminar_orden.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
+import 'package:new_brunner_app/src/widget/text_field_search.dart';
 
-class ResultPendientes extends StatelessWidget {
+class ResultPendientes extends StatefulWidget {
   const ResultPendientes({Key? key, required this.idSede, required this.tipo}) : super(key: key);
   final String idSede;
   final String tipo;
 
   @override
+  State<ResultPendientes> createState() => _ResultPendientesState();
+}
+
+class _ResultPendientesState extends State<ResultPendientes> {
+  final _searchController = TextEditingController();
+  @override
   Widget build(BuildContext context) {
     final almacenBloc = ProviderBloc.almacen(context);
-    return StreamBuilder<List<OrdenAlmacenModel>>(
-      stream: almacenBloc.notasPStrean,
-      builder: (_, snapshot) {
-        if (snapshot.hasData) {
-          if (snapshot.data!.isNotEmpty) {
-            return ListView.builder(
-              itemCount: snapshot.data!.length + 1,
-              itemBuilder: (_, index) {
-                if (index == 0) {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: ScreenUtil().setWidth(16),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          'Se encontraron ${snapshot.data!.length} resultados',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: ScreenUtil().setSp(10),
+    return Column(
+      children: [
+        TextFieldSearch(
+          controller: _searchController,
+          onChanged: (v) {
+            almacenBloc.searchNotasPendientes(widget.idSede, widget.tipo, v.trim());
+          },
+        ),
+        Expanded(
+          child: StreamBuilder<List<OrdenAlmacenModel>>(
+            stream: almacenBloc.notasPStrean,
+            builder: (_, snapshot) {
+              if (snapshot.hasData) {
+                if (snapshot.data!.isNotEmpty) {
+                  return ListView.builder(
+                    itemCount: snapshot.data!.length + 1,
+                    itemBuilder: (_, index) {
+                      if (index == 0) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: ScreenUtil().setWidth(16),
                           ),
-                        ),
-                      ],
-                    ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                'Se encontraron ${snapshot.data!.length} resultados',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: ScreenUtil().setSp(10),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                      index = index - 1;
+                      var notaP = snapshot.data![index];
+                      return _crearItem(context, notaP, index + 1, almacenBloc);
+                    },
+                  );
+                } else {
+                  return Center(
+                    child: Text('No se encontraron resultados con los datos ingresados'),
                   );
                 }
-                index = index - 1;
-                var notaP = snapshot.data![index];
-                return _crearItem(context, notaP, index + 1, almacenBloc);
-              },
-            );
-          } else {
-            return Center(
-              child: Text('No se encontraron resultados con los datos ingresados'),
-            );
-          }
-        } else {
-          return Container();
-        }
-      },
+              } else {
+                return Container();
+              }
+            },
+          ),
+        ),
+      ],
     );
   }
 
@@ -73,8 +92,8 @@ class ResultPendientes extends StatelessWidget {
                     return DetalleOrden(
                       idAlmacenLog: notaP.idAlmacenLog ?? '',
                       titulo: "OA${notaP.tipoAlmacenLog == '1' ? 'I' : 'S'}",
-                      idSede: idSede,
-                      idTipo: tipo,
+                      idSede: widget.idSede,
+                      idTipo: widget.tipo,
                     );
                   },
                 ),
@@ -92,7 +111,7 @@ class ResultPendientes extends StatelessWidget {
                       id: notaP.idAlmacenLog ?? '',
                       onChanged: (val) {
                         if (val == 1) {
-                          bloc.getNotasPendientes(idSede, tipo);
+                          bloc.getNotasPendientes(widget.idSede, widget.tipo);
                         }
                       },
                     );

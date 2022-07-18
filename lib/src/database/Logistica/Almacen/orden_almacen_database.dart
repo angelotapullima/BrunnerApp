@@ -56,9 +56,61 @@ class OrdenAlmacenDatabase {
     }
   }
 
+  Future<List<OrdenAlmacenModel>> searchOrdenesPendientesFiltro(String idSede, String tipo, String querys) async {
+    try {
+      String query =
+          "SELECT * FROM OrdenAlmacen WHERE estadoAlmacenLog='0' AND (fechaAlmacenLog LIKE '%$querys%' OR horaAlmacenLog LIKE '%$querys%' OR comentarioAlmacenLog LIKE '%$querys%' OR nombreUserCreacion LIKE '%$querys%' )";
+      if (idSede.isNotEmpty) {
+        query += " OR idSede='$idSede'";
+      }
+      if (tipo.isNotEmpty) {
+        query += " OR tipoAlmacenLog='$tipo'";
+      }
+
+      final Database db = await dbprovider.getDatabase();
+      List<OrdenAlmacenModel> list = [];
+      List<Map> maps = await db.rawQuery(query);
+
+      if (maps.isNotEmpty) list = OrdenAlmacenModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      e;
+      return [];
+    }
+  }
+
   Future<List<OrdenAlmacenModel>> getOrdenesGeneradasFiltro(String idSede, String tipo, String entrega, String numero) async {
     try {
       String query = "SELECT * FROM OrdenAlmacen WHERE estadoAlmacenLog='1'";
+      if (idSede.isNotEmpty) {
+        query += " OR idSede='$idSede'";
+      }
+      if (tipo.isNotEmpty) {
+        query += " OR tipoAlmacenLog='$tipo'";
+      }
+      if (entrega.isNotEmpty) {
+        query += " OR entregaAlmacenLog='$entrega'";
+      }
+      if (numero.isNotEmpty) {
+        query += " OR codigoAlmacenLog='$numero'";
+      }
+
+      final Database db = await dbprovider.getDatabase();
+      List<OrdenAlmacenModel> list = [];
+      List<Map> maps = await db.rawQuery(query);
+
+      if (maps.isNotEmpty) list = OrdenAlmacenModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      e;
+      return [];
+    }
+  }
+
+  Future<List<OrdenAlmacenModel>> searchOrdenesGeneradasFiltro(String idSede, String tipo, String entrega, String numero, String querys) async {
+    try {
+      String query =
+          "SELECT * FROM OrdenAlmacen WHERE estadoAlmacenLog='1' AND (fechaAlmacenLog LIKE '%$querys%' OR horaAlmacenLog LIKE '%$querys%' OR nombreSede LIKE '%$querys%' OR comentarioAlmacenLog LIKE '%$querys%' OR nombreUserCreacion LIKE '%$querys%' )";
       if (idSede.isNotEmpty) {
         query += " OR idSede='$idSede'";
       }

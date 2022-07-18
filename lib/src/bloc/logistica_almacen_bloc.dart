@@ -118,11 +118,27 @@ class LogisticaAlmacenBloc {
     _notasPendientesController.sink.add(await _api.ordenAlmacenDB.getOrdenesPendientesFiltro(idSede, tipo));
   }
 
+  void searchNotasPendientes(String idSede, String tipo, String query) async {
+    if (query.isEmpty) {
+      _notasPendientesController.sink.add(await _api.ordenAlmacenDB.getOrdenesPendientesFiltro(idSede, tipo));
+    } else {
+      _notasPendientesController.sink.add(await _api.ordenAlmacenDB.searchOrdenesPendientesFiltro(idSede, tipo, query));
+    }
+  }
+
   void getOrdenesGeneradas(String idSede, String tipo, String entrega, String numero, String inicio, String fin) async {
     _ordenesGeneradasController.sink.add(await _api.ordenAlmacenDB.getOrdenesGeneradasFiltro(idSede, tipo, entrega, numero));
     _respGeneradasController.sink.add(10);
     _respGeneradasController.sink.add(await _api.getOrdenesGeneradas(idSede, tipo, entrega, numero, inicio, fin));
     _ordenesGeneradasController.sink.add(await _api.ordenAlmacenDB.getOrdenesGeneradasFiltro(idSede, tipo, entrega, numero));
+  }
+
+  void searchOrdenesGeneradas(String idSede, String tipo, String entrega, String numero, String inicio, String fin, String query) async {
+    if (query.isEmpty) {
+      _ordenesGeneradasController.sink.add(await _api.ordenAlmacenDB.getOrdenesGeneradasFiltro(idSede, tipo, entrega, numero));
+    } else {
+      _ordenesGeneradasController.sink.add(await _api.ordenAlmacenDB.searchOrdenesGeneradasFiltro(idSede, tipo, entrega, numero, query));
+    }
   }
 
   void getDetalleOrden(String idAlmacenLog) async {
