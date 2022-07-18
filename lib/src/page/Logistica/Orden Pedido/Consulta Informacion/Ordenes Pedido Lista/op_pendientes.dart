@@ -7,11 +7,18 @@ import 'package:new_brunner_app/src/page/Logistica/Orden%20Pedido/Consulta%20Inf
 import 'package:new_brunner_app/src/page/Logistica/Orden%20Pedido/Consulta%20Informacion/Ordenes%20Pedido%20Lista/eliminar_op.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
 import 'package:new_brunner_app/src/widget/show_loading.dart';
+import 'package:new_brunner_app/src/widget/text_field_search.dart';
 import 'package:new_brunner_app/src/widget/widget_all.dart';
 
-class OPSPendientes extends StatelessWidget {
+class OPSPendientes extends StatefulWidget {
   const OPSPendientes({Key? key}) : super(key: key);
 
+  @override
+  State<OPSPendientes> createState() => _OPSPendientesState();
+}
+
+class _OPSPendientesState extends State<OPSPendientes> {
+  final _searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final logisticaOpBloc = ProviderBloc.logisticaOP(context);
@@ -42,49 +49,61 @@ class OPSPendientes extends StatelessWidget {
         stream: logisticaOpBloc.cargandoStream,
         builder: (_, s) {
           if (s.hasData && !s.data!) {
-            return StreamBuilder<List<OrdenPedidoModel>>(
-              stream: logisticaOpBloc.opsPendientesStream,
-              builder: (_, snapshot) {
-                if (snapshot.hasData) {
-                  if (snapshot.data!.isNotEmpty) {
-                    return ListView.builder(
-                        itemCount: snapshot.data!.length + 1,
-                        itemBuilder: (_, index) {
-                          if (index == 0) {
-                            return Padding(
-                              padding: EdgeInsets.symmetric(
-                                vertical: ScreenUtil().setHeight(5),
-                                horizontal: ScreenUtil().setWidth(16),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    'Se encontraron ${snapshot.data!.length} resultados',
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: ScreenUtil().setSp(10),
+            return Column(
+              children: [
+                TextFieldSearch(
+                  controller: _searchController,
+                  onChanged: (v) {
+                    logisticaOpBloc.searchOPSPendientes(v.trim());
+                  },
+                ),
+                Expanded(
+                  child: StreamBuilder<List<OrdenPedidoModel>>(
+                    stream: logisticaOpBloc.opsPendientesStream,
+                    builder: (_, snapshot) {
+                      if (snapshot.hasData) {
+                        if (snapshot.data!.isNotEmpty) {
+                          return ListView.builder(
+                              itemCount: snapshot.data!.length + 1,
+                              itemBuilder: (_, index) {
+                                if (index == 0) {
+                                  return Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: ScreenUtil().setHeight(5),
+                                      horizontal: ScreenUtil().setWidth(16),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }
-                          index = index - 1;
-                          var dato = snapshot.data![index];
-                          return _items(context, dato);
-                        });
-                  } else {
-                    return Center(
-                      child: Text('Sin información disponible'),
-                    );
-                  }
-                } else {
-                  return Center(
-                    child: CupertinoActivityIndicator(),
-                  );
-                }
-              },
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          'Se encontraron ${snapshot.data!.length} resultados',
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: ScreenUtil().setSp(10),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
+                                index = index - 1;
+                                var dato = snapshot.data![index];
+                                return _items(context, dato);
+                              });
+                        } else {
+                          return Center(
+                            child: Text('Sin información disponible'),
+                          );
+                        }
+                      } else {
+                        return Center(
+                          child: CupertinoActivityIndicator(),
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ],
             );
           } else {
             return ShowLoadding(

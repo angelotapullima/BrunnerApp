@@ -41,6 +41,9 @@ class OrdenPedidoDatabase {
         query += " AND rendido='$rendicion'";
       }
 
+      String query2 = "$query  AND numeroOP!='0' ";
+      Preferences.saveData('queryOP', query2);
+
       query += " AND numeroOP!='0' ORDER BY CAST(numeroOP AS INTEGER) DESC";
 
       Preferences.saveData('query', query);
@@ -84,6 +87,21 @@ class OrdenPedidoDatabase {
     }
   }
 
+  Future<List<OrdenPedidoModel>> searchOPSPendientes(String query) async {
+    try {
+      final Database db = await dbprovider.getDatabase();
+      List<OrdenPedidoModel> list = [];
+      List<Map> maps = await db.rawQuery(
+          "SELECT * FROM OrdenPedido WHERE estado='0' AND numeroOP='0' AND (fechaCreacion LIKE '%$query%' OR monedaOP LIKE '%$query%' OR opVencimiento LIKE '%$query%' OR nombreProveedor LIKE '%$query%' OR rucProveedor LIKE '%$query%' OR nombreSede LIKE '%$query%' OR condicionesOP LIKE '%$query%' OR nombrePerson LIKE '%$query%' OR surnamePerson LIKE '%$query%') ");
+
+      if (maps.isNotEmpty) list = OrdenPedidoModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      e;
+      return [];
+    }
+  }
+
   Future<List<OrdenPedidoModel>> getOPSByidOP(String idOP) async {
     try {
       final Database db = await dbprovider.getDatabase();
@@ -106,6 +124,23 @@ class OrdenPedidoDatabase {
       final Database db = await dbprovider.getDatabase();
       List<OrdenPedidoModel> list = [];
       List<Map> maps = await db.rawQuery(query.toString());
+
+      if (maps.isNotEmpty) list = OrdenPedidoModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      e;
+      return [];
+    }
+  }
+
+  Future<List<OrdenPedidoModel>> searchOPSQuery(String query) async {
+    try {
+      String? querys = await Preferences.readData('queryOP');
+
+      final Database db = await dbprovider.getDatabase();
+      List<OrdenPedidoModel> list = [];
+      List<Map> maps = await db.rawQuery(
+          "$querys AND (fechaCreacion LIKE '%$query%' OR monedaOP LIKE '%$query%' OR opVencimiento LIKE '%$query%' OR nombreProveedor LIKE '%$query%' OR rucProveedor LIKE '%$query%' OR nombreSede LIKE '%$query%' OR condicionesOP LIKE '%$query%' OR nombrePerson LIKE '%$query%' OR surnamePerson LIKE '%$query%') ");
 
       if (maps.isNotEmpty) list = OrdenPedidoModel.fromJsonList(maps);
       return list;

@@ -92,6 +92,14 @@ class LogisticaOPBloc {
     _opsController.sink.add(await _api.opDB.getOPSQuery());
   }
 
+  void searchOPSQuery(String query) async {
+    if (query.isEmpty) {
+      _opsController.sink.add(await _api.opDB.getOPSQuery());
+    } else {
+      _opsController.sink.add(await _api.opDB.searchOPSQuery(query));
+    }
+  }
+
   void getOPSPendientes() async {
     final data = await _api.opDB.getOPSPendientes();
     _opsPendientesController.sink.add(data);
@@ -99,6 +107,14 @@ class LogisticaOPBloc {
     await _api.listarOPPendientes();
     _cargandoController.sink.add(false);
     _opsPendientesController.sink.add(await _api.opDB.getOPSPendientes());
+  }
+
+  void searchOPSPendientes(String query) async {
+    if (query.isEmpty) {
+      _opsPendientesController.sink.add(await _api.opDB.getOPSPendientes());
+    } else {
+      _opsPendientesController.sink.add(await _api.opDB.searchOPSPendientes(query));
+    }
   }
 
   Future<List<OrdenPedidoModel>> detalleOP(String idOP) async {
