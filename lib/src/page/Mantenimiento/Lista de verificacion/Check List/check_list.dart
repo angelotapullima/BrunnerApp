@@ -352,7 +352,7 @@ class _CheckListState extends State<CheckList> {
             label: '',
             hingText: '0.00',
             controller: _kilometrajeController,
-            readOnly: true,
+            readOnly: false,
             widget: Text(
               (widget.vehiculo.tipoUnidad == '1') ? 'KM' : 'Horas',
               style: const TextStyle(color: Colors.blueGrey),
