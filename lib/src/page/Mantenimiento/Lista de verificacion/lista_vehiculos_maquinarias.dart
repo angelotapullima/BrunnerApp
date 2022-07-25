@@ -306,7 +306,7 @@ class _ListaVehiculosMaquinariasState extends State<ListaVehiculosMaquinarias> {
                       ),
                       child: RichText(
                         text: TextSpan(
-                            text: (vehiculo.tipoUnidad == '1') ? 'Vehiculo ' : 'Maquinaria',
+                            text: (vehiculo.tipoInspeccion == '1') ? 'Vehiculo ' : 'Maquinaria',
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w400,

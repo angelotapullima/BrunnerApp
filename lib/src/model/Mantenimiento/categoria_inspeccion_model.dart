@@ -4,6 +4,7 @@ import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_item
 class CategoriaInspeccionModel {
   String? idCatInspeccion;
   String? tipoUnidad;
+  String? tipoInspeccion;
   String? descripcionCatInspeccion;
   String? estadoCatInspeccion;
   //No en db
@@ -13,6 +14,7 @@ class CategoriaInspeccionModel {
   CategoriaInspeccionModel({
     this.idCatInspeccion,
     this.tipoUnidad,
+    this.tipoInspeccion,
     this.descripcionCatInspeccion,
     this.estadoCatInspeccion,
     this.checkItemInspeccion,
@@ -24,6 +26,7 @@ class CategoriaInspeccionModel {
   Map<String, dynamic> toJson() => {
         'idCatInspeccion': idCatInspeccion,
         'tipoUnidad': tipoUnidad,
+        'tipoInspeccion': tipoInspeccion,
         'descripcionCatInspeccion': descripcionCatInspeccion,
         'estadoCatInspeccion': estadoCatInspeccion,
       };
@@ -31,6 +34,7 @@ class CategoriaInspeccionModel {
   factory CategoriaInspeccionModel.fromJson(Map<String, dynamic> json) => CategoriaInspeccionModel(
         idCatInspeccion: json["idCatInspeccion"],
         tipoUnidad: json["tipoUnidad"],
+        tipoInspeccion: json["tipoInspeccion"],
         descripcionCatInspeccion: json["descripcionCatInspeccion"],
         estadoCatInspeccion: json["estadoCatInspeccion"],
       );

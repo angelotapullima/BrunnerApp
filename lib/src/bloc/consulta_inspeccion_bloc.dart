@@ -74,7 +74,7 @@ class ConsultaInspeccionBloc {
   Future<List<CategoriaInspeccionModel>> checkCategoriasInspeccion(String idInspeccionVehiculo, String tipoUnidad) async {
     final List<CategoriaInspeccionModel> result = [];
 
-    final catsInspDB = await _catInspeccionDB.getCatInspeccionByTipoUnidad(tipoUnidad);
+    final catsInspDB = await _catInspeccionDB.getCatInspeccionByTipoInspeccion(tipoUnidad);
 
     for (var i = 0; i < catsInspDB.length; i++) {
       final categoria = CategoriaInspeccionModel();

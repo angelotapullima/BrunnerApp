@@ -17,20 +17,20 @@ class CheckListBloc {
     _observacionesCheckItemController.close();
   }
 
-  void getCatCheckInspeccion(String idVehiculo, String tipoUnidad) async {
+  void getCatCheckInspeccion(String idVehiculo, String tipoInspeccion) async {
     //Obtener Categorias e items
-    _cartegoriasInspeccionController.sink.add(await checkCategoriasInspeccion(idVehiculo, tipoUnidad));
+    _cartegoriasInspeccionController.sink.add(await checkCategoriasInspeccion(idVehiculo, tipoInspeccion));
     //Obtener las observaciones
     _observacionesCheckItemController.sink.add(await _api.checkItemInspDB.getObservacionesItemInspeccionByIdVehiculo(idVehiculo));
     //LLamar al api
     await _api.getCheckItemsVehiculo(idVehiculo);
-    _cartegoriasInspeccionController.sink.add(await checkCategoriasInspeccion(idVehiculo, tipoUnidad));
+    _cartegoriasInspeccionController.sink.add(await checkCategoriasInspeccion(idVehiculo, tipoInspeccion));
     _observacionesCheckItemController.sink.add(await _api.checkItemInspDB.getObservacionesItemInspeccionByIdVehiculo(idVehiculo));
   }
 
-  void updateCheckInspeccion(CheckItemInspeccionModel check, String tipoUnidad) async {
+  void updateCheckInspeccion(CheckItemInspeccionModel check, String tipoInspeccion) async {
     await _api.checkItemInspDB.updateCheckInspeccion(check);
-    _cartegoriasInspeccionController.sink.add(await checkCategoriasInspeccion(check.idVehiculo.toString(), tipoUnidad));
+    _cartegoriasInspeccionController.sink.add(await checkCategoriasInspeccion(check.idVehiculo.toString(), tipoInspeccion));
     _observacionesCheckItemController.sink.add(await _api.checkItemInspDB.getObservacionesItemInspeccionByIdVehiculo(check.idVehiculo.toString()));
   }
 
@@ -39,16 +39,17 @@ class CheckListBloc {
     _observacionesCheckItemController.sink.add(await _api.checkItemInspDB.getObservacionesItemInspeccionByIdVehiculo(check.idVehiculo.toString()));
   }
 
-  Future<List<CategoriaInspeccionModel>> checkCategoriasInspeccion(String idVehiculo, String tipoUnidad) async {
+  Future<List<CategoriaInspeccionModel>> checkCategoriasInspeccion(String idVehiculo, String tipoInspeccion) async {
     final List<CategoriaInspeccionModel> result = [];
 
-    final catsInspDB = await _api.catInspeccionDB.getCatInspeccionByTipoUnidad(tipoUnidad);
+    final catsInspDB = await _api.catInspeccionDB.getCatInspeccionByTipoInspeccion(tipoInspeccion);
 
     for (var i = 0; i < catsInspDB.length; i++) {
       final categoria = CategoriaInspeccionModel();
 
       categoria.idCatInspeccion = catsInspDB[i].idCatInspeccion;
       categoria.tipoUnidad = catsInspDB[i].tipoUnidad;
+      categoria.tipoInspeccion = catsInspDB[i].tipoInspeccion;
       categoria.descripcionCatInspeccion = catsInspDB[i].descripcionCatInspeccion;
       categoria.estadoCatInspeccion = catsInspDB[i].estadoCatInspeccion;
 

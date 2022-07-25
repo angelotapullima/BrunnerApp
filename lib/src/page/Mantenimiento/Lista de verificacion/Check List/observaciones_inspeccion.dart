@@ -8,8 +8,8 @@ import 'package:new_brunner_app/src/util/utils.dart';
 import 'package:new_brunner_app/src/widget/text_field.dart';
 
 class ObservacionesInspeccion extends StatelessWidget {
-  const ObservacionesInspeccion({Key? key, required this.tipoUnidad}) : super(key: key);
-  final String tipoUnidad;
+  const ObservacionesInspeccion({Key? key, required this.tipoInspeccion}) : super(key: key);
+  final String tipoInspeccion;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +66,7 @@ class ObservacionesInspeccion extends StatelessWidget {
           check.observacionCkeckItemInsp = '';
           check.idVehiculo = item.idVehiculo;
           final _catInspeccionBloc = ProviderBloc.checklist(context);
-          _catInspeccionBloc.updateCheckInspeccion(check, tipoUnidad);
+          _catInspeccionBloc.updateCheckInspeccion(check, tipoInspeccion);
           showToast2('Observación eliminada', Colors.black);
         },
         background: Container(
@@ -278,7 +278,7 @@ class ObservacionesInspeccion extends StatelessWidget {
                                     check.observacionCkeckItemInsp = '';
                                     check.idVehiculo = item.idVehiculo;
                                     final _catInspeccionBloc = ProviderBloc.checklist(context);
-                                    _catInspeccionBloc.updateCheckInspeccion(check, tipoUnidad);
+                                    _catInspeccionBloc.updateCheckInspeccion(check, tipoInspeccion);
                                     Navigator.pop(context);
 
                                     showToast2('Observación eliminada', Colors.black);

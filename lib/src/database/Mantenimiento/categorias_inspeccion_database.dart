@@ -33,12 +33,12 @@ class CategoriaInspeccionDatabase {
     }
   }
 
-  Future<List<CategoriaInspeccionModel>> getCatInspeccionByTipoUnidad(String tipoUnidad) async {
+  Future<List<CategoriaInspeccionModel>> getCatInspeccionByTipoInspeccion(String tipoInspeccion) async {
     try {
       final Database db = await dbprovider.getDatabase();
       List<CategoriaInspeccionModel> list = [];
       List<Map> maps =
-          await db.rawQuery("SELECT * FROM CategoriasInspeccion WHERE tipoUnidad='$tipoUnidad' ORDER BY CAST(idCatInspeccion AS INTEGER)");
+          await db.rawQuery("SELECT * FROM CategoriasInspeccion WHERE tipoInspeccion='$tipoInspeccion' ORDER BY CAST(idCatInspeccion AS INTEGER)");
 
       if (maps.isNotEmpty) list = CategoriaInspeccionModel.fromJsonList(maps);
       return list;

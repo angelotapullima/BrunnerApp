@@ -45,6 +45,7 @@ class MantenimientoApi {
 
         vehiculo.idVehiculo = data["id_vehiculo"];
         vehiculo.tipoUnidad = data["tipo_unidad"];
+        vehiculo.tipoInspeccion = data["tipo_inspeccion"];
         vehiculo.carroceriaVehiculo = data["vehiculo_carroceria_nombre"];
         vehiculo.placaVehiculo = data["vehiculo_placa"];
         vehiculo.rucVehiculo = data["vehiculo_ruc"];
@@ -75,6 +76,7 @@ class MantenimientoApi {
         final categoria = CategoriaInspeccionModel();
         categoria.idCatInspeccion = data["id_vehiculo_inspeccion_categoria"];
         categoria.tipoUnidad = data["tipo_unidad"];
+        categoria.tipoInspeccion = data["tipo_inspeccion"];
         categoria.descripcionCatInspeccion = data["vehiculo_inspeccion_categoria_descripcion"];
         categoria.estadoCatInspeccion = data["vehiculo_inspeccion_categoria_estado"];
 

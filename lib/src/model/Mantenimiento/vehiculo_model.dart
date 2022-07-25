@@ -1,6 +1,7 @@
 class VehiculoModel {
   String? idVehiculo;
   String? tipoUnidad;
+  String? tipoInspeccion;
   String? carroceriaVehiculo;
   String? placaVehiculo;
   String? rucVehiculo;
@@ -24,6 +25,7 @@ class VehiculoModel {
   VehiculoModel({
     this.idVehiculo,
     this.tipoUnidad,
+    this.tipoInspeccion,
     this.carroceriaVehiculo,
     this.placaVehiculo,
     this.rucVehiculo,
@@ -50,6 +52,7 @@ class VehiculoModel {
   Map<String, dynamic> toJson() => {
         'idVehiculo': idVehiculo,
         'tipoUnidad': tipoUnidad,
+        'tipoInspeccion': tipoInspeccion,
         'carroceriaVehiculo': carroceriaVehiculo,
         'placaVehiculo': placaVehiculo,
         'rucVehiculo': rucVehiculo,
@@ -74,6 +77,7 @@ class VehiculoModel {
   factory VehiculoModel.fromJson(Map<String, dynamic> json) => VehiculoModel(
         idVehiculo: json["idVehiculo"],
         tipoUnidad: json["tipoUnidad"],
+        tipoInspeccion: json["tipoInspeccion"],
         carroceriaVehiculo: json["carroceriaVehiculo"],
         placaVehiculo: json["placaVehiculo"],
         rucVehiculo: json["rucVehiculo"],

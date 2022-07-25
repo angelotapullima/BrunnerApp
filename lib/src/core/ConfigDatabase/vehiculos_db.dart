@@ -2,6 +2,7 @@ class VehiculosDB {
   static const String vehiculosTableSql = 'CREATE TABLE Vehiculos('
       ' idVehiculo TEXT PRIMARY KEY,'
       ' tipoUnidad TEXT,'
+      ' tipoInspeccion TEXT,'
       ' carroceriaVehiculo TEXT,'
       ' placaVehiculo TEXT,'
       ' rucVehiculo TEXT,'
@@ -31,6 +32,7 @@ class VehiculosDB {
   static const String categoriasInspeccionTableSql = 'CREATE TABLE CategoriasInspeccion('
       ' idCatInspeccion TEXT PRIMARY KEY,'
       ' tipoUnidad TEXT,'
+      ' tipoInspeccion TEXT,'
       ' descripcionCatInspeccion TEXT,'
       ' estadoCatInspeccion TEXT)';
 

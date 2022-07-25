@@ -199,7 +199,7 @@ class _CheckListState extends State<CheckList> {
                 ),
                 CategoriasInspeccion(
                   idVehiculo: widget.vehiculo.idVehiculo.toString(),
-                  tipoUnidad: widget.vehiculo.tipoUnidad.toString(),
+                  tipoInspeccion: widget.vehiculo.tipoInspeccion.toString(),
                 ),
                 SizedBox(height: ScreenUtil().setHeight(10)),
                 const Divider(),
@@ -212,7 +212,7 @@ class _CheckListState extends State<CheckList> {
                 ),
                 SizedBox(height: ScreenUtil().setHeight(10)),
                 ObservacionesInspeccion(
-                  tipoUnidad: widget.vehiculo.tipoUnidad.toString(),
+                  tipoInspeccion: widget.vehiculo.tipoInspeccion.toString(),
                 ),
                 _buttonSave(),
                 SizedBox(height: ScreenUtil().setHeight(20)),
@@ -338,7 +338,7 @@ class _CheckListState extends State<CheckList> {
             height: ScreenUtil().setHeight(16),
           ),
           Text(
-            (widget.vehiculo.tipoUnidad == '1') ? 'Kilometraje' : 'Horometraje',
+            (widget.vehiculo.tipoInspeccion == '1') ? 'Kilometraje' : 'Horometraje',
             style: TextStyle(
               color: Colors.blueGrey,
               fontSize: ScreenUtil().setSp(16),
@@ -354,7 +354,7 @@ class _CheckListState extends State<CheckList> {
             controller: _kilometrajeController,
             readOnly: false,
             widget: Text(
-              (widget.vehiculo.tipoUnidad == '1') ? 'KM' : 'Horas',
+              (widget.vehiculo.tipoInspeccion == '1') ? 'KM' : 'Horas',
               style: const TextStyle(color: Colors.blueGrey),
             ),
           ),
@@ -393,7 +393,7 @@ class _CheckListState extends State<CheckList> {
                 }
                 _controller.chnageCargando(false);
               } else {
-                (widget.vehiculo.tipoUnidad == '1')
+                (widget.vehiculo.tipoInspeccion == '1')
                     ? showToast2('Debe ingresar los datos del KILOMETRAJE', Colors.redAccent)
                     : showToast2('Debe ingresar los datos de HOROMETRAJE', Colors.redAccent);
               }

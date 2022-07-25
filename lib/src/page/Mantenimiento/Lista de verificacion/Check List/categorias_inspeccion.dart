@@ -8,9 +8,9 @@ import 'package:new_brunner_app/src/util/utils.dart';
 import 'package:new_brunner_app/src/widget/text_field.dart';
 
 class CategoriasInspeccion extends StatefulWidget {
-  const CategoriasInspeccion({Key? key, required this.tipoUnidad, required this.idVehiculo}) : super(key: key);
+  const CategoriasInspeccion({Key? key, required this.tipoInspeccion, required this.idVehiculo}) : super(key: key);
   final String idVehiculo;
-  final String tipoUnidad;
+  final String tipoInspeccion;
 
   @override
   State<CategoriasInspeccion> createState() => _CategoriasInspeccionState();
@@ -23,7 +23,7 @@ class _CategoriasInspeccionState extends State<CategoriasInspeccion> {
   Widget build(BuildContext context) {
     final _catInspeccionBloc = ProviderBloc.checklist(context);
     if (count == 0) {
-      _catInspeccionBloc.getCatCheckInspeccion(widget.idVehiculo, widget.tipoUnidad);
+      _catInspeccionBloc.getCatCheckInspeccion(widget.idVehiculo, widget.tipoInspeccion);
       count++;
     }
 
@@ -132,7 +132,7 @@ class _CategoriasInspeccionState extends State<CategoriasInspeccion> {
             check.observacionCkeckItemInsp = '';
             check.idVehiculo = widget.idVehiculo;
             final _catInspeccionBloc = ProviderBloc.checklist(context);
-            _catInspeccionBloc.updateCheckInspeccion(check, widget.tipoUnidad);
+            _catInspeccionBloc.updateCheckInspeccion(check, widget.tipoInspeccion);
           }
         }
       },
@@ -246,7 +246,7 @@ class _CategoriasInspeccionState extends State<CategoriasInspeccion> {
                                       check.observacionCkeckItemInsp = _observacionesController.text.trim();
                                       check.idVehiculo = widget.idVehiculo;
                                       final _catInspeccionBloc = ProviderBloc.checklist(context);
-                                      _catInspeccionBloc.updateCheckInspeccion(check, widget.tipoUnidad);
+                                      _catInspeccionBloc.updateCheckInspeccion(check, widget.tipoInspeccion);
                                       Navigator.pop(context);
                                     } else {
                                       showToast2('Debe agregar una observación', Colors.red);
