@@ -44,8 +44,10 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
   String _tipoVeh = '';
   List<String> tiposVehiculo = [
     'Seleccionar unidad',
-    'Vehiculo',
-    'Maquinaria',
+    'Vehículo Motorizado Pesado',
+    'Maquinaria Pesada',
+    'Embarcación Fluvial',
+    'Vehículo Motorizado Liviano',
   ];
 
   String idCategoria = '';
@@ -581,13 +583,31 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                               return InkWell(
                                 onTap: () {
                                   _tipoVehiculo.text = tiposVehiculo[index];
-                                  if (_tipoVehiculo.text == 'Vehiculo') {
-                                    _tipoVeh = '1';
-                                  } else if (_tipoVehiculo.text == 'Maquinaria') {
-                                    _tipoVeh = '2';
-                                  } else {
-                                    _tipoVeh = '';
+
+                                  switch (tiposVehiculo[index]) {
+                                    case 'Vehículo Motorizado Pesado':
+                                      _tipoVeh = '1';
+                                      break;
+                                    case 'Maquinaria Pesada':
+                                      _tipoVeh = '2';
+                                      break;
+                                    case 'Embarcación Fluvial':
+                                      _tipoVeh = '3';
+                                      break;
+                                    case 'Vehículo Motorizado Liviano':
+                                      _tipoVeh = '4';
+                                      break;
+                                    default:
+                                      _tipoVeh = '';
+                                      break;
                                   }
+                                  // if (_tipoVehiculo.text == 'Vehiculo') {
+                                  //   _tipoVeh = '1';
+                                  // } else if (_tipoVehiculo.text == 'Maquinaria') {
+                                  //   _tipoVeh = '2';
+                                  // } else {
+                                  //   _tipoVeh = '';
+                                  // }
 
                                   idCategoria = '';
                                   _categoriaController.clear();
