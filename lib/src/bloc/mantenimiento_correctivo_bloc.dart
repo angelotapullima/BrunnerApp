@@ -1,5 +1,5 @@
 import 'package:new_brunner_app/src/api/Mantenimiento/mantenimiento_correctivo_api.dart';
-import 'package:new_brunner_app/src/model/Mantenimiento/categoria_inspeccion_model.dart';
+import 'package:new_brunner_app/src/model/Mantenimiento/categoria_inspeccion_vehiculo_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_detalle_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/item_inspeccion_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/mantenimiento_correctivo_model.dart';

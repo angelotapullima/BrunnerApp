@@ -29,16 +29,26 @@ class VehiculosDB {
       ' dniPerson TEXT,'
       ' idCargo TEXT)';
 
-  static const String categoriasInspeccionTableSql = 'CREATE TABLE CategoriasInspeccion('
-      ' idCatInspeccion TEXT PRIMARY KEY,'
+  // static const String categoriasInspeccionTableSql = 'CREATE TABLE CategoriasInspeccion('
+  //     ' idCatInspeccion TEXT PRIMARY KEY,'
+  //     ' tipoUnidad TEXT,'
+  //     ' tipoInspeccion TEXT,'
+  //     ' descripcionCatInspeccion TEXT,'
+  //     ' estadoCatInspeccion TEXT)';
+  static const String categoriasInspeccionVehiculoTableSql = 'CREATE TABLE CategoriasInspeccionVehiculo('
+      ' id TEXT PRIMARY KEY,'
+      ' idCatInspeccion TEXT,'
+      ' idVehiculo TEXT,'
       ' tipoUnidad TEXT,'
       ' tipoInspeccion TEXT,'
       ' descripcionCatInspeccion TEXT,'
       ' estadoCatInspeccion TEXT)';
 
   static const String itemInspeccionTableSql = 'CREATE TABLE ItemInspeccion('
-      ' idItemInspeccion TEXT PRIMARY KEY,'
+      ' id TEXT PRIMARY KEY,'
+      ' idItemInspeccion TEXT,'
       ' idCatInspeccion TEXT,'
+      ' idVehiculo TEXT,'
       ' conteoItemInspeccion TEXT,'
       ' descripcionItemInspeccion TEXT,'
       ' estadoMantenimientoItemInspeccion TEXT,'

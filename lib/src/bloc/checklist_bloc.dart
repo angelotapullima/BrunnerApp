@@ -1,5 +1,5 @@
 import 'package:new_brunner_app/src/api/Mantenimiento/mantenimiento_api.dart';
-import 'package:new_brunner_app/src/model/Mantenimiento/categoria_inspeccion_model.dart';
+import 'package:new_brunner_app/src/model/Mantenimiento/categoria_inspeccion_vehiculo_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/check_item_inspeccion_model.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -17,20 +17,20 @@ class CheckListBloc {
     _observacionesCheckItemController.close();
   }
 
-  void getCatCheckInspeccion(String idVehiculo, String tipoInspeccion) async {
+  void getCatCheckInspeccion(String idVehiculo) async {
     //Obtener Categorias e items
-    _cartegoriasInspeccionController.sink.add(await checkCategoriasInspeccion(idVehiculo, tipoInspeccion));
+    _cartegoriasInspeccionController.sink.add(await checkCategoriasInspeccion(idVehiculo));
     //Obtener las observaciones
     _observacionesCheckItemController.sink.add(await _api.checkItemInspDB.getObservacionesItemInspeccionByIdVehiculo(idVehiculo));
     //LLamar al api
     await _api.getCheckItemsVehiculo(idVehiculo);
-    _cartegoriasInspeccionController.sink.add(await checkCategoriasInspeccion(idVehiculo, tipoInspeccion));
+    _cartegoriasInspeccionController.sink.add(await checkCategoriasInspeccion(idVehiculo));
     _observacionesCheckItemController.sink.add(await _api.checkItemInspDB.getObservacionesItemInspeccionByIdVehiculo(idVehiculo));
   }
 
-  void updateCheckInspeccion(CheckItemInspeccionModel check, String tipoInspeccion) async {
+  void updateCheckInspeccion(CheckItemInspeccionModel check) async {
     await _api.checkItemInspDB.updateCheckInspeccion(check);
-    _cartegoriasInspeccionController.sink.add(await checkCategoriasInspeccion(check.idVehiculo.toString(), tipoInspeccion));
+    _cartegoriasInspeccionController.sink.add(await checkCategoriasInspeccion(check.idVehiculo.toString()));
     _observacionesCheckItemController.sink.add(await _api.checkItemInspDB.getObservacionesItemInspeccionByIdVehiculo(check.idVehiculo.toString()));
   }
 
@@ -39,15 +39,15 @@ class CheckListBloc {
     _observacionesCheckItemController.sink.add(await _api.checkItemInspDB.getObservacionesItemInspeccionByIdVehiculo(check.idVehiculo.toString()));
   }
 
-  Future<List<CategoriaInspeccionModel>> checkCategoriasInspeccion(String idVehiculo, String tipoInspeccion) async {
+  Future<List<CategoriaInspeccionModel>> checkCategoriasInspeccion(String idVehiculo) async {
     final List<CategoriaInspeccionModel> result = [];
 
-    final catsInspDB = await _api.catInspeccionDB.getCatInspeccionByTipoInspeccion(tipoInspeccion);
-
+    final catsInspDB = await _api.catInspeccionDB.getCatInspeccionByIdVehiculo(idVehiculo);
     for (var i = 0; i < catsInspDB.length; i++) {
       final categoria = CategoriaInspeccionModel();
 
       categoria.idCatInspeccion = catsInspDB[i].idCatInspeccion;
+      categoria.idVehiculo = catsInspDB[i].idVehiculo;
       categoria.tipoUnidad = catsInspDB[i].tipoUnidad;
       categoria.tipoInspeccion = catsInspDB[i].tipoInspeccion;
       categoria.descripcionCatInspeccion = catsInspDB[i].descripcionCatInspeccion;

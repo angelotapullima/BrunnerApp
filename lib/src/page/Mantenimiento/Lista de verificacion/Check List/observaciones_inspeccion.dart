@@ -66,7 +66,7 @@ class ObservacionesInspeccion extends StatelessWidget {
           check.observacionCkeckItemInsp = '';
           check.idVehiculo = item.idVehiculo;
           final _catInspeccionBloc = ProviderBloc.checklist(context);
-          _catInspeccionBloc.updateCheckInspeccion(check, tipoInspeccion);
+          _catInspeccionBloc.updateCheckInspeccion(check);
           showToast2('Observación eliminada', Colors.black);
         },
         background: Container(
@@ -278,7 +278,7 @@ class ObservacionesInspeccion extends StatelessWidget {
                                     check.observacionCkeckItemInsp = '';
                                     check.idVehiculo = item.idVehiculo;
                                     final _catInspeccionBloc = ProviderBloc.checklist(context);
-                                    _catInspeccionBloc.updateCheckInspeccion(check, tipoInspeccion);
+                                    _catInspeccionBloc.updateCheckInspeccion(check);
                                     Navigator.pop(context);
 
                                     showToast2('Observación eliminada', Colors.black);

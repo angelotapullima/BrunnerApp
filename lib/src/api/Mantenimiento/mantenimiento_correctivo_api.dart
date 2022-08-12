@@ -3,12 +3,12 @@ import 'dart:convert';
 import 'package:new_brunner_app/src/core/preferences.dart';
 import 'package:new_brunner_app/src/core/routes_constanst.dart';
 import 'package:http/http.dart' as http;
-import 'package:new_brunner_app/src/database/Mantenimiento/categorias_inspeccion_database.dart';
+import 'package:new_brunner_app/src/database/Mantenimiento/categoria_inspeccion_vehiculo_database.dart';
 import 'package:new_brunner_app/src/database/Mantenimiento/inspeccion_vehiculo_detalle_database.dart';
 import 'package:new_brunner_app/src/database/Mantenimiento/item_inspeccion_database.dart';
 import 'package:new_brunner_app/src/database/Mantenimiento/mantenimiento_correctivo_database.dart';
 import 'package:new_brunner_app/src/database/personas_database.dart';
-import 'package:new_brunner_app/src/model/Mantenimiento/categoria_inspeccion_model.dart';
+import 'package:new_brunner_app/src/model/Mantenimiento/categoria_inspeccion_vehiculo_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_detalle_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/item_inspeccion_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/mantenimiento_correctivo_model.dart';
@@ -38,35 +38,35 @@ class MantenimientoCorrectivoApi {
       );
       final decodedData = json.decode(resp.body);
 
-      //Insertar Categorias Inspeccion
-      for (var i = 0; i < decodedData["code"]["categoria"].length; i++) {
-        var data = decodedData["code"]["categoria"][i];
+      // //Insertar Categorias Inspeccion
+      // for (var i = 0; i < decodedData["code"]["categoria"].length; i++) {
+      //   var data = decodedData["code"]["categoria"][i];
 
-        final categoria = CategoriaInspeccionModel();
-        categoria.idCatInspeccion = data["id_vehiculo_inspeccion_categoria"];
-        categoria.tipoUnidad = data["tipo_unidad"];
-        categoria.descripcionCatInspeccion = data["vehiculo_inspeccion_categoria_descripcion"];
-        categoria.estadoCatInspeccion = data["vehiculo_inspeccion_categoria_estado"];
+      //   final categoria = CategoriaInspeccionModel();
+      //   categoria.idCatInspeccion = data["id_vehiculo_inspeccion_categoria"];
+      //   categoria.tipoUnidad = data["tipo_unidad"];
+      //   categoria.descripcionCatInspeccion = data["vehiculo_inspeccion_categoria_descripcion"];
+      //   categoria.estadoCatInspeccion = data["vehiculo_inspeccion_categoria_estado"];
 
-        await catInspeccionDB.insertarCategoriaInspeccion(categoria);
+      //   await catInspeccionDB.insertarCategoriaInspeccion(categoria);
 
-        // Insertar Items Inspeccion
+      //   // Insertar Items Inspeccion
 
-        for (var x = 0; x < data["vehiculo_inspeccion_items"].length; x++) {
-          var dataItem = data["vehiculo_inspeccion_items"][x];
+      //   for (var x = 0; x < data["vehiculo_inspeccion_items"].length; x++) {
+      //     var dataItem = data["vehiculo_inspeccion_items"][x];
 
-          final item = ItemInspeccionModel();
+      //     final item = ItemInspeccionModel();
 
-          item.idItemInspeccion = dataItem["id_vehiculo_inspeccion_item"];
-          item.idCatInspeccion = dataItem["id_vehiculo_inspeccion_categoria"];
-          item.conteoItemInspeccion = dataItem["vehiculo_inspeccion_item_conteo"];
-          item.descripcionItemInspeccion = dataItem["vehiculo_inspeccion_item_descripcion"];
-          item.estadoMantenimientoItemInspeccion = dataItem["vehiculo_inspeccion_item_estadoMantto"];
-          item.estadoItemInspeccion = dataItem["vehiculo_inspeccion_item_estado"];
+      //     item.idItemInspeccion = dataItem["id_vehiculo_inspeccion_item"];
+      //     item.idCatInspeccion = dataItem["id_vehiculo_inspeccion_categoria"];
+      //     item.conteoItemInspeccion = dataItem["vehiculo_inspeccion_item_conteo"];
+      //     item.descripcionItemInspeccion = dataItem["vehiculo_inspeccion_item_descripcion"];
+      //     item.estadoMantenimientoItemInspeccion = dataItem["vehiculo_inspeccion_item_estadoMantto"];
+      //     item.estadoItemInspeccion = dataItem["vehiculo_inspeccion_item_estado"];
 
-          await itemInspeccionDB.insertarItemInspeccion(item);
-        }
-      }
+      //     await itemInspeccionDB.insertarItemInspeccion(item);
+      //   }
+      // }
 
       //Insertar Detalle Inspecciones y Mantenimiento Correctivo
 

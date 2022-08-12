@@ -5,7 +5,7 @@ import 'package:new_brunner_app/src/api/Mantenimiento/mantenimiento_correctivo_a
 import 'package:new_brunner_app/src/api/pdf_api.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/core/routes_constanst.dart';
-import 'package:new_brunner_app/src/model/Mantenimiento/categoria_inspeccion_model.dart';
+import 'package:new_brunner_app/src/model/Mantenimiento/categoria_inspeccion_vehiculo_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_detalle_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/item_inspeccion_model.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/Correctivo/Acciones%20Mantenimiento/visualizar_detalles.dart';

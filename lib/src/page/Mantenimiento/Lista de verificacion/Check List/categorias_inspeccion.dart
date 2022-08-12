@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
-import 'package:new_brunner_app/src/model/Mantenimiento/categoria_inspeccion_model.dart';
+import 'package:new_brunner_app/src/model/Mantenimiento/categoria_inspeccion_vehiculo_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/check_item_inspeccion_model.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
 import 'package:new_brunner_app/src/widget/text_field.dart';
@@ -23,7 +23,7 @@ class _CategoriasInspeccionState extends State<CategoriasInspeccion> {
   Widget build(BuildContext context) {
     final _catInspeccionBloc = ProviderBloc.checklist(context);
     if (count == 0) {
-      _catInspeccionBloc.getCatCheckInspeccion(widget.idVehiculo, widget.tipoInspeccion);
+      _catInspeccionBloc.getCatCheckInspeccion(widget.idVehiculo);
       count++;
     }
 
@@ -132,7 +132,7 @@ class _CategoriasInspeccionState extends State<CategoriasInspeccion> {
             check.observacionCkeckItemInsp = '';
             check.idVehiculo = widget.idVehiculo;
             final _catInspeccionBloc = ProviderBloc.checklist(context);
-            _catInspeccionBloc.updateCheckInspeccion(check, widget.tipoInspeccion);
+            _catInspeccionBloc.updateCheckInspeccion(check);
           }
         }
       },
@@ -246,7 +246,7 @@ class _CategoriasInspeccionState extends State<CategoriasInspeccion> {
                                       check.observacionCkeckItemInsp = _observacionesController.text.trim();
                                       check.idVehiculo = widget.idVehiculo;
                                       final _catInspeccionBloc = ProviderBloc.checklist(context);
-                                      _catInspeccionBloc.updateCheckInspeccion(check, widget.tipoInspeccion);
+                                      _catInspeccionBloc.updateCheckInspeccion(check);
                                       Navigator.pop(context);
                                     } else {
                                       showToast2('Debe agregar una observación', Colors.red);

@@ -67,7 +67,7 @@ class InspeccionApi {
     }
   }
 
-  Future<int> getDetalleInspeccion(String idInspeccion) async {
+  Future<int> getDetalleInspeccion(String idInspeccion, String idVehiculo) async {
     try {
       String? token = await Preferences.readData('token');
 
@@ -111,7 +111,7 @@ class InspeccionApi {
       }
 
       if (decodedData["code"]["inspeccion_detalle"].length > 0) {
-        final listItemsInspecion = await itemInspeccionDB.getItemsInspeccion();
+        final listItemsInspecion = await itemInspeccionDB.getItemInspeccionByIdVehiculo(idVehiculo);
         if (listItemsInspecion.isNotEmpty) {
           for (var i = 0; i < listItemsInspecion.length; i++) {
             final checkItem = InspeccionVehiculoItemModel();

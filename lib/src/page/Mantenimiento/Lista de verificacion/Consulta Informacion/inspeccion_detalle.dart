@@ -24,7 +24,7 @@ class _InspeccionDetalleState extends State<InspeccionDetalle> {
   @override
   Widget build(BuildContext context) {
     final inspeccionBloc = ProviderBloc.consultaInsp(context);
-    inspeccionBloc.getDetalleInspeccionDetalle(widget.inspeccion.idInspeccionVehiculo.toString(), widget.inspeccion.tipoUnidad.toString());
+    inspeccionBloc.getDetalleInspeccionDetalle(widget.inspeccion.idInspeccionVehiculo.toString(), widget.inspeccion.placaVehiculo.toString());
     return Scaffold(
       appBar: AppBar(
         title: Text(

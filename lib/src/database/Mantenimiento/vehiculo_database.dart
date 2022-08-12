@@ -91,6 +91,20 @@ class VehiculoDatabase {
     }
   }
 
+  Future<List<VehiculoModel>> getVehiculoByPlaca(String placa) async {
+    try {
+      final Database db = await dbprovider.getDatabase();
+      List<VehiculoModel> list = [];
+      List<Map> maps = await db.rawQuery("SELECT * FROM Vehiculos WHERE placaVehiculo= '$placa'");
+
+      if (maps.isNotEmpty) list = VehiculoModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      e;
+      return [];
+    }
+  }
+
   deleteVehiculos() async {
     final db = await dbprovider.database;
 

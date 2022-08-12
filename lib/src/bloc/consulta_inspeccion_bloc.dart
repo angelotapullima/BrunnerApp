@@ -1,6 +1,7 @@
 import 'package:new_brunner_app/src/api/Mantenimiento/inspeccion_api.dart';
-import 'package:new_brunner_app/src/database/Mantenimiento/categorias_inspeccion_database.dart';
-import 'package:new_brunner_app/src/model/Mantenimiento/categoria_inspeccion_model.dart';
+import 'package:new_brunner_app/src/database/Mantenimiento/categoria_inspeccion_vehiculo_database.dart';
+import 'package:new_brunner_app/src/database/Mantenimiento/vehiculo_database.dart';
+import 'package:new_brunner_app/src/model/Mantenimiento/categoria_inspeccion_vehiculo_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_item_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_model.dart';
 import 'package:rxdart/rxdart.dart';
@@ -56,30 +57,33 @@ class ConsultaInspeccionBloc {
     _inpeccionesController.sink.add([]);
   }
 
-  void getDetalleInspeccionDetalle(String idInspeccionVehiculo, String tipoUnidad) async {
+  void getDetalleInspeccionDetalle(String idInspeccionVehiculo, String placa) async {
     _inspecionDetalleController.sink.add([]);
     _observacionesCheckItemController.sink.add([]);
+    final _vdb = VehiculoDatabase();
+    final veh = await _vdb.getVehiculoByPlaca(placa);
     _inspecionDetalleController.sink.add(await _api.inspeccionDB.getInspeccionByIdInspeccion(idInspeccionVehiculo));
     _cargando2Controller.sink.add(true);
-    await _api.getDetalleInspeccion(idInspeccionVehiculo);
+    await _api.getDetalleInspeccion(idInspeccionVehiculo, veh[0].idVehiculo.toString());
     _cargando2Controller.sink.add(false);
     // Obtener detalle inspeccion
     _inspecionDetalleController.sink.add(await _api.inspeccionDB.getInspeccionByIdInspeccion(idInspeccionVehiculo));
     //Obtener Categorias e Items
-    _cartegoriasInspeccionController.sink.add(await checkCategoriasInspeccion(idInspeccionVehiculo, tipoUnidad));
+    _cartegoriasInspeccionController.sink.add(await checkCategoriasInspeccion(idInspeccionVehiculo, veh[0].idVehiculo.toString()));
     //Obtener las observaciones
     _observacionesCheckItemController.sink.add(await _api.checkItemInspDB.getObservacionesItemInspeccionByIdInspeccion(idInspeccionVehiculo));
   }
 
-  Future<List<CategoriaInspeccionModel>> checkCategoriasInspeccion(String idInspeccionVehiculo, String tipoUnidad) async {
+  Future<List<CategoriaInspeccionModel>> checkCategoriasInspeccion(String idInspeccionVehiculo, String idVehiculo) async {
     final List<CategoriaInspeccionModel> result = [];
 
-    final catsInspDB = await _catInspeccionDB.getCatInspeccionByTipoInspeccion(tipoUnidad);
+    final catsInspDB = await _catInspeccionDB.getCatInspeccionByIdVehiculo(idVehiculo);
 
     for (var i = 0; i < catsInspDB.length; i++) {
       final categoria = CategoriaInspeccionModel();
 
       categoria.idCatInspeccion = catsInspDB[i].idCatInspeccion;
+      categoria.idVehiculo = catsInspDB[i].idVehiculo;
       categoria.tipoUnidad = catsInspDB[i].tipoUnidad;
       categoria.descripcionCatInspeccion = catsInspDB[i].descripcionCatInspeccion;
       categoria.estadoCatInspeccion = catsInspDB[i].estadoCatInspeccion;

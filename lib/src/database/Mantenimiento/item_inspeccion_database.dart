@@ -48,6 +48,20 @@ class ItemInspeccionDatabase {
     }
   }
 
+  Future<List<ItemInspeccionModel>> getItemInspeccionByIdVehiculo(String idVehiculo) async {
+    try {
+      final Database db = await dbprovider.getDatabase();
+      List<ItemInspeccionModel> list = [];
+      List<Map> maps = await db.rawQuery("SELECT * FROM ItemInspeccion WHERE idVehiculo='$idVehiculo' ORDER BY CAST(idItemInspeccion AS INTEGER)");
+
+      if (maps.isNotEmpty) list = ItemInspeccionModel.fromJsonList(maps);
+      return list;
+    } catch (e) {
+      e;
+      return [];
+    }
+  }
+
   deleteItemInspeccion() async {
     final db = await dbprovider.database;
 

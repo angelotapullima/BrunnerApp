@@ -3,12 +3,12 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:new_brunner_app/src/core/preferences.dart';
 import 'package:new_brunner_app/src/core/routes_constanst.dart';
-import 'package:new_brunner_app/src/database/Mantenimiento/categorias_inspeccion_database.dart';
+import 'package:new_brunner_app/src/database/Mantenimiento/categoria_inspeccion_vehiculo_database.dart';
 import 'package:new_brunner_app/src/database/Mantenimiento/check_item_inspeccion_database.dart';
 import 'package:new_brunner_app/src/database/personas_database.dart';
 import 'package:new_brunner_app/src/database/Mantenimiento/item_inspeccion_database.dart';
 import 'package:new_brunner_app/src/database/Mantenimiento/vehiculo_database.dart';
-import 'package:new_brunner_app/src/model/Mantenimiento/categoria_inspeccion_model.dart';
+import 'package:new_brunner_app/src/model/Mantenimiento/categoria_inspeccion_vehiculo_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/check_item_inspeccion_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/personas_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/item_inspeccion_model.dart';
@@ -67,36 +67,40 @@ class MantenimientoApi {
         vehiculo.cargaUtil = data["vehiculo_carga_util"];
 
         await vehiculosDB.insertarVehiculo(vehiculo);
-      }
 
-      //Insertar Categorias Inspeccion
-      for (var i = 0; i < decodedData["result"]["categoria"].length; i++) {
-        var data = decodedData["result"]["categoria"][i];
+        //Insertar Categorias Inspeccion
+        for (var m = 0; m < data["categoria"].length; m++) {
+          var datios = data["categoria"][m];
 
-        final categoria = CategoriaInspeccionModel();
-        categoria.idCatInspeccion = data["id_vehiculo_inspeccion_categoria"];
-        categoria.tipoUnidad = data["tipo_unidad"];
-        categoria.tipoInspeccion = data["tipo_inspeccion"];
-        categoria.descripcionCatInspeccion = data["vehiculo_inspeccion_categoria_descripcion"];
-        categoria.estadoCatInspeccion = data["vehiculo_inspeccion_categoria_estado"];
+          final categoria = CategoriaInspeccionModel();
+          categoria.id = '${datios["id_vehiculo_inspeccion_categoria"]}-${data["id_vehiculo"]}';
+          categoria.idCatInspeccion = datios["id_vehiculo_inspeccion_categoria"];
+          categoria.idVehiculo = data["id_vehiculo"];
+          categoria.tipoUnidad = datios["tipo_unidad"];
+          categoria.tipoInspeccion = datios["tipo_inspeccion"];
+          categoria.descripcionCatInspeccion = datios["vehiculo_inspeccion_categoria_descripcion"];
+          categoria.estadoCatInspeccion = datios["vehiculo_inspeccion_categoria_estado"];
 
-        await catInspeccionDB.insertarCategoriaInspeccion(categoria);
+          await catInspeccionDB.insertarCategoriaInspeccion(categoria);
 
-        // Insertar Items Inspeccion
+          // Insertar Items Inspeccion
 
-        for (var x = 0; x < data["vehiculo_inspeccion_items"].length; x++) {
-          var dataItem = data["vehiculo_inspeccion_items"][x];
+          for (var x = 0; x < datios["vehiculo_inspeccion_items"].length; x++) {
+            var dataItem = datios["vehiculo_inspeccion_items"][x];
 
-          final item = ItemInspeccionModel();
+            final item = ItemInspeccionModel();
 
-          item.idItemInspeccion = dataItem["id_vehiculo_inspeccion_item"];
-          item.idCatInspeccion = dataItem["id_vehiculo_inspeccion_categoria"];
-          item.conteoItemInspeccion = dataItem["vehiculo_inspeccion_item_conteo"];
-          item.descripcionItemInspeccion = dataItem["vehiculo_inspeccion_item_descripcion"];
-          item.estadoMantenimientoItemInspeccion = dataItem["vehiculo_inspeccion_item_estadoMantto"];
-          item.estadoItemInspeccion = dataItem["vehiculo_inspeccion_item_estado"];
+            item.id = '${dataItem["id_vehiculo_inspeccion_item"]}-${data["id_vehiculo"]}';
+            item.idItemInspeccion = dataItem["id_vehiculo_inspeccion_item"];
+            item.idCatInspeccion = dataItem["id_vehiculo_inspeccion_categoria"];
+            item.idVehiculo = data["id_vehiculo"];
+            item.conteoItemInspeccion = dataItem["vehiculo_inspeccion_item_conteo"];
+            item.descripcionItemInspeccion = dataItem["vehiculo_inspeccion_item_descripcion"];
+            item.estadoMantenimientoItemInspeccion = dataItem["vehiculo_inspeccion_item_estadoMantto"];
+            item.estadoItemInspeccion = dataItem["vehiculo_inspeccion_item_estado"];
 
-          await itemInspeccionDB.insertarItemInspeccion(item);
+            await itemInspeccionDB.insertarItemInspeccion(item);
+          }
         }
       }
 
@@ -133,7 +137,7 @@ class MantenimientoApi {
       );
       final decodedData = json.decode(resp.body);
 
-      final listItemsInspecion = await itemInspeccionDB.getItemsInspeccion();
+      final listItemsInspecion = await itemInspeccionDB.getItemInspeccionByIdVehiculo(idVehiculo);
 
       if (listItemsInspecion.isNotEmpty) {
         for (var i = 0; i < listItemsInspecion.length; i++) {
@@ -152,30 +156,30 @@ class MantenimientoApi {
 
           await checkItemInspDB.insertarCheckItemInspeccion(checkItem);
         }
-      }
 
-      if (decodedData["result"]["respuesta"] == 1) {
-        //Insertar checks previamente seleccionados
-        for (var i = 0; i < decodedData["result"]["inspeccion_detalle"].length; i++) {
-          var data = decodedData["result"]["inspeccion_detalle"][i];
-          final checkItem = CheckItemInspeccionModel();
-          checkItem.idCheckItemInsp = '${data["id_vehiculo_inspeccion_item"]}$idVehiculo';
-          checkItem.idCatInspeccion = data["id_vehiculo_inspeccion_categoria"];
-          checkItem.idItemInspeccion = data["id_vehiculo_inspeccion_item"];
-          checkItem.idVehiculo = idVehiculo;
-          checkItem.conteoCheckItemInsp = data["vehiculo_inspeccion_item_conteo"];
-          checkItem.descripcionCheckItemInsp = data["vehiculo_inspeccion_item_descripcion"];
-          checkItem.valueCheckItemInsp = data["inspeccion_vehiculo_detalle_estado"];
-          checkItem.ckeckItemHabilitado = '0';
-          checkItem.observacionCkeckItemInsp = data["inspeccion_vehiculo_detalle_observacion"];
+        if (decodedData["result"]["respuesta"] == 1) {
+          //Insertar checks previamente seleccionados
+          for (var i = 0; i < decodedData["result"]["inspeccion_detalle"].length; i++) {
+            var data = decodedData["result"]["inspeccion_detalle"][i];
+            final checkItem = CheckItemInspeccionModel();
+            checkItem.idCheckItemInsp = '${data["id_vehiculo_inspeccion_item"]}$idVehiculo';
+            checkItem.idCatInspeccion = data["id_vehiculo_inspeccion_categoria"];
+            checkItem.idItemInspeccion = data["id_vehiculo_inspeccion_item"];
+            checkItem.idVehiculo = idVehiculo;
+            checkItem.conteoCheckItemInsp = data["vehiculo_inspeccion_item_conteo"];
+            checkItem.descripcionCheckItemInsp = data["vehiculo_inspeccion_item_descripcion"];
+            checkItem.valueCheckItemInsp = data["inspeccion_vehiculo_detalle_estado"];
+            checkItem.ckeckItemHabilitado = '0';
+            checkItem.observacionCkeckItemInsp = data["inspeccion_vehiculo_detalle_observacion"];
 
-          await checkItemInspDB.updateCheckInspeccion(checkItem);
-        }
+            await checkItemInspDB.updateCheckInspeccion(checkItem);
+          }
 
-        //Insertar checks deshabilitados
-        for (var x = 0; x < decodedData["result"]["checklist_deshabilitado"].length; x++) {
-          var data = decodedData["result"]["checklist_deshabilitado"][x];
-          await checkItemInspDB.updateHabilitarCheck('${data["id_vehiculo_inspeccion_item"]}$idVehiculo', data["checklist_deshabilitado_estado"]);
+          //Insertar checks deshabilitados
+          for (var x = 0; x < decodedData["result"]["checklist_deshabilitado"].length; x++) {
+            var data = decodedData["result"]["checklist_deshabilitado"][x];
+            await checkItemInspDB.updateHabilitarCheck('${data["id_vehiculo_inspeccion_item"]}$idVehiculo', data["checklist_deshabilitado_estado"]);
+          }
         }
       }
 
