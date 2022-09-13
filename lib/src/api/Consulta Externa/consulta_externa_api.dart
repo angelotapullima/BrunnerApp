@@ -26,7 +26,7 @@ class ConsultaExternaApi {
         result.message = '${decodedData['nombre']}';
       } else {
         result.code = 2;
-        result.message = 'Inténtelo Nuevamente';
+        result.message = '${decodedData['message']}';
       }
 
       return result;
@@ -53,12 +53,13 @@ class ConsultaExternaApi {
           }));
 
       final decodedData = json.decode(response.body);
+      print(decodedData);
       if (response.statusCode == 200) {
         result.code = 200;
         result.message = '${decodedData['nombre_o_razon_social']}';
       } else {
         result.code = 2;
-        result.message = 'Inténtelo Nuevamente';
+        result.message = '${decodedData['message']}';
       }
 
       return result;
@@ -81,13 +82,13 @@ class ConsultaExternaApi {
           },
           body: jsonEncode({
             'token': tokenBrunner,
-            'ruc': date,
+            'fecha': date,
           }));
 
       final decodedData = json.decode(response.body);
       if (response.statusCode == 200) {
         result.code = 200;
-        result.message = '${decodedData['precio_compra']}';
+        result.message = '${decodedData['precio_venta']}';
       } else {
         result.code = 2;
         result.message = 'Inténtelo Nuevamente';

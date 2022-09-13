@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 
 class TextFieldSelect extends StatelessWidget {
-  const TextFieldSelect(
-      {Key? key,
-      required this.label,
-      required this.hingText,
-      required this.controller,
-      this.widget,
-      required this.readOnly,
-      this.ontap,
-      this.icon,
-      this.autofocus = false})
-      : super(key: key);
+  const TextFieldSelect({
+    Key? key,
+    required this.label,
+    required this.hingText,
+    required this.controller,
+    this.widget,
+    required this.readOnly,
+    this.ontap,
+    this.icon,
+    this.autofocus = false,
+    this.keyboardType,
+  }) : super(key: key);
   final String label;
   final String hingText;
   final Function()? ontap;
@@ -20,6 +21,7 @@ class TextFieldSelect extends StatelessWidget {
   final bool readOnly;
   final bool? icon;
   final bool autofocus;
+  final TextInputType? keyboardType;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +29,7 @@ class TextFieldSelect extends StatelessWidget {
       readOnly: readOnly,
       controller: controller,
       maxLines: null,
+      keyboardType: keyboardType,
       style: const TextStyle(
         color: Color(0xff808080),
       ),
