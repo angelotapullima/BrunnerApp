@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/api/Consulta%20Externa/consulta_externa_api.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
+import 'package:new_brunner_app/src/model/Logistica/Cotizacion/recurso_cotizacion_model.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
 import 'package:new_brunner_app/src/widget/button_icon_widget.dart';
 import 'package:new_brunner_app/src/widget/show_loading.dart';
@@ -71,6 +72,7 @@ class _GenerateCotizacionState extends State<GenerateCotizacion> {
                 child: Column(
                   children: [
                     generalData(),
+                    SizedBox(height: ScreenUtil().setHeight(15)),
                     Container(
                       margin: EdgeInsets.symmetric(
                         horizontal: ScreenUtil().setWidth(16),
@@ -139,6 +141,13 @@ class _GenerateCotizacionState extends State<GenerateCotizacion> {
                         ],
                       ),
                     ),
+                    StreamBuilder<List<RecursoCotizacionModel>>(
+                        stream: cotizacionBloc.recursoCotizacionStream,
+                        builder: (_, snapshopt) {
+                          if (!snapshopt.hasData) return Center(child: Text('Comience a buscar recurso'));
+                          if (snapshopt.data!.isEmpty) return Center(child: Text('Recurso no encontrado'));
+                          return Center(child: Text('Seleccionar recurso'));
+                        }),
                   ],
                 )),
           ),
