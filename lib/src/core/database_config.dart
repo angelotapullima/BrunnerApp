@@ -47,6 +47,9 @@ class DatabaseHelper {
       db.execute(LogisticaDB.ordenPedidoTableSql);
       db.execute(LogisticaDB.detalleOrdenPedidoTableSql);
 
+      //--> Cotizacion
+      db.execute(LogisticaDB.recursoCotizacionTableSql);
+
       //--> Almacen
       db.execute(LogisticaDB.recursosAlmacenTableSql);
       db.execute(LogisticaDB.dniPersonalAlmacenTableSql);

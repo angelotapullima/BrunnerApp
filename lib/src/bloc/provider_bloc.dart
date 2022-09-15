@@ -3,6 +3,7 @@ import 'package:new_brunner_app/src/bloc/checklist_bloc.dart';
 import 'package:new_brunner_app/src/bloc/clientes_oe_search_bloc.dart';
 import 'package:new_brunner_app/src/bloc/consulta_inspeccion_bloc.dart';
 import 'package:new_brunner_app/src/bloc/consulta_oe_bloc.dart';
+import 'package:new_brunner_app/src/bloc/cotizacion_bloc.dart';
 import 'package:new_brunner_app/src/bloc/data_user_bloc.dart';
 import 'package:new_brunner_app/src/bloc/ejecucion_servicio_bloc.dart';
 import 'package:new_brunner_app/src/bloc/logistica_almacen_bloc.dart';
@@ -37,6 +38,8 @@ class ProviderBloc extends InheritedWidget {
   final parteOperativoServicioBloc = POSBloc();
   final clientesSearchBloc = ClientesOESearchBloc();
   final consultaOEBloc = ConsultaOEBloc();
+  //Cotizacion
+  final cotizacionBloc = CotizacionBloc();
 
   ProviderBloc({Key? key, required Widget child}) : super(key: key, child: child);
 
@@ -97,5 +100,9 @@ class ProviderBloc extends InheritedWidget {
 
   static LogisticaAlmacenBloc almacen(BuildContext context) {
     return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.logisticaAlmacen;
+  }
+
+  static CotizacionBloc cotizacion(BuildContext context) {
+    return (context.dependOnInheritedWidgetOfExactType<ProviderBloc>())!.cotizacionBloc;
   }
 }

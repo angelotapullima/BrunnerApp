@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/api/Consulta%20Externa/consulta_externa_api.dart';
+import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
 import 'package:new_brunner_app/src/widget/button_icon_widget.dart';
 import 'package:new_brunner_app/src/widget/show_loading.dart';
@@ -23,6 +24,7 @@ class _GenerateCotizacionState extends State<GenerateCotizacion> {
   final _registerDocController = TextEditingController();
   final _exchangeMoneyController = TextEditingController();
   final _dateVigencyController = TextEditingController();
+  final _searchController = TextEditingController();
 
   final typeDocs = [
     {'id': '', 'name': 'Seleccionar'},
@@ -46,6 +48,7 @@ class _GenerateCotizacionState extends State<GenerateCotizacion> {
 
   @override
   Widget build(BuildContext context) {
+    final cotizacionBloc = ProviderBloc.cotizacion(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.teal[700]!,
@@ -64,116 +67,80 @@ class _GenerateCotizacionState extends State<GenerateCotizacion> {
         children: [
           SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16), vertical: ScreenUtil().setHeight(10)),
-              child: Column(
-                children: [
-                  TextFieldSelect(
-                    label: 'Tipo de Documento',
-                    hingText: 'Seleccionar tipo',
-                    controller: _typeDocController,
-                    widget: Icon(
-                      Icons.keyboard_arrow_down,
-                      color: Colors.green,
+                padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16), vertical: ScreenUtil().setHeight(10)),
+                child: Column(
+                  children: [
+                    generalData(),
+                    Container(
+                      margin: EdgeInsets.symmetric(
+                        horizontal: ScreenUtil().setWidth(16),
+                        vertical: ScreenUtil().setHeight(10),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: ScreenUtil().setWidth(8),
+                      ),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.teal[700]!),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _searchController,
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontSize: ScreenUtil().setSp(16),
+                                fontWeight: FontWeight.w400,
+                              ),
+                              decoration: InputDecoration(
+                                label: Text(
+                                  'Buscar Recurso en la Base de datos',
+                                  style: TextStyle(
+                                    fontSize: ScreenUtil().setSp(12),
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                border: InputBorder.none,
+                              ),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              FocusScope.of(context).requestFocus(FocusNode());
+                              if (_searchController.value.text.isEmpty)
+                                return showToast2('Debe ingresar el nombre del recurso a buscar', Colors.redAccent);
+                              cotizacionBloc.getRecursosCotizacion(_searchController.value.text);
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(9),
+                              decoration: BoxDecoration(
+                                color: Colors.teal[700]!,
+                                borderRadius: BorderRadius.circular(15),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.transparent.withOpacity(0.2),
+                                    spreadRadius: 1,
+                                    blurRadius: 2,
+                                    offset: const Offset(0, 1),
+                                  ),
+                                ],
+                              ),
+                              child: Text(
+                                'Buscar',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: ScreenUtil().setSp(14),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    icon: true,
-                    readOnly: true,
-                    ontap: () {
-                      FocusScope.of(context).unfocus();
-                      _selectTypeDoc();
-                    },
-                  ),
-                  SizedBox(height: ScreenUtil().setHeight(15)),
-                  TextFieldSelect(
-                    label: 'Número de Documento',
-                    hingText: '',
-                    controller: _numberDocController,
-                    widget: Icon(
-                      Icons.numbers,
-                      color: Colors.green,
-                    ),
-                    icon: true,
-                    readOnly: false,
-                  ),
-                  SizedBox(height: ScreenUtil().setHeight(15)),
-                  TextFieldSelect(
-                    label: 'Datos del Beneficiario',
-                    hingText: '',
-                    controller: _dataBeneficierController,
-                    icon: false,
-                    readOnly: false,
-                  ),
-                  SizedBox(height: ScreenUtil().setHeight(15)),
-                  ButtonIconWiget(
-                    title: 'Buscar',
-                    iconButton: Icons.search,
-                    colorButton: Colors.teal[700]!,
-                    onPressed: () {
-                      FocusScope.of(context).unfocus();
-                      _dataBeneficierController.clear();
-                      searchDoc();
-                    },
-                  ),
-                  SizedBox(height: ScreenUtil().setHeight(15)),
-                  TextFieldSelect(
-                    label: 'Teléfono',
-                    hingText: '',
-                    controller: _phoneNumberController,
-                    keyboardType: TextInputType.number,
-                    widget: Icon(
-                      Icons.phone,
-                      color: Colors.green,
-                    ),
-                    icon: true,
-                    readOnly: false,
-                  ),
-                  SizedBox(height: ScreenUtil().setHeight(15)),
-                  TextFieldSelect(
-                    label: 'Email',
-                    hingText: '',
-                    controller: _emailController,
-                    widget: Icon(
-                      Icons.mail,
-                      color: Colors.green,
-                    ),
-                    icon: true,
-                    readOnly: false,
-                  ),
-                  SizedBox(height: ScreenUtil().setHeight(15)),
-                  TextFieldSelect(
-                    label: 'Documento del Registro',
-                    hingText: '',
-                    controller: _registerDocController,
-                    icon: false,
-                    readOnly: false,
-                  ),
-                  SizedBox(height: ScreenUtil().setHeight(15)),
-                  TextFieldSelect(
-                    label: 'Tipo de Cambio',
-                    hingText: '',
-                    keyboardType: TextInputType.number,
-                    controller: _exchangeMoneyController,
-                    icon: false,
-                    readOnly: false,
-                  ),
-                  SizedBox(height: ScreenUtil().setHeight(15)),
-                  TextFieldSelect(
-                    label: 'Fecha de Vigencia',
-                    hingText: '',
-                    controller: _dateVigencyController,
-                    widget: Icon(
-                      Icons.calendar_month,
-                      color: Colors.green,
-                    ),
-                    icon: true,
-                    readOnly: true,
-                    ontap: () {
-                      FocusScope.of(context).unfocus();
-                      selectdate(context, _dateVigencyController);
-                    },
-                  ),
-                ],
-              ),
-            ),
+                  ],
+                )),
           ),
           AnimatedBuilder(
             animation: _controller,
@@ -265,6 +232,127 @@ class _GenerateCotizacionState extends State<GenerateCotizacion> {
           ),
         );
       },
+    );
+  }
+
+  Widget generalData() {
+    return ExpansionTile(
+      onExpansionChanged: (valor) {},
+      maintainState: true,
+      title: Text(
+        'Datos Generales',
+        style: TextStyle(
+          color: Colors.blueGrey,
+          fontSize: ScreenUtil().setSp(14),
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      children: [
+        TextFieldSelect(
+          label: 'Tipo de Documento',
+          hingText: 'Seleccionar tipo',
+          controller: _typeDocController,
+          widget: Icon(
+            Icons.keyboard_arrow_down,
+            color: Colors.green,
+          ),
+          icon: true,
+          readOnly: true,
+          ontap: () {
+            FocusScope.of(context).unfocus();
+            _selectTypeDoc();
+          },
+        ),
+        SizedBox(height: ScreenUtil().setHeight(15)),
+        TextFieldSelect(
+          label: 'Número de Documento',
+          hingText: '',
+          controller: _numberDocController,
+          widget: Icon(
+            Icons.numbers,
+            color: Colors.green,
+          ),
+          icon: true,
+          readOnly: false,
+        ),
+        SizedBox(height: ScreenUtil().setHeight(15)),
+        TextFieldSelect(
+          label: 'Datos del Beneficiario',
+          hingText: '',
+          controller: _dataBeneficierController,
+          icon: false,
+          readOnly: false,
+        ),
+        SizedBox(height: ScreenUtil().setHeight(15)),
+        ButtonIconWiget(
+          title: 'Buscar',
+          iconButton: Icons.search,
+          colorButton: Colors.teal[700]!,
+          onPressed: () {
+            FocusScope.of(context).unfocus();
+            _dataBeneficierController.clear();
+            searchDoc();
+          },
+        ),
+        SizedBox(height: ScreenUtil().setHeight(15)),
+        TextFieldSelect(
+          label: 'Teléfono',
+          hingText: '',
+          controller: _phoneNumberController,
+          keyboardType: TextInputType.number,
+          widget: Icon(
+            Icons.phone,
+            color: Colors.green,
+          ),
+          icon: true,
+          readOnly: false,
+        ),
+        SizedBox(height: ScreenUtil().setHeight(15)),
+        TextFieldSelect(
+          label: 'Email',
+          hingText: '',
+          controller: _emailController,
+          widget: Icon(
+            Icons.mail,
+            color: Colors.green,
+          ),
+          icon: true,
+          readOnly: false,
+        ),
+        SizedBox(height: ScreenUtil().setHeight(15)),
+        TextFieldSelect(
+          label: 'Documento del Registro',
+          hingText: '',
+          controller: _registerDocController,
+          icon: false,
+          readOnly: false,
+        ),
+        SizedBox(height: ScreenUtil().setHeight(15)),
+        TextFieldSelect(
+          label: 'Tipo de Cambio',
+          hingText: '',
+          keyboardType: TextInputType.number,
+          controller: _exchangeMoneyController,
+          icon: false,
+          readOnly: false,
+        ),
+        SizedBox(height: ScreenUtil().setHeight(15)),
+        TextFieldSelect(
+          label: 'Fecha de Vigencia',
+          hingText: '',
+          controller: _dateVigencyController,
+          widget: Icon(
+            Icons.calendar_month,
+            color: Colors.green,
+          ),
+          icon: true,
+          readOnly: true,
+          ontap: () {
+            FocusScope.of(context).unfocus();
+            selectdate(context, _dateVigencyController);
+          },
+        ),
+      ],
     );
   }
 

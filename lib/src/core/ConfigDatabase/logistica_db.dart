@@ -131,4 +131,13 @@ class LogisticaDB {
       ' nombreRecursoLogistica TEXT,'
       ' fechaRecursoLog TEXT,'
       ' horaRecursoLog TEXT)';
+
+  static const String recursoCotizacionTableSql = 'CREATE TABLE RecursoCotizacion('
+      ' idLogisticaRecurso TEXT PRIMARY KEY,'
+      ' idClase TEXT,'
+      ' nameRecurso TEXT,'
+      ' unidadRecurso TEXT,'
+      ' idTypeLogistica TEXT,'
+      ' nameClase TEXT,'
+      ' nameType TEXT)';
 }
