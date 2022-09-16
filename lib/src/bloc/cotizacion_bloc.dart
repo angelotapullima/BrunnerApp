@@ -8,11 +8,16 @@ class CotizacionBloc {
   final _recursosCotizacionController = BehaviorSubject<List<RecursoCotizacionModel>>();
   Stream<List<RecursoCotizacionModel>> get recursoCotizacionStream => _recursosCotizacionController.stream;
 
+  final _resultApiController = BehaviorSubject<int>();
+  Stream<int> get resultApiStream => _resultApiController.stream;
+
   dispose() {
     _recursosCotizacionController.close();
   }
 
   void getRecursosCotizacion(String query) async {
+    _resultApiController.sink.add(0);
     _recursosCotizacionController.sink.add(await _api.getOrdenesPedido(query));
+    _resultApiController.sink.add(1);
   }
 }

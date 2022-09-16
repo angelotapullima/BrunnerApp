@@ -141,13 +141,16 @@ class _GenerateCotizacionState extends State<GenerateCotizacion> {
                         ],
                       ),
                     ),
-                    StreamBuilder<List<RecursoCotizacionModel>>(
-                        stream: cotizacionBloc.recursoCotizacionStream,
-                        builder: (_, snapshopt) {
-                          if (!snapshopt.hasData) return Center(child: Text('Comience a buscar recurso'));
-                          if (snapshopt.data!.isEmpty) return Center(child: Text('Recurso no encontrado'));
-                          return Center(child: Text('Seleccionar recurso'));
-                        }),
+                    //TODO Recurso Add
+                    StreamBuilder(builder: (_, snapshot) {
+                      return StreamBuilder<List<RecursoCotizacionModel>>(
+                          stream: cotizacionBloc.recursoCotizacionStream,
+                          builder: (_, snapshopt) {
+                            if (!snapshopt.hasData) return Center(child: Text('Comience a buscar recurso'));
+                            if (snapshopt.data!.isEmpty) return Center(child: Text('Recurso no encontrado'));
+                            return Center(child: Text('Seleccionar recurso'));
+                          });
+                    })
                   ],
                 )),
           ),
