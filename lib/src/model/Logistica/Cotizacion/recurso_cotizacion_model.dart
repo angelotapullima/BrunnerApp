@@ -6,6 +6,9 @@ class RecursoCotizacionModel {
   String? idTypeLogistica;
   String? nameClase;
   String? nameType;
+  //No en DB
+  String? quantity;
+  String? percent;
 
   RecursoCotizacionModel({
     this.idLogisticaRecurso,
@@ -15,6 +18,8 @@ class RecursoCotizacionModel {
     this.idTypeLogistica,
     this.nameClase,
     this.nameType,
+    this.quantity,
+    this.percent,
   });
 
   static List<RecursoCotizacionModel> fromJsonList(List<dynamic> json) => json.map((i) => RecursoCotizacionModel.fromJson(i)).toList();

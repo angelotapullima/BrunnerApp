@@ -15,6 +15,11 @@ class CotizacionBloc {
     _recursosCotizacionController.close();
   }
 
+  void clearControllers() async {
+    _resultApiController.sink.add(2);
+    _recursosCotizacionController.sink.add([]);
+  }
+
   void getRecursosCotizacion(String query) async {
     _resultApiController.sink.add(0);
     _recursosCotizacionController.sink.add(await _api.getOrdenesPedido(query));

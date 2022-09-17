@@ -13,6 +13,13 @@ class SelectRecurso extends StatefulWidget {
 
 class _SelectRecursoState extends State<SelectRecurso> {
   final searchController = TextEditingController();
+  List<RecursoCotizacionModel> listrecursos = [];
+
+  @override
+  void initState() {
+    listrecursos = widget.recursos;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +43,7 @@ class _SelectRecursoState extends State<SelectRecurso> {
               ),
               child: TextField(
                 controller: searchController,
-                onChanged: (query) {},
+                onChanged: searchRecurso,
                 textAlign: TextAlign.left,
                 style: TextStyle(
                   fontSize: ScreenUtil().setSp(16),
@@ -60,7 +67,7 @@ class _SelectRecursoState extends State<SelectRecurso> {
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: widget.recursos.length + 1,
+                itemCount: listrecursos.length + 1,
                 itemBuilder: (_, index) {
                   if (index == 0) {
                     return Padding(
@@ -71,7 +78,7 @@ class _SelectRecursoState extends State<SelectRecurso> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Text(
-                            'Se encontraron ${widget.recursos.length} resultados',
+                            'Se encontraron ${listrecursos.length} resultados',
                             style: TextStyle(
                               color: Colors.grey,
                               fontSize: ScreenUtil().setSp(10),
@@ -82,7 +89,7 @@ class _SelectRecursoState extends State<SelectRecurso> {
                     );
                   }
                   index = index - 1;
-                  var recurso = widget.recursos[index];
+                  var recurso = listrecursos[index];
                   return InkWell(
                     onTap: () {
                       Navigator.pop(context);
@@ -139,5 +146,18 @@ class _SelectRecursoState extends State<SelectRecurso> {
         ],
       ),
     );
+  }
+
+  void searchRecurso(String query) {
+    final suggestions = widget.recursos.where((recurso) {
+      final nameRecurso = recurso.nameRecurso!.toUpperCase();
+      final input = query.toUpperCase();
+
+      return nameRecurso.contains(input);
+    }).toList();
+
+    setState(() {
+      listrecursos = suggestions;
+    });
   }
 }

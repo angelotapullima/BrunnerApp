@@ -52,4 +52,46 @@ class CotizacionApi {
       return [];
     }
   }
+
+  Future<int> generateCotization(
+      {required String numberDoc,
+      required String typeDoc,
+      required String dataBeneficirie,
+      required String numberTelefono,
+      required String email,
+      required String coments,
+      required String typeExchange,
+      required String dataValid,
+      required List<RecursoCotizacionModel> recurso}) async {
+    try {
+      String? token = await Preferences.readData('token');
+
+      final url = Uri.parse('$apiBaseURL/api/Cotizacion/generar_cotizacion_app');
+      final resp = await http.post(
+        url,
+        body: {
+          'app': 'true',
+          'tn': token,
+          'cotizacion_beneficiario_numero': numberDoc,
+          'cotizacion_beneficiario_tipo_documento': typeDoc,
+          'cotizacion_beneficiario': dataBeneficirie,
+          'cotizacion_beneficiario_telefono': numberTelefono,
+          'cotizacion_beneficiario_email': email,
+          'cotizacion_comentarios': coments,
+          'cotizacion_tipo_cambio': typeExchange,
+          'cotizacion_fecha_validez': dataValid,
+          'cotizacion_datos': recurso,
+        },
+      );
+
+      if (resp.statusCode == 200) {
+        final decodedData = json.decode(resp.body);
+        return decodedData["result"]["code"];
+      } else {
+        return 2;
+      }
+    } catch (e) {
+      return 2;
+    }
+  }
 }
