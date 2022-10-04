@@ -24,7 +24,7 @@ Widget contenidoItem(BuildContext context, InspeccionVehiculoDetalleModel detall
             break;
           case '2':
             color = Colors.orangeAccent;
-            textEstado = 'En Proceso de Aprobación';
+            textEstado = 'Responsable Asignado';
             break;
           case '4':
             color = Colors.green;
@@ -33,6 +33,10 @@ Widget contenidoItem(BuildContext context, InspeccionVehiculoDetalleModel detall
           case '5':
             color = Colors.deepPurpleAccent;
             textEstado = 'Diagnosticado';
+            break;
+          case '6':
+            color = Colors.brown;
+            textEstado = 'Pendiente de Repuesto';
             break;
           default:
             color = Colors.redAccent;

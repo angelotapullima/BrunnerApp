@@ -36,7 +36,8 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
     'Atendido',
     'Informe Pendiente de Aprobación',
     'Diagnosticado',
-    'En proceso de Atención',
+    'Pendiente de Repuesto',
+    'Responsable Asignado',
     'Sin Atender',
     'Anulado',
   ];
@@ -700,7 +701,10 @@ class _MantCorrectivoState extends State<MantCorrectivo> {
                                     case 'Diagnosticado':
                                       _estado = '5';
                                       break;
-                                    case 'En proceso de Atención':
+                                    case 'Pendiente de Repuesto':
+                                      _estado = '6';
+                                      break;
+                                    case 'Responsable Asignado':
                                       _estado = '2';
                                       break;
                                     case 'Sin Atender':

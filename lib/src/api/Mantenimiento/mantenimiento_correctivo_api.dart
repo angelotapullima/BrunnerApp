@@ -205,6 +205,7 @@ class MantenimientoCorrectivoApi {
       }
 
       String? token = await Preferences.readData('token');
+      String? idUser = await Preferences.readData('id_user');
 
       final url = Uri.parse('$apiBaseURL/api/MantenimientoCorrectivo/$api');
 
@@ -215,6 +216,7 @@ class MantenimientoCorrectivoApi {
           'tn': token,
           'id': id,
           'valor': valor,
+          'id_user': idUser,
         },
       );
       final decodedData = json.decode(resp.body);
