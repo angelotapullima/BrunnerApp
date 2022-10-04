@@ -15,7 +15,7 @@ class MantenimientoCorrectivo extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          'Mantenimiento correcctivo',
+          'Orden de Trabajo',
           style: TextStyle(
             color: Colors.white,
             fontSize: ScreenUtil().setSp(18),
