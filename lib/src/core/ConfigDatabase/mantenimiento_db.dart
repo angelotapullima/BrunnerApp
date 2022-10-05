@@ -75,11 +75,16 @@ class MantenimientoDB {
       ' responsable TEXT,'
       ' idResponsable TEXT,'
       ' estado TEXT,'
-      ' diagnostico TEXT,'
-      ' fechaDiagnostico TEXT,'
-      ' conclusion TEXT,'
-      ' recomendacion TEXT,'
       ' dateTimeMantenimiento TEXT,'
       ' estadoFinal TEXT,'
       ' fechaFinalMantenimiento TEXT)';
+
+  static const String detalleManttoTableSql = 'CREATE TABLE DetalleMantto('
+      ' idManttoDetalle TEXT PRIMARY KEY,'
+      ' idMantenimiento TEXT,'
+      ' registrador TEXT,'
+      ' tipoDetalle TEXT,'
+      ' descripcionDetalle TEXT,'
+      ' estadoDetalle TEXT,'
+      ' fechaDetalle TEXT)';
 }

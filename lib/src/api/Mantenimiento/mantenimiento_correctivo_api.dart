@@ -4,14 +4,14 @@ import 'package:new_brunner_app/src/core/preferences.dart';
 import 'package:new_brunner_app/src/core/routes_constanst.dart';
 import 'package:http/http.dart' as http;
 import 'package:new_brunner_app/src/database/Mantenimiento/categoria_inspeccion_vehiculo_database.dart';
+import 'package:new_brunner_app/src/database/Mantenimiento/detalle_matto_database.dart';
 import 'package:new_brunner_app/src/database/Mantenimiento/inspeccion_vehiculo_detalle_database.dart';
 import 'package:new_brunner_app/src/database/Mantenimiento/item_inspeccion_database.dart';
 import 'package:new_brunner_app/src/database/Mantenimiento/mantenimiento_correctivo_database.dart';
 import 'package:new_brunner_app/src/database/personas_database.dart';
-import 'package:new_brunner_app/src/model/Mantenimiento/categoria_inspeccion_vehiculo_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_detalle_model.dart';
-import 'package:new_brunner_app/src/model/Mantenimiento/item_inspeccion_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/mantenimiento_correctivo_model.dart';
+import 'package:new_brunner_app/src/model/Mantenimiento/mantto_detalle_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/personas_model.dart';
 import 'package:new_brunner_app/src/model/api_result_model.dart';
 import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/Orden%20Habilitacion/new_observaciones_model.dart';
@@ -22,6 +22,7 @@ class MantenimientoCorrectivoApi {
   final personaDB = PersonasDatabase();
   final detalleInspDB = InspeccionVehiculoDetalleDatabase();
   final mantCorrectivoDB = MantenimientoCorrectivoDatabase();
+  final detalleManttoDB = DetalleManttoDatabase();
 
   Future<int> getData(String tipoUnidad) async {
     try {
@@ -107,15 +108,26 @@ class MantenimientoCorrectivoApi {
           mantenimiento.responsable = dato["responsable"];
           mantenimiento.idResponsable = dato["id_responsable"];
           mantenimiento.estado = dato["mantenimiento_correctivo_estado"];
-          mantenimiento.diagnostico = dato["mantenimiento_correctivo_diagnostico"];
-          mantenimiento.fechaDiagnostico = dato["mantenimiento_correctivo_diagnostico_fecha"];
-          mantenimiento.conclusion = dato["mantenimiento_correctivo_conclusion"];
-          mantenimiento.recomendacion = dato["mantenimiento_correctivo_recomendacion"];
           mantenimiento.dateTimeMantenimiento = dato["mantenimiento_correctivo_datetime"];
           mantenimiento.estadoFinal = dato["mantenimiento_correctivo_estado_final"];
           mantenimiento.fechaFinalMantenimiento = dato["mantenimiento_correctivo_fechafinal"];
 
           await mantCorrectivoDB.insertarMantenimiento(mantenimiento);
+
+          for (var y = 0; y < dato["mantto_detalle"].length; y++) {
+            var detailY = dato["mantto_detalle"][y];
+
+            final detalleMantto = ManttoDetalleModel();
+            detalleMantto.idManttoDetalle = detailY["id_mantto_detalle"];
+            detalleMantto.idMantenimiento = dato["id_mantto"];
+            detalleMantto.registrador = detailY["registrador"];
+            detalleMantto.tipoDetalle = detailY["mantenimiento_correctivo_detalle_tipo"];
+            detalleMantto.descripcionDetalle = detailY["mantenimiento_correctivo_detalle_descripcion"];
+            detalleMantto.estadoDetalle = detailY["mantenimiento_correctivo_detalle_estado"];
+            detalleMantto.fechaDetalle = detailY["mantenimiento_correctivo_detalle_fecha"];
+
+            await detalleManttoDB.insertarDetalleMantto(detalleMantto);
+          }
         }
       }
 

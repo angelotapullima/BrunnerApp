@@ -153,20 +153,20 @@ class EditarDetallesMantenimiento extends StatelessWidget {
   }
 
   Widget detalleOption(BuildContext context, MantenimientoCorrectivoModel data, int tipo) {
-    String text = 'Sin información';
-    if (tipo == 1) {
-      text = data.diagnostico ?? 'Sin información';
-    } else if (tipo == 2) {
-      text = data.conclusion ?? 'Sin información';
-    } else {
-      text = data.recomendacion ?? 'Sin información';
-    }
+    // String text = 'Sin información';
+    // if (tipo == 1) {
+    //   text = data.diagnostico ?? 'Sin información';
+    // } else if (tipo == 2) {
+    //   text = data.conclusion ?? 'Sin información';
+    // } else {
+    //   text = data.recomendacion ?? 'Sin información';
+    // }
     return Container(
       margin: EdgeInsets.all(8),
       child: Stack(children: [
         InkWell(
           onTap: () {
-            editarAccionResponsable(context, data, tipo, detalle.tipoUnidad.toString());
+            // editarAccionResponsable(context, data, tipo, detalle.tipoUnidad.toString());
           },
           child: Container(
             margin: EdgeInsets.only(top: ScreenUtil().setHeight(10)),
@@ -201,12 +201,12 @@ class EditarDetallesMantenimiento extends StatelessWidget {
                     SizedBox(
                       width: ScreenUtil().setWidth(8),
                     ),
-                    Expanded(
-                      child: Text(
-                        text,
-                        style: TextStyle(fontSize: ScreenUtil().setSp(12), color: (text == 'Sin información') ? Colors.grey : Colors.black),
-                      ),
-                    ),
+                    // Expanded(
+                    //   child: Text(
+                    //     text,
+                    //     style: TextStyle(fontSize: ScreenUtil().setSp(12), color: (text == 'Sin información') ? Colors.grey : Colors.black),
+                    //   ),
+                    // ),
                   ],
                 ),
                 Align(

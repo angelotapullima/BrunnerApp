@@ -165,13 +165,10 @@ class MantenimientoCorrectivoBloc {
           mantenimiento.responsable = mantenimientoDB[x].responsable;
           mantenimiento.idResponsable = mantenimientoDB[x].idResponsable;
           mantenimiento.estado = mantenimientoDB[x].estado;
-          mantenimiento.diagnostico = mantenimientoDB[x].diagnostico;
-          mantenimiento.fechaDiagnostico = mantenimientoDB[x].fechaDiagnostico;
-          mantenimiento.conclusion = mantenimientoDB[x].conclusion;
-          mantenimiento.recomendacion = mantenimientoDB[x].recomendacion;
           mantenimiento.dateTimeMantenimiento = mantenimientoDB[x].dateTimeMantenimiento;
           mantenimiento.estadoFinal = mantenimientoDB[x].estadoFinal;
           mantenimiento.fechaFinalMantenimiento = mantenimientoDB[x].fechaFinalMantenimiento;
+          mantenimiento.listDetails = await _api.detalleManttoDB.getDetalleByIdMantenimiento(mantenimiento.idMantenimiento!);
           if (mc != '') {
             mantConEstados.add(mantenimiento);
           } else {
@@ -225,6 +222,7 @@ class MantenimientoCorrectivoBloc {
     final detalleDB = await _api.detalleInspDB.getDetalleInspeccionById(idInspeccionDetalle);
 
     if (detalleDB.isNotEmpty) {
+      final List<MantenimientoCorrectivoModel> listMantenimiento = [];
       final detalle = InspeccionVehiculoDetalleModel();
       detalle.idInspeccionDetalle = detalleDB[0].idInspeccionDetalle;
       detalle.tipoUnidad = detalleDB[0].tipoUnidad;
@@ -244,7 +242,21 @@ class MantenimientoCorrectivoBloc {
 
       final mantenimientoDB = await _api.mantCorrectivoDB.getMantenimientoByIdInspeccionDetalle(detalleDB[0].idInspeccionDetalle.toString());
 
-      detalle.mantCorrectivos = mantenimientoDB;
+      for (var x = 0; x < mantenimientoDB.length; x++) {
+        final mantenimiento = MantenimientoCorrectivoModel();
+        mantenimiento.idMantenimiento = mantenimientoDB[x].idMantenimiento;
+        mantenimiento.idInspeccionDetalle = mantenimientoDB[x].idInspeccionDetalle;
+        mantenimiento.responsable = mantenimientoDB[x].responsable;
+        mantenimiento.idResponsable = mantenimientoDB[x].idResponsable;
+        mantenimiento.estado = mantenimientoDB[x].estado;
+        mantenimiento.dateTimeMantenimiento = mantenimientoDB[x].dateTimeMantenimiento;
+        mantenimiento.estadoFinal = mantenimientoDB[x].estadoFinal;
+        mantenimiento.fechaFinalMantenimiento = mantenimientoDB[x].fechaFinalMantenimiento;
+        mantenimiento.listDetails = await _api.detalleManttoDB.getDetalleByIdMantenimiento(mantenimiento.idMantenimiento!);
+        listMantenimiento.add(mantenimiento);
+      }
+
+      detalle.mantCorrectivos = listMantenimiento;
       result.add(detalle);
     }
 
@@ -280,14 +292,24 @@ class MantenimientoCorrectivoBloc {
       detalle.observacionInspeccionDetalle = detalleDB[0].observacionInspeccionDetalle;
       detalle.estadoFinalInspeccionDetalle = detalleDB[0].estadoFinalInspeccionDetalle;
       detalle.observacionFinalInspeccionDetalle = detalleDB[0].observacionFinalInspeccionDetalle;
-      final List<MantenimientoCorrectivoModel> mantenimiento = [];
+      final List<MantenimientoCorrectivoModel> mantenimientos = [];
       final mantenimientoDB = await _api.mantCorrectivoDB.getMantenimientoByIdInspeccionDetalle(detalleDB[0].idInspeccionDetalle.toString());
       for (var i = 0; i < mantenimientoDB.length; i++) {
         if (mantenimientoDB[i].estadoFinal == '1') {
-          mantenimiento.add(mantenimientoDB[i]);
+          final mantenimiento = MantenimientoCorrectivoModel();
+          mantenimiento.idMantenimiento = mantenimientoDB[i].idMantenimiento;
+          mantenimiento.idInspeccionDetalle = mantenimientoDB[i].idInspeccionDetalle;
+          mantenimiento.responsable = mantenimientoDB[i].responsable;
+          mantenimiento.idResponsable = mantenimientoDB[i].idResponsable;
+          mantenimiento.estado = mantenimientoDB[i].estado;
+          mantenimiento.dateTimeMantenimiento = mantenimientoDB[i].dateTimeMantenimiento;
+          mantenimiento.estadoFinal = mantenimientoDB[i].estadoFinal;
+          mantenimiento.fechaFinalMantenimiento = mantenimientoDB[i].fechaFinalMantenimiento;
+          mantenimiento.listDetails = await _api.detalleManttoDB.getDetalleByIdMantenimiento(mantenimiento.idMantenimiento!);
+          mantenimientos.add(mantenimiento);
         }
       }
-      detalle.mantCorrectivos = mantenimiento;
+      detalle.mantCorrectivos = mantenimientos;
       result.add(detalle);
     }
 

@@ -4,6 +4,7 @@ import 'package:new_brunner_app/src/api/Mantenimiento/mantenimiento_correctivo_a
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_detalle_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/mantenimiento_correctivo_model.dart';
+import 'package:new_brunner_app/src/model/Mantenimiento/mantto_detalle_model.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
 import 'package:new_brunner_app/src/widget/show_loading.dart';
 
@@ -303,28 +304,17 @@ class _AddAccionesResponsableState extends State<AddAccionesResponsable> {
   }
 
   Widget options(BuildContext context, String titulo, List<MantenimientoCorrectivoModel> detail, int tipoOption) {
-    List<MantenimientoCorrectivoModel> showList = [];
+    List<ManttoDetalleModel> showList = [];
     for (var i = 0; i < detail.length; i++) {
-      switch (tipoOption) {
-        case 1:
-          if (detail[i].diagnostico != null) {
-            showList.add(detail[i]);
-          }
+      if (detail[i].listDetails == null) {
+        showList = [];
+      } else {
+        showList.addAll(detail[i].listDetails!.where((detailMantto) {
+          final typeEstatus = detailMantto.tipoDetalle!;
+          final query = tipoOption.toString();
 
-          break;
-        case 2:
-          if (detail[i].conclusion != null) {
-            showList.add(detail[i]);
-          }
-
-          break;
-        case 3:
-          if (detail[i].recomendacion != null) {
-            showList.add(detail[i]);
-          }
-
-          break;
-        default:
+          return typeEstatus.contains(query);
+        }).toList());
       }
     }
     return (showList.isNotEmpty)
@@ -366,7 +356,7 @@ class _AddAccionesResponsableState extends State<AddAccionesResponsable> {
           );
   }
 
-  Widget detalleOption(MantenimientoCorrectivoModel data, int tipo) {
+  Widget detalleOption(ManttoDetalleModel data, int tipo) {
     return Container(
       margin: EdgeInsets.all(8),
       child: Stack(children: [
@@ -404,7 +394,7 @@ class _AddAccionesResponsableState extends State<AddAccionesResponsable> {
                     width: ScreenUtil().setWidth(8),
                   ),
                   Text(
-                    data.responsable.toString(),
+                    data.registrador.toString(),
                     style: TextStyle(fontSize: ScreenUtil().setSp(12), fontWeight: FontWeight.w500),
                   ),
                 ],
@@ -424,11 +414,7 @@ class _AddAccionesResponsableState extends State<AddAccionesResponsable> {
                   ),
                   Expanded(
                     child: Text(
-                      (tipo == 1)
-                          ? data.diagnostico.toString()
-                          : (tipo == 2)
-                              ? data.conclusion.toString()
-                              : data.recomendacion.toString(),
+                      data.descripcionDetalle.toString(),
                       style: TextStyle(fontSize: ScreenUtil().setSp(12)),
                     ),
                   ),
@@ -445,7 +431,7 @@ class _AddAccionesResponsableState extends State<AddAccionesResponsable> {
             decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(50), border: Border.all(color: Colors.blueGrey)),
             child: Center(
               child: Text(
-                obtenerFechaHora(data.dateTimeMantenimiento.toString()),
+                obtenerFechaHora(data.fechaDetalle.toString()),
                 style: TextStyle(
                   color: Colors.blueGrey,
                   fontWeight: FontWeight.w600,
@@ -514,20 +500,16 @@ class _AddAccionesResponsableState extends State<AddAccionesResponsable> {
                                   switch (acciones[index]) {
                                     case 'Diagnóstico':
                                       _accion = '1';
-                                      _descripccionAccionController.text = data.diagnostico ?? '';
+                                      _descripccionAccionController.clear();
                                       break;
                                     case 'Acciones Correctivas':
                                       _accion = '2';
-                                      _descripccionAccionController.text = data.conclusion ?? '';
+                                      _descripccionAccionController.clear();
                                       break;
                                     case 'Recomendaciones':
                                       _accion = '3';
-                                      _descripccionAccionController.text = data.recomendacion ?? '';
+                                      _descripccionAccionController.clear();
                                       break;
-                                    // case 'Anular':
-                                    //   _accion = '4';
-                                    //   _descripccionAccionController.clear();
-                                    //break;
                                     default:
                                       _accion = '';
                                       break;

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_detalle_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/mantenimiento_correctivo_model.dart';
+import 'package:new_brunner_app/src/model/Mantenimiento/mantto_detalle_model.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
 import 'package:new_brunner_app/src/widget/show_loading.dart';
 
@@ -118,28 +119,17 @@ class VisualizarDetalles extends StatelessWidget {
   }
 
   Widget options(BuildContext context, String titulo, List<MantenimientoCorrectivoModel> detail, int tipoOption) {
-    List<MantenimientoCorrectivoModel> showList = [];
+    List<ManttoDetalleModel> showList = [];
     for (var i = 0; i < detail.length; i++) {
-      switch (tipoOption) {
-        case 1:
-          if (detail[i].diagnostico != null) {
-            showList.add(detail[i]);
-          }
+      if (detail[i].listDetails == null) {
+        showList = [];
+      } else {
+        showList.addAll(detail[i].listDetails!.where((detailMantto) {
+          final typeEstatus = detailMantto.tipoDetalle!;
+          final query = tipoOption.toString();
 
-          break;
-        case 2:
-          if (detail[i].conclusion != null) {
-            showList.add(detail[i]);
-          }
-
-          break;
-        case 3:
-          if (detail[i].recomendacion != null) {
-            showList.add(detail[i]);
-          }
-
-          break;
-        default:
+          return typeEstatus.contains(query);
+        }).toList());
       }
     }
     return (showList.isNotEmpty)
@@ -181,7 +171,7 @@ class VisualizarDetalles extends StatelessWidget {
           );
   }
 
-  Widget detalleOption(MantenimientoCorrectivoModel data, int tipo) {
+  Widget detalleOption(ManttoDetalleModel data, int tipo) {
     return Container(
       margin: EdgeInsets.all(8),
       child: Stack(children: [
@@ -219,7 +209,7 @@ class VisualizarDetalles extends StatelessWidget {
                     width: ScreenUtil().setWidth(8),
                   ),
                   Text(
-                    data.responsable.toString(),
+                    data.registrador.toString(),
                     style: TextStyle(fontSize: ScreenUtil().setSp(12), fontWeight: FontWeight.w500),
                   ),
                 ],
@@ -239,11 +229,7 @@ class VisualizarDetalles extends StatelessWidget {
                   ),
                   Expanded(
                     child: Text(
-                      (tipo == 1)
-                          ? data.diagnostico.toString()
-                          : (tipo == 2)
-                              ? data.conclusion.toString()
-                              : data.recomendacion.toString(),
+                      data.descripcionDetalle.toString(),
                       style: TextStyle(fontSize: ScreenUtil().setSp(12)),
                     ),
                   ),
@@ -260,7 +246,7 @@ class VisualizarDetalles extends StatelessWidget {
             decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(50), border: Border.all(color: Colors.blueGrey)),
             child: Center(
               child: Text(
-                obtenerFechaHora(data.dateTimeMantenimiento.toString()),
+                obtenerFechaHora(data.fechaDetalle.toString()),
                 style: TextStyle(
                   color: Colors.blueGrey,
                   fontWeight: FontWeight.w600,

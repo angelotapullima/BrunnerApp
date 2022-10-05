@@ -34,6 +34,7 @@ class DatabaseHelper {
       //Mantenimiento Correctivo
       db.execute(MantenimientoDB.inspeccionVehiculoDetalleTableSql);
       db.execute(MantenimientoDB.mantenimientoCorrectivoTableSql);
+      db.execute(MantenimientoDB.detalleManttoTableSql);
 
       //Empresa
       db.execute(EmpresaDB.empresasTableSql);

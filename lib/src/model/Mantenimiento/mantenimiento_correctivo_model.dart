@@ -1,16 +1,17 @@
+import 'package:new_brunner_app/src/model/Mantenimiento/mantto_detalle_model.dart';
+
 class MantenimientoCorrectivoModel {
   String? idMantenimiento;
   String? idInspeccionDetalle;
   String? responsable;
   String? idResponsable;
   String? estado;
-  String? diagnostico;
-  String? fechaDiagnostico;
-  String? conclusion;
-  String? recomendacion;
   String? dateTimeMantenimiento;
   String? estadoFinal;
   String? fechaFinalMantenimiento;
+
+  //No DB
+  List<ManttoDetalleModel>? listDetails;
 
   MantenimientoCorrectivoModel({
     this.idMantenimiento,
@@ -18,13 +19,10 @@ class MantenimientoCorrectivoModel {
     this.responsable,
     this.idResponsable,
     this.estado,
-    this.diagnostico,
-    this.fechaDiagnostico,
-    this.conclusion,
-    this.recomendacion,
     this.dateTimeMantenimiento,
     this.estadoFinal,
     this.fechaFinalMantenimiento,
+    this.listDetails,
   });
 
   static List<MantenimientoCorrectivoModel> fromJsonList(List<dynamic> json) => json.map((i) => MantenimientoCorrectivoModel.fromJson(i)).toList();
@@ -35,10 +33,6 @@ class MantenimientoCorrectivoModel {
         'responsable': responsable,
         'idResponsable': idResponsable,
         'estado': estado,
-        'diagnostico': diagnostico,
-        'fechaDiagnostico': fechaDiagnostico,
-        'conclusion': conclusion,
-        'recomendacion': recomendacion,
         'dateTimeMantenimiento': dateTimeMantenimiento,
         'estadoFinal': estadoFinal,
         'fechaFinalMantenimiento': fechaFinalMantenimiento,
@@ -50,10 +44,6 @@ class MantenimientoCorrectivoModel {
         responsable: json["responsable"],
         idResponsable: json["idResponsable"],
         estado: json["estado"],
-        diagnostico: json["diagnostico"],
-        fechaDiagnostico: json["fechaDiagnostico"],
-        conclusion: json["conclusion"],
-        recomendacion: json["recomendacion"],
         dateTimeMantenimiento: json["dateTimeMantenimiento"],
         estadoFinal: json["estadoFinal"],
         fechaFinalMantenimiento: json["fechaFinalMantenimiento"],
