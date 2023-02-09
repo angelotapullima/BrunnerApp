@@ -13,10 +13,12 @@ class OrdenHabilitacionCorrectiva extends StatefulWidget {
   const OrdenHabilitacionCorrectiva({Key? key}) : super(key: key);
 
   @override
-  State<OrdenHabilitacionCorrectiva> createState() => _OrdenHabilitacionCorrectivaState();
+  State<OrdenHabilitacionCorrectiva> createState() =>
+      _OrdenHabilitacionCorrectivaState();
 }
 
-class _OrdenHabilitacionCorrectivaState extends State<OrdenHabilitacionCorrectiva> {
+class _OrdenHabilitacionCorrectivaState
+    extends State<OrdenHabilitacionCorrectiva> {
   final _placaUnidad = TextEditingController();
   final _tipoVehiculo = TextEditingController();
 
@@ -262,20 +264,24 @@ class _OrdenHabilitacionCorrectivaState extends State<OrdenHabilitacionCorrectiv
                                   Navigator.push(
                                     context,
                                     PageRouteBuilder(
-                                      pageBuilder: (context, animation, secondaryAnimation) {
+                                      pageBuilder: (context, animation,
+                                          secondaryAnimation) {
                                         return VehiculosSearch(
                                           tipoUnidad: _tipoVeh,
                                           onChanged: (vehiculo) {
-                                            _placaUnidad.text = vehiculo.placaVehiculo ?? '';
+                                            _placaUnidad.text =
+                                                vehiculo.placaVehiculo ?? '';
                                           },
                                         );
                                       },
-                                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                      transitionsBuilder: (context, animation,
+                                          secondaryAnimation, child) {
                                         var begin = const Offset(0.0, 1.0);
                                         var end = Offset.zero;
                                         var curve = Curves.ease;
 
-                                        var tween = Tween(begin: begin, end: end).chain(
+                                        var tween =
+                                            Tween(begin: begin, end: end).chain(
                                           CurveTween(curve: curve),
                                         );
 
@@ -296,14 +302,20 @@ class _OrdenHabilitacionCorrectivaState extends State<OrdenHabilitacionCorrectiv
                               onTap: () async {
                                 if (_tipoVeh.isNotEmpty && _tipoVeh != '') {
                                   if (_placaUnidad.text.isNotEmpty) {
-                                    final consultaDetallespBloc = ProviderBloc.ordenHab(context);
-                                    consultaDetallespBloc.getInspeccionesById(_placaUnidad.text.trim(), _tipoVeh);
+                                    final consultaDetallespBloc =
+                                        ProviderBloc.ordenHab(context);
+                                    consultaDetallespBloc.getInspeccionesById(
+                                        _placaUnidad.text.trim(), _tipoVeh);
                                     Navigator.pop(context);
                                   } else {
-                                    showToast2('Debe seleccionar la Placa de una Unidad', Colors.redAccent);
+                                    showToast2(
+                                        'Debe seleccionar la Placa de una Unidad',
+                                        Colors.redAccent);
                                   }
                                 } else {
-                                  showToast2('Debe seleccionar un Tipo de Unidad', Colors.redAccent);
+                                  showToast2(
+                                      'Debe seleccionar un Tipo de Unidad',
+                                      Colors.redAccent);
                                 }
                               },
                               child: Container(
@@ -318,7 +330,8 @@ class _OrdenHabilitacionCorrectivaState extends State<OrdenHabilitacionCorrectiv
                                       color: Colors.black.withOpacity(0.2),
                                       spreadRadius: 3,
                                       blurRadius: 8,
-                                      offset: const Offset(0, 3), // changes position of shadow
+                                      offset: const Offset(
+                                          0, 3), // changes position of shadow
                                     ),
                                   ],
                                 ),
@@ -342,7 +355,8 @@ class _OrdenHabilitacionCorrectivaState extends State<OrdenHabilitacionCorrectiv
                                 Navigator.push(
                                   context,
                                   PageRouteBuilder(
-                                    pageBuilder: (context, animation, secondaryAnimation) {
+                                    pageBuilder: (context, animation,
+                                        secondaryAnimation) {
                                       return ScanQRVehiculoPlaca(
                                         modulo: 'OHC',
                                       );
@@ -362,7 +376,8 @@ class _OrdenHabilitacionCorrectivaState extends State<OrdenHabilitacionCorrectiv
                                       color: Colors.black.withOpacity(0.2),
                                       spreadRadius: 3,
                                       blurRadius: 8,
-                                      offset: const Offset(0, 3), // changes position of shadow
+                                      offset: const Offset(
+                                          0, 3), // changes position of shadow
                                     ),
                                   ],
                                 ),

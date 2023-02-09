@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/page/Home/menu_widget.dart';
+import 'package:new_brunner_app/src/page/Importaciones%20y%20Suministros/Cotizacion/Consulta%20externa%20productos/consulta_externa_productos_page.dart';
 import 'package:new_brunner_app/src/page/Importaciones%20y%20Suministros/Cotizacion/Generar%20Cotizacion/generate_cotizacion.dart';
 import 'package:new_brunner_app/src/widget/option_widget.dart';
 
@@ -49,12 +50,22 @@ class Cotizacion extends StatelessWidget {
             descripcion: 'Revisar Consultas externas del producto',
             icon: Icons.remove_red_eye,
             color: Colors.blue[700]!,
-            ontap: () {},
+            ontap: () {
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) {
+                    return const ConsultaExternaProductosPage();
+                  },
+                ),
+              );
+            },
           ),
           SizedBox(height: ScreenUtil().setWidth(30)),
           OptionWidget(
             titulo: 'Consulta de Información',
-            descripcion: 'Ver Cotización de productos generados de forma manual',
+            descripcion:
+                'Ver Cotización de productos generados de forma manual',
             icon: Icons.search,
             color: Colors.indigo,
             ontap: () {},

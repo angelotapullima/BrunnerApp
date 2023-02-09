@@ -3,18 +3,19 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/inspeccion_vehiculo_detalle_model.dart';
 import 'package:new_brunner_app/src/model/Mantenimiento/mantenimiento_correctivo_model.dart';
-import 'package:new_brunner_app/src/page/Mantenimiento/Mantenimiento%20Correctivo/Correctivo/Acciones%20Mantenimiento/editar_acciones_responsables.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
 import 'package:new_brunner_app/src/widget/show_loading.dart';
 
 class EditarDetallesMantenimiento extends StatelessWidget {
-  const EditarDetallesMantenimiento({Key? key, required this.detalle}) : super(key: key);
+  const EditarDetallesMantenimiento({Key? key, required this.detalle})
+      : super(key: key);
   final InspeccionVehiculoDetalleModel detalle;
 
   @override
   Widget build(BuildContext context) {
     final detalleBloc = ProviderBloc.mantenimientoCorrectivo(context);
-    detalleBloc.getDetalleInspeccionManttCorrectivoById(detalle.idInspeccionDetalle.toString(), detalle.tipoUnidad.toString());
+    detalleBloc.getDetalleInspeccionManttCorrectivoById(
+        detalle.idInspeccionDetalle.toString(), detalle.tipoUnidad.toString());
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0XFF3498DB),
@@ -46,7 +47,14 @@ class EditarDetallesMantenimiento extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          fileData('Check List', 'N° ${dato.nroCheckList}', 15, 15, FontWeight.w400, FontWeight.w500, TextAlign.start),
+                          fileData(
+                              'Check List',
+                              'N° ${dato.nroCheckList}',
+                              15,
+                              15,
+                              FontWeight.w400,
+                              FontWeight.w500,
+                              TextAlign.start),
                           Text(
                             '${obtenerFecha(dato.fechaInspeccion.toString())} ${dato.horaInspeccion}',
                             style: TextStyle(
@@ -69,17 +77,26 @@ class EditarDetallesMantenimiento extends StatelessWidget {
                     const Divider(),
                     Text(
                       '${dato.descripcionCategoria}',
-                      style: TextStyle(fontWeight: FontWeight.w500, fontSize: ScreenUtil().setSp(14)),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: ScreenUtil().setSp(14)),
                     ),
                     SizedBox(height: ScreenUtil().setHeight(8)),
-                    fileData('Descripción', '${dato.descripcionItem}', 14, 15, FontWeight.w400, FontWeight.w500, TextAlign.center),
+                    fileData('Descripción', '${dato.descripcionItem}', 14, 15,
+                        FontWeight.w400, FontWeight.w500, TextAlign.center),
                     SizedBox(height: ScreenUtil().setHeight(8)),
                     Padding(
                       padding: EdgeInsets.symmetric(
                         horizontal: ScreenUtil().setWidth(16),
                       ),
-                      child:
-                          fileData('Observación', '${dato.observacionInspeccionDetalle}', 14, 15, FontWeight.w500, FontWeight.w400, TextAlign.center),
+                      child: fileData(
+                          'Observación',
+                          '${dato.observacionInspeccionDetalle}',
+                          14,
+                          15,
+                          FontWeight.w500,
+                          FontWeight.w400,
+                          TextAlign.center),
                     ),
                     const Divider(),
                     SizedBox(height: ScreenUtil().setHeight(8)),
@@ -93,7 +110,9 @@ class EditarDetallesMantenimiento extends StatelessWidget {
                     ),
                     SizedBox(height: ScreenUtil().setHeight(8)),
                     Column(
-                      children: dato.mantCorrectivos!.map((item) => responsables(context, item)).toList(),
+                      children: dato.mantCorrectivos!
+                          .map((item) => responsables(context, item))
+                          .toList(),
                     ),
                     SizedBox(height: ScreenUtil().setHeight(50)),
                   ],
@@ -137,7 +156,8 @@ class EditarDetallesMantenimiento extends StatelessWidget {
           Text(
             (dato.estadoFinal == '1') ? 'Habilitado' : 'Deshabilitado',
             style: TextStyle(
-              color: (dato.estadoFinal == '1') ? Colors.green : Colors.redAccent,
+              color:
+                  (dato.estadoFinal == '1') ? Colors.green : Colors.redAccent,
               fontSize: ScreenUtil().setSp(9),
               fontWeight: FontWeight.w500,
             ),
@@ -152,7 +172,8 @@ class EditarDetallesMantenimiento extends StatelessWidget {
     );
   }
 
-  Widget detalleOption(BuildContext context, MantenimientoCorrectivoModel data, int tipo) {
+  Widget detalleOption(
+      BuildContext context, MantenimientoCorrectivoModel data, int tipo) {
     // String text = 'Sin información';
     // if (tipo == 1) {
     //   text = data.diagnostico ?? 'Sin información';
@@ -178,7 +199,9 @@ class EditarDetallesMantenimiento extends StatelessWidget {
               bottom: ScreenUtil().setHeight(8),
             ),
             decoration: BoxDecoration(
-              color: (detalle.estadoFinalInspeccionDetalle == '0') ? Colors.redAccent.withOpacity(0.5) : Colors.white,
+              color: (detalle.estadoFinalInspeccionDetalle == '0')
+                  ? Colors.redAccent.withOpacity(0.5)
+                  : Colors.white,
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
@@ -226,7 +249,10 @@ class EditarDetallesMantenimiento extends StatelessWidget {
           child: Container(
             width: ScreenUtil().setWidth(150),
             padding: EdgeInsets.all(4),
-            decoration: BoxDecoration(color: Colors.blueGrey, borderRadius: BorderRadius.circular(50), border: Border.all(color: Colors.blueGrey)),
+            decoration: BoxDecoration(
+                color: Colors.blueGrey,
+                borderRadius: BorderRadius.circular(50),
+                border: Border.all(color: Colors.blueGrey)),
             child: Center(
               child: Text(
                 (tipo == 1)

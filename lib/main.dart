@@ -35,7 +35,8 @@ class MyApp extends StatelessWidget {
             Locale('es', 'ES'), // Spanish, no country code
             //const Locale('en', 'EN'), // English, no country code
           ],
-          localeResolutionCallback: (Locale? locale, Iterable<Locale> supportedLocales) {
+          localeResolutionCallback:
+              (Locale? locale, Iterable<Locale> supportedLocales) {
             return locale;
           },
           onGenerateRoute: Routers.generateRoute,

@@ -5,7 +5,6 @@ import 'package:new_brunner_app/src/bloc/ejecucion_servicio_bloc.dart';
 import 'package:new_brunner_app/src/bloc/provider_bloc.dart';
 import 'package:new_brunner_app/src/model/Empresa/sede_model.dart';
 import 'package:new_brunner_app/src/page/Logistica/Almacen/Consulta%20Informacion/result_generadas.dart';
-import 'package:new_brunner_app/src/page/Logistica/Almacen/Consulta%20Informacion/result_pendientes.dart';
 import 'package:new_brunner_app/src/util/utils.dart';
 import 'package:new_brunner_app/src/widget/show_loading.dart';
 import 'package:new_brunner_app/src/widget/text_field.dart';
@@ -101,7 +100,8 @@ class _OrdenGeneradasState extends State<OrdenGeneradas> {
             } else {
               if (c.data! == 11) {
                 return Padding(
-                  padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16)),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: ScreenUtil().setWidth(16)),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -121,7 +121,8 @@ class _OrdenGeneradasState extends State<OrdenGeneradas> {
                                 color: Colors.black.withOpacity(0.2),
                                 spreadRadius: 3,
                                 blurRadius: 8,
-                                offset: const Offset(0, 3), // changes position of shadow
+                                offset: const Offset(
+                                    0, 3), // changes position of shadow
                               ),
                             ],
                           ),
@@ -142,7 +143,8 @@ class _OrdenGeneradasState extends State<OrdenGeneradas> {
                 );
               }
               return Padding(
-                padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16)),
+                padding:
+                    EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16)),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -163,7 +165,8 @@ class _OrdenGeneradasState extends State<OrdenGeneradas> {
                               color: Colors.black.withOpacity(0.2),
                               spreadRadius: 3,
                               blurRadius: 8,
-                              offset: const Offset(0, 3), // changes position of shadow
+                              offset: const Offset(
+                                  0, 3), // changes position of shadow
                             ),
                           ],
                         ),
@@ -270,7 +273,8 @@ class _OrdenGeneradasState extends State<OrdenGeneradas> {
                               readOnly: true,
                               ontap: () {
                                 FocusScope.of(context).unfocus();
-                                _seleccionar(context, notasPBloc, 'Seleccionar', _streamSede);
+                                _seleccionar(context, notasPBloc, 'Seleccionar',
+                                    _streamSede);
                               },
                             ),
                             SizedBox(
@@ -364,9 +368,15 @@ class _OrdenGeneradasState extends State<OrdenGeneradas> {
                             ),
                             InkWell(
                               onTap: () async {
-                                final almacenBloc = ProviderBloc.almacen(context);
+                                final almacenBloc =
+                                    ProviderBloc.almacen(context);
                                 almacenBloc.getOrdenesGeneradas(
-                                    idSede, idTipo, idEntrega, _numeroController.text, _inicioController.text, _finController.text);
+                                    idSede,
+                                    idTipo,
+                                    idEntrega,
+                                    _numeroController.text,
+                                    _inicioController.text,
+                                    _finController.text);
                                 Navigator.pop(context);
                               },
                               child: Container(
@@ -381,7 +391,8 @@ class _OrdenGeneradasState extends State<OrdenGeneradas> {
                                       color: Colors.black.withOpacity(0.2),
                                       spreadRadius: 3,
                                       blurRadius: 8,
-                                      offset: const Offset(0, 3), // changes position of shadow
+                                      offset: const Offset(
+                                          0, 3), // changes position of shadow
                                     ),
                                   ],
                                 ),
@@ -411,7 +422,12 @@ class _OrdenGeneradasState extends State<OrdenGeneradas> {
     );
   }
 
-  void _seleccionar(BuildContext context, bloc, String titulo, Widget stream(EjecucionServicioBloc stream, ScrollController controller)) {
+  void _seleccionar(
+      BuildContext context,
+      bloc,
+      String titulo,
+      Widget stream(
+          EjecucionServicioBloc stream, ScrollController controller)) {
     final notasPBloc = ProviderBloc.ejecucionServicio(context);
     showModalBottomSheet(
       context: context,
@@ -469,7 +485,8 @@ class _OrdenGeneradasState extends State<OrdenGeneradas> {
     );
   }
 
-  Widget _streamSede(EjecucionServicioBloc stream, ScrollController controller) {
+  Widget _streamSede(
+      EjecucionServicioBloc stream, ScrollController controller) {
     return StreamBuilder<List<SedeModel>>(
       stream: stream.sedesStream,
       builder: (context, snapshot) {
@@ -555,16 +572,22 @@ class _OrdenGeneradasState extends State<OrdenGeneradas> {
                         Expanded(
                           child: ListView.builder(
                             controller: controller,
-                            itemCount: tipo == 1 ? tipoRegistro.length : tipoEntrega.length,
+                            itemCount: tipo == 1
+                                ? tipoRegistro.length
+                                : tipoEntrega.length,
                             itemBuilder: (_, index) {
-                              var item = tipo == 1 ? tipoRegistro[index] : tipoEntrega[index];
+                              var item = tipo == 1
+                                  ? tipoRegistro[index]
+                                  : tipoEntrega[index];
                               return InkWell(
                                 onTap: () {
                                   if (tipo == 1) {
-                                    _tipoController.text = item["name"].toString();
+                                    _tipoController.text =
+                                        item["name"].toString();
                                     idTipo = item["id"].toString();
                                   } else {
-                                    _entregaController.text = item["name"].toString();
+                                    _entregaController.text =
+                                        item["name"].toString();
                                     idEntrega = item["id"].toString();
                                   }
 
